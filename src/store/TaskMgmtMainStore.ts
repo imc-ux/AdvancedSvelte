@@ -1,5 +1,5 @@
 import { makeAutoObservable, flow } from 'mobx';
-import { GetUserList, SearchTaskList, GetUserPermission } from '@/action/TaskMgmtMainAction';
+import { GetUserList, SearchTaskList, GetUserPermission, GetUserActivePermission } from '@/action/TaskMgmtMainAction';
 import { UsersInfo } from '@/vo/userManager/index';
 import { userPermission } from '@/vo/taskManager';
 
@@ -8,6 +8,7 @@ class TaskMgmt {
   userListResult: any = null;
   taskListResult: any = null;
   userPermissionResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -46,6 +47,18 @@ class TaskMgmt {
     } catch (error) {
       this.pending = false;
       this.userPermission = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getUserActivePermissionResult = error;
     }
   });
 }

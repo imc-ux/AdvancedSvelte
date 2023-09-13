@@ -28,3 +28,8 @@ export function GetPageIdsByType(info: any, mark: any): Promise<UJsonRespond> {
 export function GetJtracNosByPageId(info: any, mark: any): Promise<UJsonRespond> {
   return callRestfulService(MPageManagerKey.GetJtracNosByPageId, info, mark);
 }
+
+//获取权限
+export function GetUserActivePermission(info: string, mark: any): Promise<UJsonRespond> {
+  return callRestfulService(MPageManagerKey.GetUserActivePermission, info, mark);
+}

@@ -1331,3 +1331,8 @@ body.waiting * {
 .bx--date-picker--range > .bx--date-picker-container:first-child {
   margin-right: 4px;
 }
+
+.position-absolute {
+  position: absolute;
+  z-index: 2000;
+}

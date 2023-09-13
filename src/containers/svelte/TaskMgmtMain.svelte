@@ -1,5 +1,7 @@
 <!-- Summary:任务管理主页面 -->
 <script lang="ts">
+  import '@/styles/core/white.css';
+  import '@/styles/core/index.scss';
   import { AdvancedSelect, Button, BatchInput, Text } from '@/components/sveltecomponents';
   import { Checkbox } from 'carbon-components-svelte';
   import { autorun } from 'mobx';
@@ -23,11 +25,11 @@
   import Storage, { StorageType } from '@/utils/Storage';
   import { deepClone } from '@/utils/CommonUtils';
   import { TaskMgmtAlert } from '@/constant/alert/Task';
-  import { Add, TaskAdd } from 'carbon-icons-svelte';
+  import { Add, User } from 'carbon-icons-svelte';
   import AddTask from '@/containers/svelte/popup/AddTask.svelte';
   import type { GridReadyEvent } from 'ag-grid-community';
-
   import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
+  import RENDERER_EVENT from '@/constant/Renderer';
 
   let bizList = [];
   let rowData: any[] | null = null;
@@ -41,7 +43,7 @@
   let breakFlag: string = 'N';
   let pageCount = 0;
   let pageSize = 20;
-  let searchInfo: any = {};
+  let searchInfo: any = null;
   let currentPage = 0;
   let arrHeadTitleNameWidth: any[] = [];
   let arrHeadTitleName: any[] = [];
@@ -53,26 +55,30 @@
   const linkCodes = ['taskTitle'];
   const labelCodes = ['userName', 'status'];
   const progressCode = ['taskProgress'];
+  let permissionData: any[] = [];
   onMount(() => {
-    const currentTheme = Storage.getLocalItem('svelte-theme') ?? 'green-theme';
+    let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
+    if (currentTheme.includes('-theme')) {
+      currentTheme = 'ux-leaf';
+    }
     document.body.setAttribute('data-theme', currentTheme);
     window.addEventListener('message', themeChangeHandler, false);
     setWaiting();
-    // if (loginUser === null || loginUser === '') {
-    //   window.location.href = 'login.html';
-
-    // }
+    if (loginUser === null || loginUser === '') {
+      window.location.href = 'login.html';
+    }
     searchUserList();
-    userPermission();
+
+    getUserActivePermission();
   });
 
   onDestroy(() => {
-    disposer();
     disposerSearchTask();
     user();
+    getPermission();
     window.removeEventListener('message', themeChangeHandler, false);
-    gridApi?.removeEventListener('LinkButtonClick', onItemRendererLinkButtonHandler);
-    gridApi?.removeEventListener('IconButtonClick', onTaskDetailOpenHandler);
+    gridApi?.removeEventListener(RENDERER_EVENT.Renderer_LinkButton, onItemRendererLinkButtonHandler);
+    gridApi?.removeEventListener(RENDERER_EVENT.Renderer_Icon_Button, onTaskDetailOpenHandler);
   });
 
   function themeChangeHandler(e: MessageEvent) {
@@ -81,25 +87,42 @@
     }
   }
 
-  function onGridReadyHandler(params: GridReadyEvent) {
-    gridApi = params.api;
-    gridApi?.addEventListener('LinkButtonClick', onItemRendererLinkButtonHandler);
-    gridApi?.addEventListener('IconButtonClick', onTaskDetailOpenHandler);
+  function getUserActivePermission() {
+    const info: string = UserInfo.userId;
+    taskMgmtMainStore.getUserActivePermission(info);
   }
 
-  const disposer = autorun(() => {
-    if (taskMgmtMainStore.userPermissionResult) {
-      permissionValue = deepClone(taskMgmtMainStore.userPermissionResult);
-      taskMgmtMainStore.userPermissionResult = null;
+  function onGridReadyHandler(params: GridReadyEvent) {
+    gridApi = params.api;
+    gridApi?.addEventListener(RENDERER_EVENT.Renderer_LinkButton, onItemRendererLinkButtonHandler);
+    gridApi?.addEventListener(RENDERER_EVENT.Renderer_Icon_Button, onTaskDetailOpenHandler);
+  }
+
+  const getPermission = autorun(() => {
+    if (taskMgmtMainStore.getUserActivePermissionResult) {
+      const permssionList = deepClone(taskMgmtMainStore.getUserActivePermissionResult);
+      taskMgmtMainStore.getUserActivePermissionResult = null;
       removeWaiting();
-      if (!permissionValue.error) {
-        if (!permissionValue.data.includes('K')) {
-          document.getElementById('add-task').remove();
-        }
+      if (!permssionList.error) {
+        permissionData = permssionList.data?.split(',');
       }
       searchUserList();
     }
   });
+
+  // const disposer = autorun(() => {
+  //   if (taskMgmtMainStore.userPermissionResult) {
+  //     permissionValue = deepClone(taskMgmtMainStore.userPermissionResult);
+  //     taskMgmtMainStore.userPermissionResult = null;
+  //     removeWaiting();
+  //     if (!permissionValue.error) {
+  //       if (!permissionValue.data.includes('K')) {
+  //         document.getElementById('add-task').remove();
+  //       }
+  //     }
+  //     searchUserList();
+  //   }
+  // });
 
   const user = autorun(() => {
     if (taskMgmtMainStore.userListResult) {
@@ -120,7 +143,7 @@
         selectedItemsValue = items[0];
         selectedBizListValue = bizList[0];
         selectedBizList = bizList[0].id;
-        if (!permissionValue?.data.includes('K')) {
+        if (!permissionData?.includes('S_A')) {
           bizList.find((i) => {
             if (i.id === UserInfo.userId) {
               selectedBizListValue = i;
@@ -203,9 +226,10 @@
     });
     taskColumns.forEach((i) => {
       if (i?.headerName !== '详细' && i.headerName) {
-        arrHeadTitleName.push(i.headerName);
-        // arrHeadTitleNameWidth.push({ wpx: i.width.replace('px', '') });
-        arrHeadTitleNameWidth.push({ wpx: i.width });
+        if (!arrHeadTitleName.some((value) => value === i.headerName)) {
+          arrHeadTitleName.push(i.headerName);
+          arrHeadTitleNameWidth.push({ wpx: i.width });
+        }
       }
     });
     let wb = XLSX.utils.book_new();
@@ -321,7 +345,9 @@
   }
 
   function onItemRendererLinkButtonHandler(e: any) {
-    CreatePop('任务修改', ModifyTask, e.detail.data, onClosePopHandler, { width: '650px' });
+    CreatePop('任务修改', ModifyTask, e.value, onClosePopHandler, {
+      width: '650px',
+    });
   }
 
   function onClosePopHandler(data: string) {
@@ -330,24 +356,28 @@
         setWaiting();
         currentPage = 0;
         taskMgmtMainStore.searchTaskList(searchInfo);
-        document.getElementById('task-data-table-id').scrollTop = 0;
+        document.getElementById('task-mgmt-Grid').scrollTop = 0;
       }
     }
   }
 
   function onSearchConditionResetHandler() {
-    selectedBizListValue = defaultUser;
     selectedItemsValue = items[0];
     taskTitle = '';
     taskTitleTotal = 0;
     taskProgress = 'AB';
-    selectedBizList = UserInfo.userId;
     progressTask[0].checked = true;
     progressTask[1].checked = true;
     progressTask[2].checked = false;
     breakFlag = 'N';
     statusTask[0].checked = true;
     statusTask[1].checked = false;
+    selectedBizList = bizList[0].id;
+    selectedBizListValue = bizList[0];
+    if (!permissionData?.includes('S_A')) {
+      selectedBizList = UserInfo.userId;
+      selectedBizListValue = defaultUser;
+    }
   }
 
   function onPageChange(e: CustomEvent) {
@@ -356,7 +386,7 @@
       taskTitle: searchInfo.taskTitle,
       taskProgress: searchInfo.taskProgress,
       breakFlag: searchInfo.breakFlag,
-      iStart: e.detail.page * pageSize,
+      iStart: (e.detail.page - 1) * pageSize,
       iPageCount: selectedItems,
     };
     currentPage = e.detail.page;
@@ -373,19 +403,22 @@
   }
 
   function onTaskDetailOpenHandler(e: any) {
-    if (e.detail.colDef.field === 'modifyFlag') CreatePop('查看详细', TaskDetail, e.detail.data);
+    if (e.field === 'modifyFlag' && e.value.modifyFlag === 'Y') CreatePop('查看详细', TaskDetail, e.value);
   }
 
   function onAddBtnClickHandler() {
-    CreatePop('新增任务', AddTask, {}, onClosePopHandler, { width: '650px', height: '455px' });
+    CreatePop('新增任务', AddTask, {}, onClosePopHandler, {
+      width: '650px',
+      height: '455px',
+    });
   }
 
-  function userPermission() {
-    const info: userPermission = {};
-    info.userId = UserInfo.userId;
-    info.pageId = 'task';
-    taskMgmtMainStore.getUserPermission(info);
-  }
+  // function userPermission() {
+  //   const info: userPermission = {};
+  //   info.userId = UserInfo.userId;
+  //   info.pageId = 'task';
+  //   taskMgmtMainStore.getUserPermission(info);
+  // }
 </script>
 
 <div class="outer">
@@ -417,17 +450,17 @@
         <div class="top-text3 status-text">
           <Text>状态</Text>
         </div>
-        <div class="flex-div status-div ">
+        <div class="flex-div status-div">
           {#each progressTask as progress}
             <Checkbox labelText={progress.value} value={progress.value} checked={progress.checked} on:change={onProgressTaskChangeHandler} />
           {/each}
         </div>
       </div>
-      <div class="flex-div top-last-div ">
+      <div class="flex-div top-last-div">
         <div class="top-text3">
           <Text>中止</Text>
         </div>
-        <div class="flex-div  break-flag-status">
+        <div class="flex-div break-flag-status">
           {#each statusTask as status}
             <Checkbox labelText={status.value} value={status.value} checked={status.checked} on:change={onStatusTaskChangeHandler} />
           {/each}
@@ -437,10 +470,13 @@
   </div>
   <div class="flex-div top-second-width task-search">
     <div class="flex-div top-second-left">
-      <div class="add-button" id="add-task">
-        <Button icon={Add} size="small" kind="tertairy" on:click={onAddBtnClickHandler} class="button-normal">新增</Button>
-      </div>
-      <div class="load-button add-button ">
+      {#if permissionData?.includes('S_A')}
+        <div class="add-button" id="add-task">
+          <Button icon={Add} size="small" kind="tertairy" on:click={onAddBtnClickHandler} class="button-normal">新增</Button>
+        </div>
+      {/if}
+
+      <div class="load-button add-button">
         <Button icon={Download} size="small" kind="tertiary" on:click={onRowDataDownloadHandler} class="button-normal">下载</Button>
       </div>
     </div>
@@ -588,31 +624,16 @@
 
   .item-select {
     width: 145px;
-    height: 30px;
-    line-height: 30px;
-    position: absolute;
-    margin-right: 7px;
-    right: 248px;
-    margin-top: 2px;
+    margin-right: 5px;
   }
 
   .flex-end {
-    position: relative;
+    justify-content: flex-end;
   }
 
   .seartch-button {
-    position: absolute;
-    margin-right: 7px;
-    margin-top: 2px;
-    margin-bottom: 1px;
+    margin-right: 5px;
     right: 115px;
-  }
-
-  .reset-button {
-    position: absolute;
-    margin-top: 2px;
-    margin-bottom: 1px;
-    right: 0px;
   }
 
   .add-button {
@@ -679,6 +700,10 @@
   :global(.flex-div > div > .bx--btn) {
     height: 30px !important;
     margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: normal;
   }
 
   :global(.flex-div > div > .bx--btn--sm) {

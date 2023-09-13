@@ -20,3 +20,8 @@ export function UpdateJtracInfo(info: any): Promise<UJsonRespond> {
 export function UpdateMultJtracStatus(info?: any): Promise<UJsonRespond> {
   return callRestfulService(MUploadManagerKey.UpdateMultJtracStatus, info);
 }
+
+//获取用户权限
+export function GetUserActivePermission(info: string): Promise<UJsonRespond> {
+  return callRestfulService(MUploadManagerKey.GetUserActivePermission, info);
+}

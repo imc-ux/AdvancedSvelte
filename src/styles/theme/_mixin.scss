@@ -1,8 +1,6 @@
 @mixin themifyList($key, $valueMap) {
   // theme list
-  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
-    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
-    yellow-theme, grey-theme, dark-blue-theme;
+  $themes: ux-leaf, ux-whale, ux-garden;
 
   @each $theme in $themes {
     :global([data-theme="#{$theme}"]) & {
@@ -13,9 +11,7 @@
 
 @mixin themifyListIpt($key, $valueMap) {
   // theme list
-  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
-    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
-    yellow-theme, grey-theme, dark-blue-theme;
+  $themes: ux-leaf, ux-whale, ux-garden;
 
   @each $theme in $themes {
     :global([data-theme="#{$theme}"]) & {
@@ -24,12 +20,12 @@
   }
 }
 
+// ProgressBar  使用
+
 // 不添加:global
 @mixin themifyListSelf($key, $valueMap) {
   // theme list
-  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
-    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
-    yellow-theme, grey-theme, dark-blue-theme;
+  $themes: ux-leaf, ux-whale, ux-garden;
 
   @each $theme in $themes {
     [data-theme="#{$theme}"] & {
@@ -40,13 +36,24 @@
 
 @mixin themifyListSelfIpt($key, $valueMap) {
   // theme list
-  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
-    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
-    yellow-theme, grey-theme, dark-blue-theme;
+  $themes: ux-leaf, ux-whale, ux-garden;
 
   @each $theme in $themes {
     [data-theme="#{$theme}"] & {
       #{$key}: map-get($valueMap, $theme) !important;
+    }
+  }
+}
+
+// body设置背景图
+@mixin body-bgc() {
+  $themes: ux-leaf, ux-whale, ux-garden;
+
+  @each $theme in $themes {
+    &[data-theme="#{$theme}"] {
+      background: url("../../../static/uploadsys/images/sveltetheme/#{$theme}.png")
+        no-repeat;
+      background-size: 100% 100%;
     }
   }
 }

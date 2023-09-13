@@ -1,12 +1,13 @@
-import { makeAutoObservable, flow } from "mobx";
+import { makeAutoObservable, flow } from 'mobx';
 import {
   GetUserList,
   GetUserPermission,
   SearchUniqJtracList,
   UpdateMultJtracStatus,
   DeleteJtracInfo,
-} from "@/action/UploadAction";
-import { UsersInfo } from "@/vo/userManager/index";
+  GetUserActivePermission,
+} from '@/action/UploadAction';
+import { UsersInfo } from '@/vo/userManager/index';
 
 class UploadManager {
   pending = false;
@@ -15,6 +16,7 @@ class UploadManager {
   searchUniqJtracListResult: any = null;
   updateMultJtracStatusResult: any = null;
   deleteJtracInfoResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -77,6 +79,18 @@ class UploadManager {
     } catch (error) {
       this.pending = false;
       this.deleteJtracInfoResult = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getUserActivePermissionResult = error;
     }
   });
 }

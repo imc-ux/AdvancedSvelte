@@ -19,24 +19,18 @@
   import Search from "carbon-icons-svelte/lib/Search.svelte";
   import Reset from "carbon-icons-svelte/lib/Reset.svelte";
   import Close from "carbon-icons-svelte/lib/Close.svelte";
-  import DocumentBlank from "carbon-icons-svelte/lib/DocumentBlank.svelte";
+  import type { GridReadyEvent } from "ag-grid-community";
   import { onMount, onDestroy } from "svelte";
-  import {
-    DatePicker,
-    DataTable,
-    DatePickerInput,
-    Checkbox,
-  } from "carbon-components-svelte";
+  import { Checkbox } from "carbon-components-svelte";
   import {
     Button,
     Box,
     Text,
     AdvancedSelect,
     BatchInput,
-    DataGridEx,
   } from "@/components/sveltecomponents";
-  import { IconButton } from "@/components/renderers";
-  import uploadColumn from "@/components/columns/uploadColumnsSvelte";
+  import { IconButton } from "@/components/renderers/index";
+  import uploadSveletColumn from "@/components/columns/uploadColumnsSvelte";
   import pageStore from "@/store/UploadStore";
   import { autorun } from "mobx";
   import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
@@ -47,23 +41,26 @@
     PermissionList,
   } from "@/vo/uploadManager/index";
   import { CreatePop } from "@/components/Popup";
+  import { PaginationNav } from "svelte-paginate";
   import AddJtrac from "@/containers/svelte/popup/AddJtrac.svelte";
   import conflictdetail from "@/containers/svelte/popup/conflictdetail.svelte";
   import filelist from "@/containers/svelte/popup/filelist.svelte";
   import jtraclist from "@/containers/svelte/popup/jtraclist.svelte";
   import fileDetail from "@/containers/svelte/popup/fileDetail.svelte";
-  import { itemPages } from "@/constant/constant";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import { itemPages, systemTypeList } from "@/constant/constant";
   import XLSX from "xlsx";
   import { UserInfo, JTRAC_TITLE, JTRAC_TITLE_H5 } from "@/utils/Settings";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
-  import { PaginationNav } from "svelte-paginate";
   import { UploadAlert } from "@/constant/alert/upload";
   import { deepClone } from "@/utils/CommonUtils";
+  import Renderer from "@/constant/Renderer";
   import Storage from "@/utils/Storage";
+  import { DateInput } from "date-picker-svelte";
+  import { format, subMonths } from "date-fns";
 
-  let dateFrom: string = "";
-  let dateTo: string = "";
-  let dateCurrent: string = "";
+  let dateFrom: Date = new Date();
+  let dateTo: Date = new Date();
   let selectedUploader: string = "";
   let jtracNo: string = "";
   let modules: string = "";
@@ -74,14 +71,13 @@
   let moduleTotal: number = 0;
   let exModuleTotal: number = 2;
   let page: number = 1;
-  let selectedPageSize: number = 20;
   let searchSign: boolean = false;
+  let selectedPageSize: number = 20;
   let totalSign: boolean = false;
   let downloadSearchSign: boolean = false;
   let dateEmpty: boolean = false;
   let uploaderList: any[] = [];
   let rowData: any[] = [];
-  let selectedRowIds: any[] = [];
   let searchData: any[] = [];
   let downloadData: any[] = [];
   let allData: any[] = [];
@@ -89,58 +85,37 @@
   let arrHeadTitleNameWidth: any[] = [];
   let arrHeadTitleName: any[] = [];
   let checkBoxArr: any[] = [
-    { defaultValue: "待检查", checked: false },
-    { defaultValue: "待上传", checked: false },
+    { defaultValue: "待检查", checked: true },
+    { defaultValue: "待上传", checked: true },
     { defaultValue: "已传45", checked: true },
     { defaultValue: "已传IDC", checked: false },
   ];
   let searchInfo: any = {};
   let selectedUploaderValue: any = null;
   let selectedPageSizeValue: any = itemPages[0];
-  let currentPage: number = page;
+  let currentPage: number = 0;
   let pageCount: number = 10;
-  const linkCodes = ["jtracNo", "fileListChange", "moduleListChange"];
-  const labelCodes = ["clientDeveloperName", "conflictFiles"];
-  const btnCodes = [{ code: "detailFlag", icon: DocumentBlank }];
-  const centerCodes = ["jtracNo"];
-  let maxHeight: string = "700px";
+  let gridApi: any;
 
   onMount(() => {
-    window.onresize = function () {
-      if (Number(document.documentElement.clientHeight - 202) > 250) {
-        maxHeight = Number(document.documentElement.clientHeight - 202) + "px";
-      } else {
-        maxHeight = "250px";
-      }
-    };
-    if (Number(document.documentElement.clientHeight - 202) > 250) {
-      maxHeight = Number(document.documentElement.clientHeight - 202) + "px";
-    } else {
-      maxHeight = "250px";
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-leaf";
+    if (currentTheme.includes("-theme")) {
+      currentTheme = "ux-leaf";
     }
-    const currentTheme = Storage.getLocalItem("svelte-theme") ?? "green-theme";
     document.body.setAttribute("data-theme", currentTheme);
     window.addEventListener("message", themeChangeHandler, false);
     const date = new Date();
-    if (date.getMonth() < 3) {
-      dateFrom = `${date.getFullYear() - 1}-${
-        10 + date.getMonth()
-      }-${date.getDate()}`;
-    } else {
-      dateFrom = `${date.getFullYear()}-${
-        date.getMonth() - 2
-      }-${date.getDate()}`;
-    }
-    dateTo = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    dateCurrent = dateTo;
+    dateFrom = subMonths(date, 3);
+    dateTo = date;
+
     setWaiting();
     searchUploader();
-    searchPermission();
+    getUserActivePermission();
   });
 
   onDestroy(() => {
     uploader();
-    permission();
+    getUserActivePermissionList();
     upLoadListSearch();
     UpdateStatus();
     upLoadListDelete();
@@ -176,10 +151,10 @@
     }
   });
 
-  const permission = autorun(() => {
-    if (pageStore.getUserPermissionResult) {
-      const value = deepClone(pageStore.getUserPermissionResult);
-      pageStore.getUserPermissionResult = null;
+  const getUserActivePermissionList = autorun(() => {
+    if (pageStore.getUserActivePermissionResult) {
+      const value = deepClone(pageStore.getUserActivePermissionResult);
+      pageStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!value.error) {
         permissionData = value.data.split(",");
@@ -193,17 +168,17 @@
       pageStore.searchUniqJtracListResult = null;
       removeWaiting();
       if (!value.error) {
-        selectedRowIds = [];
         let ac = [];
         let bc = [];
         let cc = [];
         value.data?.forEach((elem: any) => {
+          elem.selected = false;
           elem.id = elem.nid;
-          elem.linkCodes = linkCodes;
-          elem.labelCodes = labelCodes;
-          elem.btnCodes = btnCodes;
-          elem.centerCodes = centerCodes;
           elem.isDetail = true;
+          elem.createDate = elem.createDate?.substr(0, 19);
+          elem.reviewerName = uploaderList?.find(
+            (v) => v.id === elem.reviewer
+          )?.name;
           if (!elem.labelList || elem.labelList === "null") {
             elem.labelList = "";
           }
@@ -222,6 +197,7 @@
             );
           ac = elem.fileList.split(",");
           elem.fileListChange = `(${ac.length})${ac[0]}`;
+          elem.srFileList = elem.fileList.replace(/,/g, "\r");
           bc = elem.moduleList.replace(/\r/g, ",").split(",");
           elem.moduleListChange = `(${bc.length})${bc[0]}`;
           if (elem.status === "R") {
@@ -232,6 +208,24 @@
             elem.statusChange = "已传45";
           } else {
             elem.statusChange = "已传IDC";
+          }
+          elem.versionLists = elem.versionList.split(",");
+          elem.systemTypeLists = elem.systemTypes.split(",");
+          elem.versionNo = "";
+          if (elem.versionLists.length > 1) {
+            if (elem.systemTypeLists.length === elem.versionLists.length) {
+              for (let i = 0; i < elem.versionLists.length; i++) {
+                let systemStr = systemTypeList.find(
+                  (v) => v.id === elem.systemTypeLists[i]
+                )?.imk;
+                elem.versionNo += systemStr + ":" + elem.versionLists[i] + " ";
+              }
+            } else {
+              elem.versionNo =
+                elem.systemTypeLists.toString() + elem.versionList.toString();
+            }
+          } else {
+            elem.versionNo = elem.systemTypes + ":" + elem.versionList;
           }
           if (
             elem.bizDeveloperName === null ||
@@ -266,6 +260,7 @@
             });
             elem.moduleListChange = `(${multModules.length})${multModules[0]}`;
             elem.moduleList = multModules.join(",");
+            elem.srModuleList = elem.moduleList.replace(/,/g, "\r");
             elem.detailFlag = true;
             let labelModules: any[] = [];
             if (elem.labelList) {
@@ -278,6 +273,8 @@
               elem.labelListChange = `(${labelModules.length})${labelModules[0]}`;
               elem.labelList = labelModules.join(",");
             }
+          } else {
+            elem.srModuleList = elem.moduleList.replace(/,/g, "\r");
           }
         });
         if (searchType === "search") {
@@ -368,12 +365,10 @@
     pageStore.getUserList(info);
   }
 
-  function searchPermission() {
-    const info: PermissionList = {};
-    info.userId = UserInfo.userId;
-    info.pageId = "jtrac";
+  function getUserActivePermission() {
+    const info = UserInfo.userId;
     setWaiting();
-    pageStore.getUserPermission(info);
+    pageStore.getUserActivePermission(info);
   }
 
   function onBtnAddJtracClickHandler() {
@@ -394,8 +389,8 @@
   function onBtnSearchClickHandler() {
     totalSign = false;
     const info: JtracListSearchInfo = {
-      dateFrom: dateFrom,
-      dateTo: dateTo,
+      dateFrom: dateFrom ? format(dateFrom, "yyyy-MM-dd") : "",
+      dateTo: dateTo ? format(dateTo, "yyyy-MM-dd") : "",
       status: getStatus(checkBoxArr),
       clientDeveloperId: selectedUploader,
       jtracNo: jtracNo,
@@ -404,36 +399,10 @@
       iStart: 0,
       iPageCount: selectedPageSize,
     };
-    if (dateEmpty) {
-      info.dateFrom = "";
-      info.dateTo = "";
-    }
     page = 1;
-    currentPage = page;
+    currentPage = 0;
     searchInfo = info;
     searchType = "search";
-    setWaiting();
-    pageStore.searchUniqJtracList(info);
-  }
-
-  function onPageChange(v: any) {
-    if (page === v.detail.page) {
-      return;
-    }
-    const info = {
-      dateFrom: searchInfo.dateFrom,
-      dateTo: searchInfo.dateTo,
-      status: searchInfo.status,
-      clientDeveloperId: searchInfo.clientDeveloperId,
-      jtracNo: searchInfo.jtracNo,
-      modules: searchInfo.modules,
-      jtracUniqFlag: searchInfo.jtracUniqFlag,
-      iStart: (v.detail.page - 1) * selectedPageSize,
-      iPageCount: selectedPageSize,
-    };
-    page = v.detail.page;
-    searchType = "search";
-    currentPage = page;
     setWaiting();
     pageStore.searchUniqJtracList(info);
   }
@@ -446,9 +415,6 @@
       }
     });
     const statusArr: any[] = [];
-    // if (arr.includes('提交')) {
-    //   statusArr.push('A');
-    // }
     if (arr.includes("待检查")) {
       statusArr.push("R");
     }
@@ -500,8 +466,8 @@
     moduleTotal = 0;
     exModuleTotal = 2;
     checkBoxArr = [
-      { defaultValue: "待检查", checked: false },
-      { defaultValue: "待上传", checked: false },
+      { defaultValue: "待检查", checked: true },
+      { defaultValue: "待上传", checked: true },
       { defaultValue: "已传45", checked: true },
       { defaultValue: "已传IDC", checked: false },
     ];
@@ -526,6 +492,12 @@
       CustomAlert(UploadAlert.PLZ_SEARCH, AlertIcon.WARNING);
       return;
     }
+    let selectedRowIds = [];
+    rowData.forEach((elem) => {
+      if (elem.selected) {
+        selectedRowIds.push(elem.id);
+      }
+    });
     let jtracAc = [];
     let errorAc = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
@@ -597,6 +569,12 @@
       CustomAlert(UploadAlert.SEARCH_DATA, AlertIcon.WARNING);
       return;
     }
+    let selectedRowIds = [];
+    rowData.forEach((elem) => {
+      if (elem.selected) {
+        selectedRowIds.push(elem.id);
+      }
+    });
     let jtracAc: any[] = [];
     let errorAc: any[] = [];
     let nid: any[] = [];
@@ -645,6 +623,12 @@
       CustomAlert(UploadAlert.PLZ_SEARCH, AlertIcon.WARNING);
       return;
     }
+    let selectedRowIds = [];
+    rowData.forEach((elem) => {
+      if (elem.selected) {
+        selectedRowIds.push(elem.id);
+      }
+    });
     let jtracArrStr: string = "";
     let jtracNoAc: any[] = [];
     let conflictArrStr: string = "";
@@ -811,6 +795,12 @@
       CustomAlert(UploadAlert.PLZ_SEARCH, AlertIcon.WARNING);
       return;
     }
+    let selectedRowIds = [];
+    rowData.forEach((elem) => {
+      if (elem.selected) {
+        selectedRowIds.push(elem.id);
+      }
+    });
     let jtracArrStr: string = "";
     let jtracNoAc: any[] = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
@@ -858,6 +848,7 @@
     data = deepClone(data);
     data.forEach((iData) => {
       //version
+      let reg = /[,]/g;
       for (let n in iData) {
         if (n === "jtracNo") {
           iData["JtracNo"] = iData[n];
@@ -883,10 +874,10 @@
         } else if (n === "JtracRepeatNum") {
           iData["提交次数"] = iData[n];
           delete iData[n];
-        } else if (n === "fileListChange") {
+        } else if (n === "fileList") {
           iData["文件列表"] = iData[n];
           delete iData[n];
-        } else if (n === "moduleListChange") {
+        } else if (n === "moduleList") {
           iData["模块"] = iData[n];
           delete iData[n];
         } else if (n === "labelListChange") {
@@ -900,7 +891,7 @@
         }
       }
     });
-    let arrTitle: any[] = uploadColumn;
+    let arrTitle: any[] = uploadSveletColumn;
     arrTitle.forEach((data) => {
       if (data.value !== "详细" && data.value) {
         arrHeadTitleName.push(data.value);
@@ -926,7 +917,7 @@
         fileDetail,
         { jtracNo: data.jtracNo },
         onPopCloseSearchHandler,
-        { width: "600px", height: "600px" }
+        { width: "600px", height: "630px" }
       );
     }
   }
@@ -976,7 +967,7 @@
     info.bizDeveloper = data.bizDeveloper ?? "";
     CreatePop("文件列表", filelist, { info }, onPopCloseSearchHandler, {
       width: "700px",
-      height: "600px",
+      height: "630px",
     });
   }
 
@@ -996,7 +987,7 @@
     info.bizDeveloper = data.bizDeveloper ?? "";
     CreatePop("模块列表", filelist, { info }, onPopCloseSearchHandler, {
       width: "700px",
-      height: "600px",
+      height: "630px",
     });
   }
 
@@ -1010,39 +1001,86 @@
     selectedPageSizeValue = value;
   }
 
-  function onBtnDetailLinkClickHandler(data: any, row: any) {
-    CreatePop(
-      "查看详细",
-      jtraclist,
-      { jtracNo: data.jtracNo, jtracStatus: data.status },
-      onPopCloseSearchHandler,
-      {
-        width: "1100px",
-        height: "600px",
-      }
+  function onPageChange(v: any) {
+    if (page === v.detail.page) {
+      return;
+    }
+    const info = {
+      dateFrom: searchInfo.dateFrom,
+      dateTo: searchInfo.dateTo,
+      status: searchInfo.status,
+      clientDeveloperId: searchInfo.clientDeveloperId,
+      jtracNo: searchInfo.jtracNo,
+      modules: searchInfo.modules,
+      jtracUniqFlag: searchInfo.jtracUniqFlag,
+      iStart: (v.detail.page - 1) * selectedPageSize,
+      iPageCount: selectedPageSize,
+    };
+    page = v.detail.page;
+    searchType = "search";
+    currentPage = v.detail.page;
+    setWaiting();
+    pageStore.searchUniqJtracList(info);
+  }
+
+  function onBtnDetailLinkClickHandler(e) {
+    if (e.field === "fileListChange") {
+      onBtnFileLinkClickHandler(e.value);
+    } else if (e.field === "moduleListChange") {
+      onBtnModuleLinkClickHandler(e.value);
+    }
+  }
+
+  function onBtnCheckBoxHandler(e: any) {
+    if (e.value1 !== undefined) {
+      e.value.selected = e.value1;
+    }
+  }
+
+  function onGridReadyHandler(params: GridReadyEvent) {
+    gridApi = params.api;
+    gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
+    gridApi?.addEventListener(
+      Renderer.Renderer_Select_Check_Box,
+      onBtnCheckBoxHandler
+    );
+    gridApi?.addEventListener(
+      Renderer.Renderer_Icon_Button,
+      onBtnDetailLinkClickHandler
     );
   }
 
-  function onDatePickerClickHandler() {
-    if (dateEmpty) {
-      dateFrom = dateCurrent;
-      dateTo = dateCurrent;
-      dateEmpty = false;
+  function onBtnLinkHandler(e: any) {
+    if (e.field === "jtracNo") {
+      onBtnJtracNoLinkClickHandler(e.value);
+    } else if (e.field === "fileListChange") {
+      onBtnFileLinkClickHandler(e.value);
+    } else if (e.field === "moduleListChange") {
+      onBtnModuleLinkClickHandler(e.value);
+    } else if (e.field === "detailFlag") {
+      CreatePop(
+        "查看详细",
+        jtraclist,
+        { jtracNo: e.value.jtracNo, jtracStatus: e.value.status },
+        onPopCloseSearchHandler,
+        {
+          width: "1100px",
+          height: "600px",
+        }
+      );
     }
   }
 
-  function onBtnLinkHandler(data, cell) {
-    if (cell.key === "jtracNo") {
-      onBtnJtracNoLinkClickHandler(data);
-    } else if (cell.key === "fileListChange") {
-      onBtnFileLinkClickHandler(data);
-    } else if (cell.key === "moduleListChange") {
-      onBtnModuleLinkClickHandler(data);
-    }
+  function dateFromInputHandler(e) {
+    console.log(e);
+  }
+
+  function dateToInputHandler(e) {
+    console.log(e);
   }
 </script>
 
-<Box class="outter">
+<Box column class="outter">
   <Box column class="grid-x callout-padding main-minWidth">
     <Box f={1} class="grid-x margin-bottom" verticalAlign="middle">
       <Box width="500px" height="30px">
@@ -1050,16 +1088,19 @@
           <Text>提交时间</Text>
         </Box>
         <Box width="370px">
-          <DatePicker
-            bind:valueFrom={dateFrom}
-            bind:valueTo={dateTo}
-            datePickerType="range"
-            dateFormat="Y-m-d"
-            on:change
-            on:click={onDatePickerClickHandler}>
-            <DatePickerInput />
-            <DatePickerInput />
-          </DatePicker>
+          <DateInput
+            bind:value={dateFrom}
+            format="yyyy-MM-dd"
+            valid={true}
+            closeOnSelection={true}
+            on:Input={dateFromInputHandler} />
+          <DateInput
+            class="margin-left-s"
+            bind:value={dateTo}
+            format="yyyy-MM-dd"
+            valid={true}
+            closeOnSelection={true}
+            on:Input={dateToInputHandler} />
         </Box>
       </Box>
       <Box f={1} height="30px" class="box-width">
@@ -1141,9 +1182,9 @@
       </Box>
     </Box>
   </Box>
-  <Box class="margin-bottom">
+  <Box class="margin-bottom ">
     <Box f={2} horizontalAlign="left">
-      {#if permissionData.includes("A")}
+      {#if permissionData.includes("J_A")}
         <Button
           class="button-normal"
           size="small"
@@ -1151,21 +1192,21 @@
           icon={Add}
           on:click={onBtnAddJtracClickHandler}>新增</Button>
       {/if}
-      {#if permissionData.includes("B")}
+      {#if permissionData.includes("J_E")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
           on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button>
       {/if}
-      {#if permissionData.includes("C")}
+      {#if permissionData.includes("J_D")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
           on:click={onBtnUpdateStatus45ClickHandler}>45</Button>
       {/if}
-      {#if permissionData.includes("D")}
+      {#if permissionData.includes("J_B")}
         <Button
           kind="tertiary"
           icon={TrashCan}
@@ -1177,14 +1218,14 @@
         icon={Download}
         class="margin-left-s button-normal"
         on:click={onBtnDownloadClickHandler}>下载</Button>
-      {#if permissionData.includes("E")}
+      {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Checkmark}
           class="margin-left-s button-normal"
           on:click={onBtnSumitClickHandler}>确认全部冲突</Button>
       {/if}
-      {#if permissionData.includes("F")}
+      {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Collaborate}
@@ -1213,18 +1254,19 @@
         on:click={onBtnClearClickHandler}>RESET</Button>
     </Box>
   </Box>
-  <DataGridEx
-    {maxHeight}
-    batchSelection
-    bind:selectedRowIds
-    columnsDefs={uploadColumn}
-    className="dataTable"
+  <DataGrid
+    id="upload-mgmt-Grid"
+    columnDefs={uploadSveletColumn}
     {rowData}
-    pageShowFlag={false}
-    onLinkClick={onBtnLinkHandler}
-    onBtnClick={onBtnDetailLinkClickHandler} />
-  {#if rowData.length > 0}
-    <Box horizontalAlign="compact" verticalAlign="middle" class="main-bottom">
+    headerRows={2}
+    onGridReady={onGridReadyHandler}
+    pageShowFlag={false} />
+  {#if rowData && rowData.length > 0}
+    <Box
+      horizontalAlign="compact"
+      verticalAlign="middle"
+      class="main-bottom"
+      height="95px">
       <Text class="pageText">Total {rowData[0].totalCount} Item(s)</Text>
       <PaginationNav
         on:setPage={(e) => onPageChange(e)}
@@ -1233,10 +1275,6 @@
         {currentPage}
         limit={6}
         showStepOptions={true} />
-    </Box>
-  {:else if searchSign && rowData.length === 0}
-    <Box class="not-find-rowdata-div">
-      <p class="not-find-rowdata">No Data</p>
     </Box>
   {/if}
 </Box>
@@ -1298,10 +1336,11 @@
   }
 
   :global(.outter) {
-    display: inline-block !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    min-height: 500px;
+    display: flex !important;
+    flex-direction: column !important;
+    width: auto;
+    height: 100% !important;
+    min-width: 1422px;
   }
 
   :global(.components-height) {

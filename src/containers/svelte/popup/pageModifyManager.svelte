@@ -1,30 +1,30 @@
 <script>
-  import "@/styles/core/white.css";
-  import "@/styles/core/index.scss";
+  import '@/styles/core/white.css';
+  import '@/styles/core/index.scss';
+  import { Box, Text, Link, Button, Input, MultiSelect, AdvancedSelect } from '@/components/sveltecomponents';
+  import { IconButton } from '@/components/renderers';
+  import { CreatePop } from '@/components/Popup';
+  import fileDetail from '@/containers/svelte/popup/fileDetail.svelte';
+  import pageModifyManager from '@/containers/svelte/popup/pageModifyManager.svelte';
+  import { onMount, onDestroy } from 'svelte';
+  import { autorun } from 'mobx';
+  import Close from 'carbon-icons-svelte/lib/Close.svelte';
+  import pageStore from '@/store/PageModifyManageStore';
+  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
+  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
+  import { PageManageAlert } from '@/constant/alert/Base';
+  import Edit from 'carbon-icons-svelte/lib/Edit.svelte';
+  import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
+  import { tick } from 'svelte';
   import {
-    Box,
-    Text,
-    Link,
-    Button,
-    Input,
-    MultiSelect,
-    AdvancedSelect,
-  } from "@/components/sveltecomponents";
-  import { CreatePop } from "@/components/Popup";
-  import moduleDetail from "@/containers/svelte/popup/moduleDetail.svelte";
-  import fileDetail from "@/containers/svelte/popup/fileDetail.svelte";
-  import pageModifyManager from "@/containers/svelte/popup/pageModifyManager.svelte";
-  import { onMount, onDestroy } from "svelte";
-  import { autorun } from "mobx";
-  import Add from "carbon-icons-svelte/lib/Add.svelte";
-  import Close from "carbon-icons-svelte/lib/Close.svelte";
-  import pageStore from "@/store/PageModifyManageStore";
-  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
-  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
-  import { PageManageAlert } from "@/constant/alert/Base";
-  import Edit from "carbon-icons-svelte/lib/Edit.svelte";
-  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
-  import { tick } from "svelte";
+    mpManagementTypeList,
+    spManagementTypeList,
+    buyerManagementTypeList,
+    expManagementTypeList,
+    gerpManagementTypeList,
+  } from '@/constant/constant';
+  import { UserInfo } from '@/utils/Settings';
+  import { deepClone } from '@/utils/CommonUtils';
 
   let pages = [];
   let jtracs = [];
@@ -38,31 +38,24 @@
   let jtracsOptions = [];
   let bizList = [];
 
-  let person = "";
-  let checkPerson = "";
-  let id = "";
-  let inputID = "";
-  let name = "";
-  let inputName = "";
-  let managementName = "";
-  let selectManagement = "";
-  let typeName = "";
-  let selectedType = "";
-  let searchPopFlag = false;
+  let person = '';
+  let checkPerson = '';
+  let id = '';
+  let inputID = '';
+  let name = '';
+  let inputName = '';
+  let managementName = '';
+  let typeName = '';
   let modifyMode = false;
   let saveInfo;
   let saveType = false;
-  let selectedManagementValue = "";
+  let selectedManagementValue = '';
   let selectedPopsValue = null;
   let selectedRendererValue = null;
-  const JTRAC_TITLE = "V2A-";
-  let isPopAdd = false;
-  let isRendererAdd = false;
   let info = null;
-  let isChild = false;
-  let popCode;
   let count = 6;
   let popList = [];
+  let permissionData = [];
 
   const popId = `${new Date().getTime()}-${Math.round(Math.random() * 100000)}`;
 
@@ -71,24 +64,23 @@
 
   onMount(() => {
     setWaiting();
-
-    // searchCodeList();
     searchPopList();
     searchRendererList();
     searchBizDebeloper();
     searchCheckList();
     searchManagerList();
+    getUserActivePermission();
     pageStore.getJtracNosByPageId(params, popId);
   });
 
   onDestroy(() => {
     disposerPerson();
     disposer();
-    //disposerManagerType();
     disposerUpdate();
     disposerPopupList();
     disposerJtracs();
     disposerPopList();
+    getPermission();
   });
 
   function countOver() {
@@ -98,11 +90,14 @@
     }
   }
 
+  function getUserActivePermission() {
+    const info = UserInfo.userId;
+    setWaiting();
+    pageStore.getUserActivePermission(info, popId);
+  }
+
   const disposerPerson = autorun(() => {
-    if (
-      pageStore.userPersionResult &&
-      pageStore.userPersionResult.mark === popId
-    ) {
+    if (pageStore.userPersionResult && pageStore.userPersionResult.mark === popId) {
       const value = JSON.parse(JSON.stringify(pageStore.userPersionResult));
       pageStore.userPersionResult = null;
       countOver();
@@ -113,6 +108,17 @@
         checkList = value.data;
       } else {
         CustomAlert(value.msg, AlertIcon.ERROR);
+      }
+    }
+  });
+
+  const getPermission = autorun(() => {
+    if (pageStore.getUserActivePermissionResult && pageStore.getUserActivePermissionResult.mark === popId) {
+      const permisisonList = deepClone(pageStore.getUserActivePermissionResult);
+      pageStore.getUserActivePermissionResult = null;
+      removeWaiting();
+      if (!permisisonList.error) {
+        permissionData = permisisonList.data?.split(',');
       }
     }
   });
@@ -131,16 +137,11 @@
         CustomAlert(value.msg, AlertIcon.ERROR);
       }
     }
-  });  
+  });
 
   const disposerUpdate = autorun(() => {
-    if (
-      pageStore.updateMpPageInfoResult &&
-      pageStore.updateMpPageInfoResult.mark === popId
-    ) {
-      const value = JSON.parse(
-        JSON.stringify(pageStore.updateMpPageInfoResult)
-      );
+    if (pageStore.updateMpPageInfoResult && pageStore.updateMpPageInfoResult.mark === popId) {
+      const value = JSON.parse(JSON.stringify(pageStore.updateMpPageInfoResult));
       pageStore.updateMpPageInfoResult = null;
 
       countOver();
@@ -150,7 +151,7 @@
         } else {
           CustomAlert(PageManageAlert.SAVE_DATA, AlertIcon.SUCCESS);
         }
-        onClose("Y");
+        onClose('Y');
       } else {
         CustomAlert(value.msg, AlertIcon.ERROR);
       }
@@ -158,13 +159,8 @@
   });
 
   const disposerPopupList = autorun(() => {
-    if (
-      pageStore.getMpPageMgmtListResult &&
-      pageStore.getMpPageMgmtListResult.mark === popId
-    ) {
-      const value = JSON.parse(
-        JSON.stringify(pageStore.getMpPageMgmtListResult)
-      );
+    if (pageStore.getMpPageMgmtListResult && pageStore.getMpPageMgmtListResult.mark === popId) {
+      const value = JSON.parse(JSON.stringify(pageStore.getMpPageMgmtListResult));
       pageStore.getMpPageMgmtListResult = null;
       countOver();
       if (!value.error) {
@@ -176,68 +172,62 @@
             id = info.code;
             name = info.name;
             managementName = info.managementName;
-            if (info.type === "pop") {
-              typeName = "Popup";
-            } else if (info.type === "renderer") {
-              typeName = "Renderer";
-            } else if (info.type === "main") {
-              typeName = "主页";
+            if (params.type === 'buyer') {
+              typeName = 'Buyer主页';
+              managementList = buyerManagementTypeList;
+            } else if (params.type === 'supplier') {
+              typeName = 'Supplier主页';
+              managementList = spManagementTypeList;
+            } else if (params.type === 'gerp') {
+              typeName = 'GERP主页';
+              managementList = gerpManagementTypeList;
+            } else if (params.type === 'buyerExp') {
+              typeName = 'BuyerEXP主页';
+              managementList = expManagementTypeList;
+            } else if (params.type === 'main') {
+              typeName = 'MP主页';
+              managementList = mpManagementTypeList;
+            } else if (params.type === 'pop') {
+              typeName = 'Popup';
+              managementList = [{ code: '', name: '--请选择--' }];
+            } else if (params.type === 'renderer') {
+              typeName = 'Renderer';
+              managementList = [{ code: '', name: '--请选择--' }];
             }
-
-            // if(info.type==='pop'){
-            //   typeName = 'Popup';
-            // }else if(info.type==='renderer'){
-            //   typeName = 'Renderer'
-            // }else if(info.type==='buyerMain'){
-            //   typeName = 'Buyer主页'
-            // }else if(info.type==='supplierMain'){
-            //   typeName = 'Supplier主页'
-            // }else if(info.type==='gerpMain'){
-            //   typeName = 'GERP主页'
-            // }else if(info.type==='buyerEXPMain'){
-            //   typeName = 'BuyerEXP主页'
-            // }else if(info.type==='mpMain'){
-            //   typeName = 'MP主页'
-            // }
-
             saveInfo = info;
             pages = [];
             jtracs = [];
             if (info.relatedPops) {
-              let pageArray = info.relatedPops.split(",");
+              let pageArray = info.relatedPops.split(',');
               pageArray?.forEach((elem) => {
-                const relatedPopName = popsOptions.find(
-                  (value) => value.code === elem
-                );
+                const relatedPopName = popsOptions.find((value) => value.code === elem);
                 if (elem) {
                   pages.push({
                     name: relatedPopName?.name,
                     code: elem,
-                    type: "label",
+                    type: 'label',
                   });
                 }
               });
             }
             renderers = [];
             if (info.relatedRenderers) {
-              let renderArray = info.relatedRenderers.split(",");
+              let renderArray = info.relatedRenderers.split(',');
               renderArray?.forEach((elem) => {
                 if (elem) {
-                  const relatedRendererName = renderersOptions.find(
-                    (value) => value.code === elem
-                  );
+                  const relatedRendererName = renderersOptions.find((value) => value.code === elem);
                   renderers.push({
                     name: relatedRendererName?.name,
                     code: elem,
-                    type: "label",
+                    type: 'label',
                   });
                 }
               });
             }
 
-            if (info.type !== "renderer" && modifyMode) {
-              pages.push({ name: "", code: "", type: "input" });
-              renderers.push({ name: "", code: "", type: "input" });
+            if (info.type !== 'renderer' && modifyMode) {
+              pages.push({ name: '', code: '', type: 'input' });
+              renderers.push({ name: '', code: '', type: 'input' });
             }
           } else {
             CustomAlert(PageManageAlert.SEARCH_NOT_DATA, AlertIcon.ERROR);
@@ -251,13 +241,8 @@
   });
 
   const disposerJtracs = autorun(() => {
-    if (
-      pageStore.getJtracNosByPageIdResult &&
-      pageStore.getJtracNosByPageIdResult.mark === popId
-    ) {
-      const value = JSON.parse(
-        JSON.stringify(pageStore.getJtracNosByPageIdResult)
-      );
+    if (pageStore.getJtracNosByPageIdResult && pageStore.getJtracNosByPageIdResult.mark === popId) {
+      const value = JSON.parse(JSON.stringify(pageStore.getJtracNosByPageIdResult));
       pageStore.getJtracNosByPageIdResult = null;
       countOver();
       if (!value.error) {
@@ -265,7 +250,7 @@
         const regExp = /^V2A-|H5BUG-/;
         jtracsOptions = value.data
 
-          .split(",")
+          .split(',')
           .filter((item) => {
             if (regExp.test(item)) {
               return true;
@@ -284,30 +269,23 @@
   });
 
   const disposerPopList = autorun(() => {
-    if (
-      pageStore.getPageIdsByTypeResult &&
-      pageStore.getPageIdsByTypeResult.mark === popId
-    ) {
-      const value = JSON.parse(
-        JSON.stringify(pageStore.getPageIdsByTypeResult)
-      );
+    if (pageStore.getPageIdsByTypeResult && pageStore.getPageIdsByTypeResult.mark === popId) {
+      const value = JSON.parse(JSON.stringify(pageStore.getPageIdsByTypeResult));
       pageStore.getPageIdsByTypeResult = null;
       countOver();
       if (!value.error) {
-        // popList = value.data;
-
-        if (value.data[0].type === "pop") {
+        if (value.data[0].type === 'pop') {
           popsOptions = value.data;
-          popsOptions.unshift({ code: "--请选择--" });
-          if (popsOptions[0].code === "--请选择--") {
+          popsOptions.unshift({ code: '--请选择--' });
+          if (popsOptions[0].code === '--请选择--') {
             selectedPopsValue = popsOptions[0];
           }
         }
 
-        if (value.data[0].type === "renderer") {
+        if (value.data[0].type === 'renderer') {
           renderersOptions = value.data;
-          renderersOptions.unshift({ code: "--请选择--" });
-          if (renderersOptions[0].code === "--请选择--") {
+          renderersOptions.unshift({ code: '--请选择--' });
+          if (renderersOptions[0].code === '--请选择--') {
             selectedRendererValue = renderersOptions[0];
           }
         }
@@ -322,17 +300,10 @@
     }
   });
 
-  // function overCount() {
-  //   count--;
-  //   if (count === 0) {
-  //     removeWaiting();
-  //   }
-  // }
-
   function searchBizDebeloper() {
     const info = {
-      blockflag: "N",
-      usertype: "U",
+      blockflag: 'N',
+      usertype: 'U',
       iStart: 0,
       iPageCount: 20,
     };
@@ -340,7 +311,7 @@
   }
 
   function searchCheckList() {
-    const strs = ["O"];
+    const strs = ['O'];
     pageStore.getUserCheckPersonList(strs, popId);
   }
 
@@ -352,10 +323,9 @@
   function searchRenderer() {
     isRendererAdd = true;
     const info = {
-      code: "",
-      name: "",
-      type: "renderer",
-      // developer: '',
+      code: '',
+      name: '',
+      type: 'renderer',
       iStart: 0,
       iPageCount: 9999,
     };
@@ -373,8 +343,8 @@
       return;
     }
     if (saveInfo) {
-      if (saveInfo.type !== "pop" && saveInfo.type !== "renderer") {
-        if (selectedManagementValue === "") {
+      if (saveInfo.type !== 'pop' && saveInfo.type !== 'renderer') {
+        if (selectedManagementValue === '') {
           CustomAlert(PageManageAlert.PLEASE_SELECT_MANAGEMENT);
           return;
         }
@@ -427,9 +397,9 @@
   function searchPopupList() {
     isPopAdd = true;
     const info = {
-      code: "",
-      name: "",
-      type: "pop",
+      code: '',
+      name: '',
+      type: 'pop',
       iStart: 0,
       iPageCount: 9999,
     };
@@ -440,23 +410,20 @@
   function searchCodeList() {
     const info = {
       code: params,
-      name: "",
-      type: "",
+      name: '',
+      type: '',
       iStart: 0,
       iPageCount: 9999,
     };
-    // count = 3;
     setWaiting();
-    // searchPopList();
-    // searchRendererList();
     pageStore.getMpPageMgmtList(info, popId);
   }
 
   function searchPopList() {
     const info = {
-      code: "",
-      name: "",
-      type: "pop",
+      code: '',
+      name: '',
+      type: 'pop',
       iStart: 0,
       iPageCount: 9999,
     };
@@ -466,9 +433,9 @@
 
   function searchRendererList() {
     const info = {
-      code: "",
-      name: "",
-      type: "renderer",
+      code: '',
+      name: '',
+      type: 'renderer',
       iStart: 0,
       iPageCount: 9999,
     };
@@ -477,35 +444,21 @@
   }
 
   function onbtnPopLinkHandler(v, page) {
-    // isChild = true;
-    // popCode = page.code;
-    CreatePop(
-      "MP管理页面-详细",
-      pageModifyManager,
-      page.code,
-      onClosePopHandler,
-      { width: "900px", height: "800px" }
-    );
+    CreatePop('MP管理页面-详细', pageModifyManager, page.code, onClosePopHandler, { width: '900px', height: '800px' });
   }
 
   function onbtnRendererLinkHandler(v, renderer) {
-    CreatePop(
-      "MP管理页面-详细",
-      pageModifyManager,
-      renderer.code,
-      onClosePopHandler,
-      { width: "900px", height: "800px" }
-    );
+    CreatePop('MP管理页面-详细', pageModifyManager, renderer.code, onClosePopHandler, { width: '900px', height: '800px' });
   }
 
   function onClosePopHandler(data) {
-    if (data === "Y") {
+    if (data === 'Y') {
       onClose(data);
     }
   }
 
   function onbtnAddPage(v, page) {
-    pages[v].type = "input";
+    pages[v].type = 'input';
     count = 1;
     setWaiting();
     searchPopupList();
@@ -526,9 +479,9 @@
       searchManagerList();
       searchPopList();
       searchRendererList();
-      if (info.type !== "renderer") {
-        pages.push({ name: "", code: "", type: "input" });
-        renderers.push({ name: "", code: "", type: "input" });
+      if (info.type !== 'renderer') {
+        pages.push({ name: '', code: '', type: 'input' });
+        renderers.push({ name: '', code: '', type: 'input' });
       }
     } else {
       CustomAlert(PageManageAlert.NOT_MODIFY_SEARCH_NOT_DATA);
@@ -536,7 +489,7 @@
   }
 
   function onbtnJtracLinkHandler(v, page) {
-    CreatePop("Jtrac详细", fileDetail, { jtracNo: page.jtracNo });
+    CreatePop('Jtrac详细', fileDetail, { jtracNo: page.jtracNo });
   }
 
   function onbtnDeleteRendererPage(i) {
@@ -550,36 +503,26 @@
   async function handleSubmit(value, i) {
     pages[i].name = value.name;
     pages[i].code = value.code;
-    pages[i].type = "label";
-    pages.push({ name: "", code: "", type: "input" });
+    pages[i].type = 'label';
+    pages.push({ name: '', code: '', type: 'input' });
     await tick();
-    document.getElementById("outer").parentElement.scrollTop =
-      document.getElementById("outer").parentElement.scrollHeight;
+    document.getElementById('outer').parentElement.scrollTop = document.getElementById('outer').parentElement.scrollHeight;
   }
 
   async function handleRendererSubmit(value, i) {
     renderers[i].name = value.name;
     renderers[i].code = value.code;
-    renderers[i].type = "label";
-    renderers.push({ name: "", code: "", type: "input" });
+    renderers[i].type = 'label';
+    renderers.push({ name: '', code: '', type: 'input' });
     await tick();
-    document.getElementById("outer").parentElement.scrollTop =
-      document.getElementById("outer").parentElement.scrollHeight;
+    document.getElementById('outer').parentElement.scrollTop = document.getElementById('outer').parentElement.scrollHeight;
   }
-
-  // function onbtnAddRendererPage(v, renderer) {
-  //   isRendererAdd = true;
-  //   renderers[v].type = 'input';
-  //   count = 1;
-  //   setWaiting();
-  //   searchRenderer();
-  // }
 
   function onBtnDeleteHandlerClick() {
     if (saveInfo) {
       const info = {
         id: saveInfo.id,
-        isDelete: "Y",
+        isDelete: 'Y',
       };
       saveType = true;
       setWaiting();
@@ -591,7 +534,7 @@
 
   function onTextIDChangeHandler(e) {
     if (saveInfo) {
-      if (saveInfo.type === "renderer") {
+      if (saveInfo.type === 'renderer') {
         inputName = e.detail.data;
       }
     }
@@ -599,7 +542,7 @@
 
   function onTextNameChangeHandler(e) {
     if (saveInfo) {
-      if (saveInfo.type === "renderer") {
+      if (saveInfo.type === 'renderer') {
         inputID = e.detail.data;
       }
     }
@@ -609,130 +552,73 @@
     selectManagement = value.code;
     selectedManagementValue = value;
   }
-
-  // function addStyleHandler() {
-  //   document.getElementById('outer').parentElement.parentElement.style.width = '900px';
-  //   document.getElementById('outer').parentElement.parentElement.style.height = '800px';
-  // }
 </script>
 
-<div id="outer">
+<div id="outer" style="overflow-y:auto;height:520px">
   <Box horizontalAlign="right" class="margin_bottom modifyTop">
     {#if modifyMode}
-      <Button
-        size="small"
-        kind="tertiary"
-        class="margin_right button-normal button-main-style"
-        on:click={onBtnSaveClick}>保存</Button>
-    {:else}
-      <Button
-        size="small"
-        kind="tertiary"
-        class="margin_right button-normal button-main-style"
-        icon={Edit}
-        on:click={onBtnModifyClick}>修改</Button>
+      <Button size="small" kind="tertiary" class=" button-normal button-main-style" on:click={onBtnSaveClick}>保存</Button>
+    {:else if permissionData?.includes('M_C')}
+      <Button size="small" kind="tertiary" class=" button-normal button-main-style" icon={Edit} on:click={onBtnModifyClick}>修改</Button>
     {/if}
-    <Button
-      size="small"
-      kind="tertiary"
-      class="button-normal button-main-style"
-      icon={TrashCan}
-      on:click={onBtnDeleteHandlerClick}>删除</Button>
+    {#if permissionData?.includes('M_B')}
+      <Button size="small" kind="tertiary" class="btn-margin-left button-normal button-main-style" icon={TrashCan} on:click={onBtnDeleteHandlerClick}
+        >删除</Button
+      >
+    {/if}
   </Box>
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">Type</Text>
     </Box>
-    <Box
-      f={1}
-      class="border_right_bottom_top padding_right_left typeLable"
-      horizontalAlign="left"
-      verticalAlign="middle">
+    <Box f={1} class="border_right_bottom_top padding_right_left typeLable" horizontalAlign="left" verticalAlign="middle">
       <Text class="ellipsis typeText pop-text-align ">{typeName}</Text>
     </Box>
   </Box>
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">ID</Text>
     </Box>
-    <Box
-      f={1}
-      class="border_right_bottom padding_right_left typeLable"
-      horizontalAlign="left"
-      verticalAlign="middle">
+    <Box f={1} class="border_right_bottom padding_right_left typeLable" horizontalAlign="left" verticalAlign="middle">
       {#if modifyMode}
-        <Input
-          class="typeText popupInput pop-text-align "
-          bind:value={inputID}
-          maxAscii={255}
-          on:blur={onTextIDChangeHandler} />
+        <Input class="typeText popupInput pop-text-align " bind:value={inputID} maxAscii={255} on:blur={onTextIDChangeHandler} />
       {:else}
-        <Text
-          class="ellipsis popupText popTextHeight pop-text-align "
-          title={id}>{id}</Text>
+        <Text class="ellipsis popupText popTextHeight pop-text-align " title={id}>{id}</Text>
       {/if}
     </Box>
   </Box>
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">Name</Text>
     </Box>
-    <Box
-      f={1}
-      class="border_right_bottom padding_right_left typeLable"
-      horizontalAlign="left"
-      verticalAlign="middle">
+    <Box f={1} class="border_right_bottom padding_right_left typeLable" horizontalAlign="left" verticalAlign="middle">
       {#if modifyMode}
-        <Input
-          class="typeText popupInput pop-text-align "
-          bind:value={inputName}
-          maxAscii={255}
-          on:blur={onTextNameChangeHandler} />
+        <Input class="typeText popupInput pop-text-align " bind:value={inputName} maxAscii={255} on:blur={onTextNameChangeHandler} />
       {:else}
-        <Text
-          class="ellipsis popupText pop-text-align modify-line-height"
-          title={name}>{name}</Text>
+        <Text class="ellipsis popupText pop-text-align modify-line-height" title={name}>{name}</Text>
       {/if}
     </Box>
   </Box>
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">Management</Text>
     </Box>
     <Box
       f={1}
       class="border_right_bottom padding_right_left_bottom typeLable advancedSelectPadding select-height-pop "
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       {#if modifyMode}
-        <AdvancedSelect
-          bind:value={selectedManagementValue}
-          options={managementList}
-          onSubmit={(v) => onManagementSubmitHandler(v)} />
+        <AdvancedSelect bind:value={selectedManagementValue} options={managementList} onSubmit={(v) => onManagementSubmitHandler(v)} />
       {:else}
-        <Text class="ellipsis typeText pop-text-align modify-line-height"
-          >{managementName}</Text>
+        <Text class="ellipsis typeText pop-text-align modify-line-height">{managementName}</Text>
       {/if}
     </Box>
   </Box>
 
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">页面负责人</Text>
     </Box>
     <Box
@@ -740,24 +626,17 @@
       flexDisplay={false}
       class="border_right_bottom padding_right_left typeLable multiselectPadding multiselect"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       {#if modifyMode}
-        <MultiSelect
-          class="margin-botton"
-          hideLabel
-          dataProvider={bizList}
-          bind:selectedIds={selectPersion} />
+        <MultiSelect class="margin-botton" hideLabel dataProvider={bizList} bind:selectedIds={selectPersion} />
       {:else}
-        <Text class="ellipsis typeText pop-text-align " title={person}
-          >{person}</Text>
+        <Text class="ellipsis typeText pop-text-align " title={person}>{person}</Text>
       {/if}
     </Box>
   </Box>
   <Box height="35px">
-    <Box
-      class="background modifyLableStyle"
-      horizontalAlign="compact"
-      verticalAlign="middle">
+    <Box class="background modifyLableStyle" horizontalAlign="compact" verticalAlign="middle">
       <Text class="textColor modify-line-height">检查负责人</Text>
     </Box>
     <Box
@@ -765,47 +644,33 @@
       flexDisplay={false}
       class="border_right_bottom padding_right_left typeLable multiselectPadding multiselect"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       {#if modifyMode}
-        <MultiSelect
-          direction="top"
-          class="margin-botton"
-          hideLabel
-          dataProvider={checkList}
-          bind:selectedIds={selectChecker} />
+        <MultiSelect direction="top" class="margin-botton" hideLabel dataProvider={checkList} bind:selectedIds={selectChecker} />
       {:else}
-        <Text
-          class="ellipsis typeText pop-text-align modify-line-height"
-          title={checkPerson}>{checkPerson}</Text>
+        <Text class="ellipsis typeText pop-text-align modify-line-height" title={checkPerson}>{checkPerson}</Text>
       {/if}
     </Box>
   </Box>
   <Box>
     <Box class="boxBlock" width="100%">
       {#if pages.length > 0}
-        <Box
-          column
-          width="100%"
-          class="background_white margin_right margin_top_bg popupBox">
+        <Box column width="100%" class="background_white margin_right margin_top_bg popupBox">
           <Box class="modify-text">关联pop</Box>
           <Box height={2} class="modify-line" />
-          <Box
-            class="popup-border-top block child-background-color {modifyMode
-              ? 'border-left-right'
-              : 'popup-border-bottom'}">
+          <Box class="popup-border-top block child-background-color {modifyMode ? 'border-left-right' : 'popup-border-bottom'}">
             {#each pages as page, i}
               {#if i < pages.length - 1}
                 <Box
                   height={28}
                   class=" select-height-pop related-padding-left gost-button-margin select-margin-right label-border-left label-border-right"
                   horizontalAlign="left"
-                  verticalAlign="middle">
+                  verticalAlign="middle"
+                >
                   {#if modifyMode}
-                    {#if page.type === "label"}
-                      <Text
-                        title={page.code}
-                        class="ellipsis popupLable pop-text-align related-label-margin-left"
-                        >{page.code}</Text>
+                    {#if page.type === 'label'}
+                      <Text title={page.code} class="ellipsis popupLable pop-text-align related-label-margin-left">{page.code}</Text>
                     {:else}
                       <AdvancedSelect
                         class="autoComplete"
@@ -815,23 +680,15 @@
                         labelIdentifier="code"
                         bind:value={selectedPopsValue}
                         onSubmit={(v) => handleSubmit(v, i)}
-                        container={document.body} />
+                      />
                     {/if}
-                    {#if page.code && page.code !== "--请选择--"}
-                      <Button
-                        kind="ghost"
-                        size="small"
-                        icon={Close}
-                        on:click={(v) => onbtnDeletePage(i)} />
-                      <!-- {:else} -->
-                      <!-- <Button kind="ghost" size="small" icon={Add} on:click={(v) => onbtnAddPage(i, page)} /> -->
+                    {#if page.code && page.code !== '--请选择--'}
+                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeletePage(i)} />
                     {/if}
                   {:else}
-                    <Link
-                      title={`${page.name}(${page.code})`}
-                      class="ellipsis popupLink "
-                      on:click={(v) => onbtnPopLinkHandler(v, page)}
-                      >{page.name}({page.code})</Link>
+                    <Link title={`${page.name}(${page.code})`} class="ellipsis popupLink " on:click={(v) => onbtnPopLinkHandler(v, page)}
+                      >{page.name}({page.code})</Link
+                    >
                   {/if}
                 </Box>
               {:else if i === pages.length - 1}
@@ -839,14 +696,11 @@
                   height={28}
                   horizontalAlign="left"
                   verticalAlign="middle"
-                  class="select-height-pop gost-button-margin related-padding-left select-margin-right label-border-left label-border-right">
+                  class="select-height-pop gost-button-margin related-padding-left select-margin-right label-border-left label-border-right"
+                >
                   {#if modifyMode}
-                    {#if page.type === "label"}
-                      <!-- <Link style="width:300px" on:click={(v) => onbtnPopLinkHandler(v, page)}>{page.code}</Link> -->
-                      <Text
-                        title={page.code}
-                        class="ellipsis popupLable pop-text-align related-label-margin-left"
-                        >{page.code}</Text>
+                    {#if page.type === 'label'}
+                      <Text title={page.code} class="ellipsis popupLable pop-text-align related-label-margin-left">{page.code}</Text>
                     {:else}
                       <AdvancedSelect
                         class="autoComplete"
@@ -856,23 +710,15 @@
                         labelIdentifier="code"
                         bind:value={selectedPopsValue}
                         onSubmit={(v) => handleSubmit(v, i)}
-                        container={document.body} />
+                      />
                     {/if}
                     {#if page.code}
-                      <Button
-                        kind="ghost"
-                        size="small"
-                        icon={Close}
-                        on:click={(v) => onbtnDeletePage(i)} />
-                      <!-- {:else} -->
-                      <!-- <Button kind="ghost" size="small" icon={Add} on:click={(v) => onbtnAddPage(i, page)} /> -->
+                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeletePage(i)} />
                     {/if}
                   {:else}
-                    <Link
-                      title="{page.name}({page.code})"
-                      class="ellipsis popupLink "
-                      on:click={(v) => onbtnPopLinkHandler(v, page)}
-                      >{page.name}({page.code})</Link>
+                    <Link title="{page.name}({page.code})" class="ellipsis popupLink " on:click={(v) => onbtnPopLinkHandler(v, page)}
+                      >{page.name}({page.code})</Link
+                    >
                   {/if}
                 </Box>
               {/if}
@@ -881,29 +727,21 @@
         </Box>
       {/if}
       {#if renderers.length > 0}
-        <Box
-          column
-          width="100%"
-          class="background_white margin_right margin_top_bg popupBox">
+        <Box column width="100%" class="background_white margin_right margin_top_bg popupBox">
           <Box class="modify-text">关联renderer</Box>
           <Box height={2} class="modify-line" />
-          <Box
-            class="popup-border-top block child-background-color {modifyMode
-              ? 'border-left-right'
-              : 'popup-border-bottom'}">
+          <Box class="popup-border-top block child-background-color {modifyMode ? 'border-left-right' : 'popup-border-bottom'}">
             {#each renderers as renderer, i}
               {#if i < renderers.length - 1}
                 <Box
                   height={28}
                   class=" select-height-pop related-padding-left gost-button-margin select-margin-right label-border-left label-border-right"
                   horizontalAlign="left"
-                  verticalAlign="middle">
+                  verticalAlign="middle"
+                >
                   {#if modifyMode}
-                    {#if renderer.type === "label"}
-                      <Text
-                        title={renderer.code}
-                        class="ellipsis popupLable pop-text-align related-label-margin-left"
-                        >{renderer.code}</Text>
+                    {#if renderer.type === 'label'}
+                      <Text title={renderer.code} class="ellipsis popupLable pop-text-align related-label-margin-left">{renderer.code}</Text>
                     {:else}
                       <AdvancedSelect
                         class="autoComplete"
@@ -913,23 +751,15 @@
                         labelIdentifier="code"
                         bind:value={selectedRendererValue}
                         onSubmit={(v) => handleRendererSubmit(v, i)}
-                        container={document.body} />
+                      />
                     {/if}
                     {#if renderer.code}
-                      <Button
-                        kind="ghost"
-                        size="small"
-                        icon={Close}
-                        on:click={(v) => onbtnDeleteRendererPage(i)} />
-                      <!-- {:else} -->
-                      <!-- <Button kind="ghost" size="small" icon={Add} on:click={(v) => onbtnAddRendererPage(i, renderer)} /> -->
+                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeleteRendererPage(i)} />
                     {/if}
                   {:else}
-                    <Link
-                      title={renderer.code}
-                      class="ellipsis popupLink"
-                      on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
-                      >{renderer.code}</Link>
+                    <Link title={renderer.code} class="ellipsis popupLink" on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
+                      >{renderer.code}</Link
+                    >
                   {/if}
                 </Box>
               {:else if i === renderers.length - 1}
@@ -937,13 +767,11 @@
                   height={28}
                   horizontalAlign="left"
                   verticalAlign="middle"
-                  class="select-height-pop gost-button-margin related-padding-left select-margin-right label-border-left label-border-right">
+                  class="select-height-pop gost-button-margin related-padding-left select-margin-right label-border-left label-border-right"
+                >
                   {#if modifyMode}
-                    {#if renderer.type === "label"}
-                      <Text
-                        title={renderer.code}
-                        class="ellipsis popupLable pop-text-align related-label-margin-left"
-                        >{renderer.code}</Text>
+                    {#if renderer.type === 'label'}
+                      <Text title={renderer.code} class="ellipsis popupLable pop-text-align related-label-margin-left">{renderer.code}</Text>
                     {:else}
                       <AdvancedSelect
                         class="autoComplete"
@@ -953,23 +781,15 @@
                         labelIdentifier="code"
                         bind:value={selectedRendererValue}
                         onSubmit={(v) => handleRendererSubmit(v, i)}
-                        container={document.body} />
+                      />
                     {/if}
                     {#if renderer.code}
-                      <Button
-                        kind="ghost"
-                        size="small"
-                        icon={Close}
-                        on:click={(v) => onbtnDeleteRendererPage(i)} />
-                      <!-- {:else} -->
-                      <!-- <Button kind="ghost" size="small" icon={Add} on:click={(v) => onbtnAddRendererPage(i, renderer)} /> -->
+                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeleteRendererPage(i)} />
                     {/if}
                   {:else}
-                    <Link
-                      title={renderer.code}
-                      class="ellipsis popupLink"
-                      on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
-                      >{renderer.name}</Link>
+                    <Link title={renderer.code} class="ellipsis popupLink" on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
+                      >{renderer.name}</Link
+                    >
                   {/if}
                 </Box>
               {/if}
@@ -980,38 +800,18 @@
     </Box>
   </Box>
   {#if jtracsOptions.length > 0}
-    <Box
-      column
-      width="100%"
-      height="auto"
-      class="background_white  margin_top_bg JtracBox">
+    <Box column width="100%" height="auto" class="background_white  margin_top_bg JtracBox">
       <Box class="modify-text">Jtrac</Box>
       <Box height={2} class="modify-line" />
       <Box class="popup-border block child-background-color">
         {#each jtracsOptions as jtrac, i}
           {#if i < jtracsOptions.length - 1}
-            <Box
-              height={28}
-              class=" popup-position select-height-pop related-padding-left"
-              horizontalAlign="left"
-              verticalAlign="middle">
-              <Link
-                title={jtrac.jtracNo}
-                class="ellipsis popupLink "
-                on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}
-                >{jtrac.jtracNo}</Link>
+            <Box height={28} class=" popup-position select-height-pop related-padding-left" horizontalAlign="left" verticalAlign="middle">
+              <Link title={jtrac.jtracNo} class="ellipsis popupLink " on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.jtracNo}</Link>
             </Box>
           {:else if i === jtracsOptions.length - 1}
-            <Box
-              height={28}
-              horizontalAlign="left"
-              verticalAlign="middle"
-              class="popup-position select-height-pop related-padding-left">
-              <Link
-                title={jtrac.name}
-                class="ellipsis popupLink "
-                on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}
-                >{jtrac.name}</Link>
+            <Box height={28} horizontalAlign="left" verticalAlign="middle" class="popup-position select-height-pop related-padding-left">
+              <Link title={jtrac.name} class="ellipsis popupLink " on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.name}</Link>
             </Box>
           {/if}
         {/each}

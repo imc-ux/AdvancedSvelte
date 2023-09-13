@@ -36,6 +36,7 @@
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+    cursor: pointer;
     @include themifyList("color", $theme-color);
     margin-top: 10px;
   }

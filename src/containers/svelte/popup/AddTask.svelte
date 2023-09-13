@@ -25,7 +25,7 @@
   let endDate = '';
   let taskUserId = '';
   let count = 1;
-  let taskList = [];
+  // let taskList = [];
   export let onClose;
   const placeholder = '同一技术请保持题目一致，特殊符号尽量只输入半角.和-';
 
@@ -39,7 +39,7 @@
   onDestroy(() => {
     disposer();
     addTask();
-    searchTask();
+    // searchTask();
   });
 
   function countOver() {
@@ -76,18 +76,19 @@
     }
   });
 
-  const searchTask = autorun(() => {
-    if (addTaskStore.searchTaskResult) {
-      const value = deepClone(addTaskStore.searchTaskResult);
-      addTaskStore.searchTaskResult = null;
-      countOver();
-      if (!value.error) {
-        taskList = value.data;
-      } else {
-        CustomAlert(AddTaskAlert.SEARCH_TASK_ERROR);
-      }
-    }
-  });
+  // const searchTask = autorun(() => {
+  //   if (addTaskStore.searchTaskResult) {
+  //     const value = deepClone(addTaskStore.searchTaskResult);
+  //     addTaskStore.searchTaskResult = null;
+  //     countOver();
+  //     if (!value.error) {
+  //       taskList = value.data;
+  //     } else {
+  //       console.log('error');
+  //       CustomAlert(AddTaskAlert.SEARCH_TASK_ERROR);
+  //     }
+  //   }
+  // });
 
   function onTitleInputChangeHandler(e: CustomEvent) {
     taskTitle = e.detail.data;
@@ -123,6 +124,7 @@
     info.startDate = startDate;
     info.endDate = endDate;
     info.taskAdmin = UserInfo.userId;
+    // info.taskAdmin = 'wangpingyue';
     addTaskStore.addTaskInfo(info);
   }
 
@@ -135,17 +137,17 @@
     addTaskStore.getUserList(info);
   }
 
-  function searchTaskList() {
-    const info: taskInfo = {
-      taskTitle: '',
-      taskUserId: taskUserId,
-      taskProgress: '',
-      breakFlag: '',
-      iStart: 0,
-      iPageCount: 10000,
-    };
-    addTaskStore.searchTaskList(info);
-  }
+  // function searchTaskList() {
+  //   const info: taskInfo = {
+  //     taskTitle: '',
+  //     taskUserId: taskUserId,
+  //     taskProgress: '',
+  //     breakFlag: '',
+  //     iStart: 0,
+  //     iPageCount: 10000,
+  //   };
+  //   addTaskStore.searchTaskList(info);
+  // }
 
   function getCurrentDate() {
     const date = new Date();
@@ -166,15 +168,15 @@
   }
 
   function validate() {
-    searchTaskList();
+    // searchTaskList();
     if (taskTitle === '') {
       CustomAlert(AddTaskAlert.TASK_TITLE_ERROR, AlertIcon.ERROR);
       return false;
     }
-    if (taskList?.findIndex((i) => i.taskTitle === taskTitle) > -1) {
-      CustomAlert(AddTaskAlert.TASK_TITLE_SAME, AlertIcon.ERROR);
-      return false;
-    }
+    // if (taskList?.findIndex((i) => i.taskTitle === taskTitle) > -1) {
+    //   CustomAlert(AddTaskAlert.TASK_TITLE_SAME, AlertIcon.ERROR);
+    //   return false;
+    // }
     if (taskUserId === '') {
       CustomAlert(AddTaskAlert.TASK_USERID_ERROR, AlertIcon.ERROR);
       return false;

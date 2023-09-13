@@ -9,6 +9,7 @@
     MultiSelect,
     AdvancedSelect,
   } from "@/components/sveltecomponents";
+  import { IconButton } from "@/components/renderers";
   import { onMount, onDestroy } from "svelte";
   import Save from "carbon-icons-svelte/lib/Save.svelte";
   import Close from "carbon-icons-svelte/lib/Close.svelte";
@@ -371,7 +372,7 @@
   }
 </script>
 
-<div id="outter">
+<div id="outter" style="overflow-y:auto;height:600px">
   <Box horizontalAlign="right" class="typeLable">
     <Button
       class="button-normal margin_bottom_s button-main-style"
@@ -545,16 +546,14 @@
                   options={popsOptions}
                   optionIdentifier="type"
                   labelIdentifier="code"
-                  container={document.body}
                   bind:value={selectedPopsValue}
                   onSubmit={(v) => handleSubmit(v, i)} />
               {/if}
-              <Button
-                f={1}
-                kind="ghost"
-                icon={Close}
-                on:click={(v) => onDeleteClickHandler(i)}
-                class={page.code ? "" : "button-display"} />
+              {#if page.code}
+                <IconButton
+                  currentIcon={Close}
+                  on:click={(v) => onDeleteClickHandler(i)} />
+              {/if}
             </Box>
           {/each}
         </Box>
@@ -596,12 +595,12 @@
                   bind:value={selectedRendererValue}
                   onSubmit={(v) => handleRendererSubmit(v, i)} />
               {/if}
-              <Button
-                f={1}
-                kind="ghost"
-                icon={Close}
-                on:click={(v) => onDeleteRendererClickHandler(i)}
-                class={page.code ? "" : "button-display"} /></Box>
+              {#if page.code}
+                <IconButton
+                  currentIcon={Close}
+                  on:click={(v) => onDeleteRendererClickHandler(i)} />
+              {/if}
+            </Box>
           {/each}
         </Box>
       </Box>

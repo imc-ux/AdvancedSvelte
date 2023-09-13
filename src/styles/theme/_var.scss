@@ -1,15 +1,13 @@
 // mixin和原H5上传项目changeTheme文件定义一致
 $theme-color: (
-  green-theme: #08adaa,
-  light-green-theme: #00b050,
-  blue-theme: #4589ff,
-  light-blue-theme: #00b0f0,
-  orange-theme: #ff5722,
-  dark-orange-theme: #795548,
-  yellow-theme: #cddc39,
-  red-theme: #f44336,
-  pink-theme: #e91e63,
-  purple-theme: #673ab7,
-  grey-theme: #607d8b,
-  dark-blue-theme: #3f51b5,
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+);
+
+// 按钮特效使用
+$dark-theme-color: (
+  ux-leaf: scale-color(#08adaa, $lightness: -40%),
+  ux-whale: scale-color(#379cdc, $lightness: -40%),
+  ux-garden: scale-color(#547a14, $lightness: -40%),
 );

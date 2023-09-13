@@ -23,6 +23,7 @@
   import conflictdetailColumns from "@/components/columns/conflictdetailColumns";
   import copy from "copy-to-clipboard";
   import { deepClone } from "@/utils/CommonUtils";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
 
   let waitingUploadNum: string = "";
   let conflictNum: string = "";
@@ -31,6 +32,7 @@
   let selectedNoArr: any[] = [];
   let rowData: any[] = [];
   let jtracDetail: any[] = [];
+  let agHeight: string = "370px";
   const labelCodes = ["summary"];
   const centerCodes = ["jtracNo", "status"];
   const leftCodes = ["summary"];
@@ -114,8 +116,10 @@
 
   function initData() {
     if (conflictNo === null) {
+      agHeight = "500px";
       getJtracInfo(selectedNoArr);
     } else {
+      agHeight = "370px";
       let conflictNoArr = conflictNo.split("*");
       let conflictJtracNo = conflictNoArr.toString();
       conflictNum = conflictJtracNo;
@@ -138,40 +142,42 @@
   }
 </script>
 
-{#if conflictNo !== null}
-  <Box f={1} class="grid-x margin-bottom">
-    <Box width="70px" className="main-text" verticalAlign="middle">
-      <Text>待传号码</Text>
+<div style="height:520px">
+  {#if conflictNo !== null}
+    <Box f={1} class="grid-x margin-bottom">
+      <Box width="70px" className="main-text" verticalAlign="middle">
+        <Text>待传号码</Text>
+      </Box>
     </Box>
-  </Box>
-  <Box>
-    <Input bind:value={waitingUploadNum} />
-  </Box>
+    <Box>
+      <Input bind:value={waitingUploadNum} />
+    </Box>
+    <Box height="10px" class="grid-x" verticalAlign="middle" />
+    <Box f={1} class="grid-x margin-bottom">
+      <Box width="70px" className="main-text" verticalAlign="middle">
+        <Text>冲突号码</Text>
+      </Box>
+    </Box>
+    <Box class="grid-x margin-bottom">
+      <Box f={5}>
+        <Input bind:value={conflictNum} />
+      </Box>
+      <Box f={1} horizontalAlign="left" class="copy-button-padding">
+        <Button
+          kind="secondary"
+          class="button-normal conflictdetail-button"
+          icon={Copy}
+          on:click={onBtnCopyClickHandler}>复制</Button>
+      </Box>
+    </Box>
+  {/if}
   <Box height="10px" class="grid-x" verticalAlign="middle" />
-  <Box f={1} class="grid-x margin-bottom">
-    <Box width="70px" className="main-text" verticalAlign="middle">
-      <Text>冲突号码</Text>
-    </Box>
-  </Box>
-  <Box class="grid-x margin-bottom">
-    <Box f={5}>
-      <Input bind:value={conflictNum} />
-    </Box>
-    <Box f={1} horizontalAlign="left" class="copy-button-padding">
-      <Button
-        kind="secondary"
-        class="button-normal conflictdetail-button"
-        icon={Copy}
-        on:click={onBtnCopyClickHandler}>复制</Button>
-    </Box>
-  </Box>
-{/if}
-<Box height="10px" class="grid-x" verticalAlign="middle" />
-<DataGridEx
-  columnsDefs={conflictdetailColumns}
-  {rowData}
-  className=""
-  pageShowFlag={false} />
+  <DataGrid
+    id="conflict-mgmt-Grid"
+    columnDefs={conflictdetailColumns}
+    {rowData}
+    pageShowFlag={false} />
+</div>
 
 <style>
   :global(.conflictdetail-button) {

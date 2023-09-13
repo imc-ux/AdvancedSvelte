@@ -9,3 +9,8 @@ export function modifyTaskInfo(info: taskModifyInfo): Promise<UJsonRespond> {
 export function GetUserPermission(info: userPermission): Promise<UJsonRespond> {
   return callRestfulService(MTaskModifyKey.GetUserPermission, info);
 }
+
+//获取权限
+export function GetUserActivePermission(info: string): Promise<UJsonRespond> {
+  return callRestfulService(MTaskModifyKey.GetUserActivePermission, info);
+}

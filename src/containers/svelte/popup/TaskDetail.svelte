@@ -6,8 +6,9 @@
   import { autorun } from 'mobx';
   import { taskModifyTypeInfo, taskDetailInfo } from '@/vo/taskManager/index';
   import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { taskDetailColumns } from '@/components/columns/TaskDetailColums';
-  import { DataGridEx } from '@/components/sveltecomponents';
+  import taskDetailColumns from '@/components/columns/TaskDetailColums';
+  // import { DataGridEx } from '@/components/sveltecomponents';
+  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
   import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
 
   let taskChangeItem = [];
@@ -110,7 +111,8 @@
     />
   </div>
   <div class="data-table task-detail-table">
-    <DataGridEx {rowData} columnsDefs={taskDetailColumns} display="none" />
+    <!-- <DataGridEx {rowData} columnsDefs={taskDetailColumns} display="none" /> -->
+    <DataGrid columnDefs={taskDetailColumns} {rowData} pageShowFlag={false} />
   </div>
 </div>
 

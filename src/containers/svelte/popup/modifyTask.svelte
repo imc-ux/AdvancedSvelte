@@ -14,6 +14,7 @@
   import Save from 'carbon-icons-svelte/lib/Save.svelte';
   import { UserInfo } from '@/utils/Settings';
   import { taskModifyInfo, userPermission } from '@/vo/taskManager/index';
+  import { deepClone } from '@/utils/CommonUtils';
 
   export let params;
   export let onClose;
@@ -34,20 +35,26 @@
   let disabled: boolean;
   let count = 2;
   let isDisplay = false;
+  let permissionData: any[] = [];
+  let taskUserIdList: any[] = [];
 
   onMount(() => {
     setWaiting();
     modifyInfo();
     searchUserList();
+
+    // ongetUserPermissionHandler();
+    getUserActivePermission();
     onOuterContainerStyleHandler();
-    ongetUserPermissionHandler();
-    console.log('modify', params);
+    taskUserIdList = taskUserId.split(',');
+    console.log('arr', taskUserIdList);
   });
 
   onDestroy(() => {
     disposer();
     modify();
-    userPermission();
+    // userPermission();
+    getPermission();
   });
 
   function countOver() {
@@ -56,6 +63,33 @@
       removeWaiting();
     }
   }
+
+  function getUserActivePermission() {
+    const info: string = UserInfo.userId;
+    modifyTaskStore.getUserActivePermission(info);
+  }
+
+  const getPermission = autorun(() => {
+    if (modifyTaskStore.getUserActivePermissionResult) {
+      const permissionList = deepClone(modifyTaskStore.getUserActivePermissionResult);
+      modifyTaskStore.getUserActivePermissionResult = null;
+      countOver();
+      if (!permissionList.error) {
+        permissionData = permissionList.data?.split(',');
+        if (!permissionData?.includes('S_C')) {
+          readonly = true;
+          disabled = true;
+          isDisplay = true;
+          document.getElementById('title-input').className = 'not-allowed';
+          document.getElementById('task-content').className = 'not-allowed ';
+          document.getElementById('breakFlag').remove();
+          document.getElementById('outer-container').parentElement.style.height = '610px';
+        } else {
+          document.getElementById('outer-container').parentElement.style.height = '650px';
+        }
+      }
+    }
+  });
 
   const disposer = autorun(() => {
     if (modifyTaskStore.userListResult) {
@@ -85,24 +119,24 @@
     }
   });
 
-  const userPermission = autorun(() => {
-    if (modifyTaskStore.userPermissionResult) {
-      const value = JSON.parse(JSON.stringify(modifyTaskStore.userPermissionResult));
-      modifyTaskStore.userPermissionResult = null;
-      countOver();
-      if (!value.error) {
-        UserPermissionAC = value.data;
-        if (!value.data.includes('L')) {
-          readonly = true;
-          disabled = true;
-          isDisplay = true;
-          document.getElementById('title-input').className = 'not-allowed';
-          document.getElementById('task-content').className = 'not-allowed ';
-          document.getElementById('breakFlag').remove();
-        }
-      }
-    }
-  });
+  // const userPermission = autorun(() => {
+  //   if (modifyTaskStore.userPermissionResult) {
+  //     const value = JSON.parse(JSON.stringify(modifyTaskStore.userPermissionResult));
+  //     modifyTaskStore.userPermissionResult = null;
+  //     countOver();
+  //     if (!value.error) {
+  //       UserPermissionAC = value.data;
+  //       if (!value.data.includes('L')) {
+  //         readonly = true;
+  //         disabled = true;
+  //         isDisplay = true;
+  //         document.getElementById('title-input').className = 'not-allowed';
+  //         document.getElementById('task-content').className = 'not-allowed ';
+  //         document.getElementById('breakFlag').remove();
+  //       }
+  //     }
+  //   }
+  // });
 
   function modifyInfo() {
     taskTitle = params.taskTitle;
@@ -139,11 +173,12 @@
 
   function onbizListSelectedChangeHandler(e: Event) {
     const bizListCheckBox = e.target as HTMLInputElement;
-    if (!taskUserId.includes(bizListCheckBox.defaultValue)) {
-      taskUserId += bizListCheckBox.defaultValue;
+    if (!taskUserIdList.includes(bizListCheckBox.defaultValue)) {
+      taskUserIdList.push(bizListCheckBox.defaultValue);
     } else {
-      taskUserId = taskUserId.replace(bizListCheckBox.defaultValue, '');
+      taskUserIdList = taskUserIdList.filter((value) => value !== bizListCheckBox.defaultValue);
     }
+    taskUserId = taskUserIdList.toString();
   }
 
   function onTaskContentChangeHandler(e: CustomEvent) {
@@ -206,7 +241,6 @@
     info.taskRemark = taskRemark.trim();
     info.breakFlag = breakFlag;
     info.userId = UserInfo.userId;
-    // info.userId = 'lixiaozheng';
     info.undoneFlag = modifyFlag;
 
     modifyTaskStore.modifyTaskInfo(info);
@@ -225,11 +259,11 @@
   }
 
   function validate() {
-    if (!taskUserId.includes(UserInfo.userId) && !UserPermissionAC.includes('L')) {
+    if (!taskUserId.includes(UserInfo.userId) && !permissionData?.includes('S_C')) {
       CustomAlert(ModifyTaskAlert.NOT_THE_PERSON_IN_CHARGE_OF_THIS_PROJECT, AlertIcon.ERROR);
-      return;
+      return false;
     }
-    if (params.breakFlag === 'Y' && !UserPermissionAC.includes('L')) {
+    if (params.breakFlag === 'Y' && !permissionData?.includes('S_C')) {
       CustomAlert(ModifyTaskAlert.CAN_NOT_BE_MODIFIED_IN_SUSPENDED_STATE, AlertIcon.ERROR);
       return false;
     }
@@ -264,7 +298,7 @@
     }
     if (
       (startDate !== params.startTime || endDate !== params.endTime) &&
-      (taskRemark === params.taskRemark || taskRemark !== '' || taskRemark !== null)
+      (taskRemark === params.taskRemark || taskRemark === '' || taskRemark === null)
     ) {
       CustomAlert(ModifyTaskAlert.TO_MODIFY_THE_SCHEDULE_YUO_NEED_TO_MODIFY_THE_NOTES, AlertIcon.ERROR);
       return false;
@@ -288,20 +322,19 @@
     return true;
   }
 
-  function ongetUserPermissionHandler() {
-    const info: userPermission = {};
-    info.userId = UserInfo.userId;
-    // info.userId = 'lixiaozheng';
-    info.pageId = 'task';
-    modifyTaskStore.getUserPermission(info);
-  }
+  // function ongetUserPermissionHandler() {
+  //   const info: userPermission = {};
+  //   info.userId = UserInfo.userId;
+  //   // info.userId = 'wangpingyue';
+  //   info.pageId = 'task';
+  //   modifyTaskStore.getUserPermission(info);
+  // }
 
   function onOuterContainerStyleHandler() {
     document.getElementById('outer-container').parentElement.style.paddingRight = '0px';
     document.getElementById('outer-container').parentElement.style.paddingBottom = '8px';
     document.getElementById('outer-container').parentElement.style.marginBottom = '0rem';
     document.getElementById('outer-container').parentElement.parentElement.style.maxHeight = 'none';
-    document.getElementById('outer-container').parentElement.style.height = isDisplay ? '650px' : '610px';
   }
 </script>
 
@@ -325,7 +358,7 @@
           <Checkbox
             labelText={bizList.name}
             value={bizList.id}
-            checked={taskUserId?.includes(bizList.id)}
+            checked={taskUserIdList?.includes(bizList.id)}
             on:change={onbizListSelectedChangeHandler}
             {disabled}
           />
@@ -556,15 +589,18 @@
   :global(.bx--slider__track ~ .bx--slider__filled-track) {
     height: 10px;
     border-radius: 60px;
-    @include themifyList('background-color', $theme-color);
+    // @include themifyList('background-color', $theme-color);
+    background-color: var(--slider-bb-color);
   }
 
   :global(.bx--slider__track ~ .bx--slider__filled-track:focus) {
-    @include themifyList('background-color', $theme-color);
+    // @include themifyList('background-color', $theme-color);
+    background-color: var(--slider-bb-color);
   }
 
   :global(.bx--slider__thumb:focus ~ .bx--slider__filled-track) {
-    @include themifyList('background-color', $theme-color);
+    // @include themifyList('background-color', $theme-color);
+    background-color: var(--slider-bb-color);
   }
 
   .slider {
@@ -588,7 +624,8 @@
   :global(.slider > div > div > .bx--slider > .bx--slider__thumb) {
     width: 10px;
     height: 10px;
-    @include themifyList('background-color', $theme-color);
+    background-color: var(--slider-bb-color);
+    // @include themifyList('background-color', $theme-color);
   }
 
   :global(.slider > div > div > .bx--slider > .bx--slider__thumb:focus) {

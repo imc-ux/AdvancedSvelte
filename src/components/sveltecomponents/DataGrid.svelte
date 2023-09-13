@@ -5,36 +5,60 @@
  * Author1: wangrui
 -->
 <script lang="ts">
-  import { Grid, GridOptions } from 'ag-grid-community';
-  import type { GridReadyEvent, GridSizeChangedEvent } from 'ag-grid-community';
-  import { onMount, onDestroy } from 'svelte';
-  import Pagination from '@/components/sveltecomponents/Pagination.svelte';
+  import { Grid, GridOptions, GridApi } from "ag-grid-community";
+  import Pagination from "@/components/sveltecomponents/Pagination.svelte";
+  import type { GridReadyEvent } from "ag-grid-community";
+  import { onMount, onDestroy } from "svelte";
 
   let grid: any;
   export let rowData: any[] | null = null;
   export let columnDefs: any[];
-  export let id: string;
-  export let headerHeight: number = 35;
-  export let rowHeight: number = 35;
-  export let pageCount: number;
-  export let currentPage: number;
+  export let id: string = Math.random().toString();
+  export let headerRows: number = 1;
+  export let pageCount: number = 10;
+  export let currentPage: number = 0;
+  export let overlayNoRowsTemplate: string = "No Data";
+  export let pageShowFlag: boolean = true;
   export let onPageChange = (e: CustomEvent) => {};
   export let onGridReady = (event: GridReadyEvent) => {};
+
+  const rowHeightMap: Map<number, number> = new Map([
+    [1, 35],
+    [2, 50],
+  ]);
+
+  const headerRowHeight: Map<number, number> = new Map([
+    [1, 35],
+    [2, 25],
+  ]);
 
   const gridOptions: GridOptions = {
     columnDefs: columnDefs,
     rowData: rowData,
-    headerHeight: headerHeight,
-    rowHeight: rowHeight,
-    suppressCellSelection: true,
+    headerHeight: headerRowHeight.get(headerRows),
+    rowHeight: rowHeightMap.get(headerRows),
     pagination: true,
     suppressPaginationPanel: true,
+    suppressRowClickSelection: true,
+    suppressRowDeselection: true,
+    enableCellTextSelection: true,
+    rowSelection: "multiple",
+    rowMultiSelectWithClick: true,
+    suppressLoadingOverlay: true,
+    suppressCellFocus: true,
+    defaultColDef: {
+      menuTabs: [],
+      suppressMovable: true,
+      resizable: true,
+    },
+    overlayNoRowsTemplate: overlayNoRowsTemplate,
     onGridReady: onGridReady,
     onGridSizeChanged: onGridSizeChange,
   };
 
   $: {
     gridOptions?.api?.setRowData(rowData);
+    gridOptions?.api?.sizeColumnsToFit();
   }
 
   onMount(() => {
@@ -48,19 +72,36 @@
   function onGridSizeChange() {
     gridOptions?.api?.sizeColumnsToFit();
   }
+
+  function onColumnResized() {
+    gridOptions?.api?.sizeColumnsToFit();
+  }
 </script>
 
-<div style="justify-content:center; align-item:center;height:100% ;display:flex;flex-direction:column">
-  <div style="flex:1" {id} />
-  {#if rowData}
-    <div style="flex:1">
-      <Pagination total={rowData?.[0]?.totalCount} {pageCount} {currentPage} {onPageChange} />
-    </div>
+<div
+  style="justify-content:center; align-item:center;display:flex;flex-direction:column;flex:1;height:100%">
+  <div style="flex:1" {id} class="grid-font-family" />
+  {#if pageShowFlag}
+    {#if rowData && rowData.length > 0}
+      <div style="height:95px">
+        <Pagination
+          total={rowData?.[0]?.totalCount}
+          {pageCount}
+          {currentPage}
+          {onPageChange} />
+      </div>
+    {/if}
   {/if}
 </div>
 
-<!-- <style>
-  .grid-height {
-    height: 100%;
+<style>
+  .grid-font-family {
+    font-size: 13px;
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+      "微软雅黑" !important;
   }
-</style> -->
+
+  :global(.ag-header-group-cell-label) {
+    justify-content: center;
+  }
+</style>

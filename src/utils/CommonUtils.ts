@@ -1,8 +1,9 @@
-import moment from 'moment';
-import Storage, { StorageType } from '@/utils/Storage';
+import moment from "moment";
+import Storage, { StorageType } from "@/utils/Storage";
+import { TextArea } from "@/components/sveltecomponents";
 
 export function getCurrentTime(): string {
-  return moment().format('YYYY-MM-DD HH:mm:ss');
+  return moment().format("YYYY-MM-DD HH:mm:ss");
 }
 
 export function isLogin(): boolean {
@@ -11,32 +12,72 @@ export function isLogin(): boolean {
 }
 
 export function login(): void {
-  openUrl('login.html');
+  openUrl("login.html");
 }
 
-export function setCookie(name: string, value: string, daysToLive?: number): void {
+export function bodyBatchInput(e: any, text: string) {
+  let mountNodeCount = 1;
+  let width = e.target.clientWidth + 2;
+  let top = e.clientY - e.offsetY;
+  let left = e.clientX - e.offsetX;
+  let topX = top - 2;
+  const mountNode = document.createElement("div");
+  mountNode.className = "position-absolute";
+  document.body.appendChild(mountNode);
+  mountNode.style.top = topX + "px";
+  mountNode.style.left = left + "px";
+  mountNode.style.width = width + "px";
+  new TextArea({
+    target: mountNode,
+    props: {
+      readOnly: true,
+      value: text,
+      class: "root index-textArea-bottom-margin",
+    },
+  });
+  document.addEventListener("mouseup", onWindowMouseUpListener);
+  document.addEventListener("mousewheel", onWindowMouseUpListener);
+  function onWindowMouseUpListener() {
+    if (mountNodeCount === 1) {
+      mountNodeCount = 0;
+      document.body.removeChild(mountNode);
+    }
+  }
+}
+
+export function setCookie(
+  name: string,
+  value: string,
+  daysToLive?: number
+): void {
   var expdate: any = new Date();
   expdate.setTime(expdate.getTime() + daysToLive * 24 * 60 * 60 * 1000); //保存的期限，毫秒计算
-  document.cookie = name + '=' + encodeURIComponent(value) + ';expires=' + expdate.toGMTString() + ';path=/';
+  document.cookie =
+    name +
+    "=" +
+    encodeURIComponent(value) +
+    ";expires=" +
+    expdate.toGMTString() +
+    ";path=/";
 }
 
 export function getCookie(c_name: string): string {
   if (document.cookie.length > 0) {
     // 获取对应字段在cookie字符串的位置
-    var c_start: number = document.cookie.indexOf(c_name + '=');
+    var c_start: number = document.cookie.indexOf(c_name + "=");
     var c_end: number;
     if (c_start !== -1) {
       c_start = c_start + c_name.length + 1;
-      c_end = document.cookie.indexOf(';', c_start);
+      c_end = document.cookie.indexOf(";", c_start);
       if (c_end === -1) c_end = document.cookie.length;
       return decodeURIComponent(document.cookie.substring(c_start, c_end));
     }
   }
-  return '';
+  return "";
 }
 
 export function xorEncode(str: string, key: string): string {
-  var crytxt = '';
+  var crytxt = "";
   var k: number,
     keylen = key.length;
   for (var i = 0; i < str.length; i++) {
@@ -59,7 +100,7 @@ export function getStringAscii(input: string): number {
 }
 
 export function getStringMax(input: string, bytes: number): string {
-  var result = '';
+  var result = "";
   var max = 0;
   if (input) {
     for (var i = 0; i < input.length; i++) {
@@ -74,19 +115,19 @@ export function getStringMax(input: string, bytes: number): string {
 }
 
 export function getUrlPara(name: string): string {
-  var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
   var r = window.location.search.substring(1).match(reg);
   if (r != null) return decodeURI(r[2]);
   return null;
 }
 
 export function px2number(value: string): number {
-  return Number(value.substring(0, value.indexOf('px')));
+  return Number(value.substring(0, value.indexOf("px")));
 }
 
 //判断是否测试环境
 export function isTestSystem(): boolean {
-  return document.location.host.indexOf(':8118') === -1 ? false : true;
+  return document.location.host.indexOf(":8118") === -1 ? false : true;
 }
 
 export function openUrl(url: string): void {
@@ -104,24 +145,29 @@ export function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
 export function getServerUrl(): string {
   // return document.location.protocol + "//" + document.location.host + "/b2b/";
   // return location.protocol + "//127.0.0.1:7777/";
-  return 'http://109.14.20.45:6636/ux/';
+  return "http://109.14.20.45:6636/ux/";
   // return '/b2b/';
 }
 
 export function getResourceUrl(): string {
-  if (DEBUG) return location.protocol + '//127.0.0.1:7777/';
-  else return document.location.protocol + '//' + document.location.host + '/upload/';
+  if (DEBUG) return location.protocol + "//127.0.0.1:7777/";
+  else
+    return (
+      document.location.protocol + "//" + document.location.host + "/upload/"
+    );
 }
 
 export function getUploadRedirectUrl(): string {
-  const file = 'result.html';
-  if (DEBUG) return document.location.protocol + '//' + document.location.host + '/app/' + file;
-  else return document.location.protocol + '//' + document.location.host + '/upload/' + file;
+  const file = "result.html";
+  return "http://109.14.20.45:6636/upload/" + file;
 }
 
 export function getImagesServerUrl() {
-  if (DEBUG) return 'http://109.14.20.45:6636/upload/';
-  else return document.location.protocol + '//' + document.location.host + '/upload/';
+  if (DEBUG) return "http://109.14.20.45:6636/upload/";
+  else
+    return (
+      document.location.protocol + "//" + document.location.host + "/upload/"
+    );
 }
 
 /*export function setPreHandleBars(
@@ -137,8 +183,8 @@ export function getImagesServerUrl() {
 
 //日期比较  string类型(2018-12-02, 2018-12-13)
 export function compareDate(d1: string, d2: string): boolean {
-  var startDate = d1.replace(/-/g, '');
-  var endDate = d2.replace(/-/g, '');
+  var startDate = d1.replace(/-/g, "");
+  var endDate = d2.replace(/-/g, "");
   if (Number(startDate) < Number(endDate)) {
     return true;
   } else {
@@ -148,7 +194,10 @@ export function compareDate(d1: string, d2: string): boolean {
 
 export function decodeHTML(input: string): string {
   const parser = new DOMParser();
-  const dom = parser.parseFromString('<!doctype html><body>' + input, 'text/html');
+  const dom = parser.parseFromString(
+    "<!doctype html><body>" + input,
+    "text/html"
+  );
   return dom.body.textContent;
 }
 
@@ -266,8 +315,20 @@ export function deepClone(data: any): any {
 export function copyToClipboard(text: string | number) {
   const _window: any = window;
   if (_window.clipboardData && _window.clipboardData.setData) {
-    return _window.clipboardData.setData('Text', text);
+    return _window.clipboardData.setData("Text", text);
   } else if (navigator.clipboard?.writeText) {
     return navigator.clipboard.writeText(text.toString());
   }
+}
+
+export function createData(cellData: any, datafiled: string[]) {
+  const result = {};
+  datafiled.forEach((v, index) => {
+    Object.defineProperty(result, index, {
+      get() {
+        return cellData[v];
+      },
+    });
+  });
+  return result;
 }

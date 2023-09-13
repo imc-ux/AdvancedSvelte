@@ -9,21 +9,23 @@
 <script lang="ts">
   import "@/styles/core/white.css";
   import "@/styles/core/index.scss";
-  import { Button, Box, DataGridEx } from "@/components/sveltecomponents";
+  import { Button, Box } from "@/components/sveltecomponents";
   import { onMount, onDestroy } from "svelte";
   import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
   import pageStore from "@/store/jtraclistStore";
   import { autorun } from "mobx";
   import { CreatePop } from "@/components/Popup";
   import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
-  import jtraclistColumns from "@/components/columns/jtraclistColumns";
+  import jtracListColumns from "@/components/columns/jtraclistColumns";
   import filelist from "@/containers/svelte/popup/filelist.svelte";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
   import { JtracListAlert } from "@/constant/alert/upload";
   import { deepClone } from "@/utils/CommonUtils";
+  import type { GridReadyEvent } from "ag-grid-community";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import RENDERER_EVENT from "@/constant/Renderer";
 
   let rowData: any[] = [];
-  let selectedRowIds: any[] = [];
   let linkCodes = ["fileListChange", "moduleListChange"];
   let leftCodes = ["fileListChange", "moduleListChange"];
   let centerCodes = [
@@ -35,7 +37,7 @@
     "bizDeveloperName",
     "statusChange",
   ];
-
+  let gridApi: any;
   export let params: any;
   export let onClose;
 
@@ -68,6 +70,7 @@
           }
           let fileArr: any = elem.fileList.split(",");
           let moduleArr: any = elem.moduleList.split(",");
+          elem.selected = false;
           elem.linkCodes = linkCodes;
           elem.leftCodes = leftCodes;
           elem.centerCodes = centerCodes;
@@ -131,49 +134,15 @@
     pageStore.searchJtracList(info);
   }
 
-  function onBtnLinkClickHandler(data, cell) {
-    if (cell.key === "fileListChange") {
-      let info: any = {};
-      info.jtracNo = data.jtracNo;
-      info.filelist = data.fileList;
-      info.detail = data.detail;
-      info.version = data.version;
-      info.systemType = data.systemType;
-      info.nid = data.nid;
-      info.reviewer = data.reviewer;
-      info.file = "A";
-      info.label = data.list;
-      CreatePop("文件列表", filelist, { info }, onPopCloseHandler, {
-        width: "630px",
-        height: "600px",
-      });
-    } else if (cell.key === "moduleListChange") {
-      let info: any = {};
-      info.jtracNo = data.jtracNo;
-      info.modulelist = data.moduleList;
-      info.detail = data.detail;
-      info.version = data.version;
-      info.systemType = data.systemType;
-      info.nid = data.nid;
-      info.reviewer = data.reviewer;
-      info.file = "B";
-      info.label = data.list;
-      CreatePop("模块列表", filelist, { info }, onPopCloseHandler, {
-        width: "630px",
-        height: "600px",
-      });
-    }
-  }
-
   function onBtnDeleteClickHandler() {
     let checkArr: number[] = [];
     let statusArr: string[] = [];
-    rowData.forEach((data) => {
-      if (selectedRowIds.includes(data.id)) {
-        checkArr.push(data.nid);
-        statusArr.push(data.status);
+    for (let i = 0; i < rowData.length; i++) {
+      if (rowData[i].selected) {
+        checkArr.push(rowData[i].data.nid);
+        statusArr.push(rowData[i].data.status);
       }
-    });
+    }
     if (checkArr.length === 0) {
       CustomAlert(JtracListAlert.CHOOSE_DELETE_DATA, AlertIcon.WARNING);
       return;
@@ -194,33 +163,75 @@
     }
   }
 
+  function onGridReadyHandler(params: GridReadyEvent) {
+    gridApi = params.api;
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_LinkButton,
+      onBtnLinkHandler
+    );
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_Select_Check_Box,
+      onBtnCheckBoxHandler
+    );
+  }
+
+  function onBtnCheckBoxHandler(e: any) {
+    if (e.value1 !== undefined) {
+      e.value.selected = e.value1;
+    }
+  }
+
+  function onBtnLinkHandler(e: any) {
+    if (e.field === "fileListChange") {
+      let data = e.value;
+      let info: any = {};
+      info.jtracNo = data.jtracNo;
+      info.filelist = data.fileList;
+      info.detail = data.detail;
+      info.version = data.version;
+      info.systemType = data.systemType;
+      info.nid = data.nid;
+      info.reviewer = data.reviewer;
+      info.file = "A";
+      info.label = data.list;
+      CreatePop("文件列表", filelist, { info }, onPopCloseHandler, {
+        width: "630px",
+        height: "600px",
+      });
+    } else if (e.field === "moduleListChange") {
+      let info: any = {};
+      let data = e.value;
+      info.jtracNo = data.jtracNo;
+      info.modulelist = data.moduleList;
+      info.detail = data.detail;
+      info.version = data.version;
+      info.systemType = data.systemType;
+      info.nid = data.nid;
+      info.reviewer = data.reviewer;
+      info.file = "B";
+      info.label = data.list;
+      CreatePop("模块列表", filelist, { info }, onPopCloseHandler, {
+        width: "630px",
+        height: "600px",
+      });
+    }
+  }
+
   function onPopCloseHandler() {}
 </script>
 
-<Box width="70px" className="main-text" verticalAlign="middle">
-  <Button
-    kind="secondary"
-    class=" button-normal"
-    icon={TrashCan}
-    on:click={onBtnDeleteClickHandler}>删除</Button>
-</Box>
-<DataGridEx
-  maxHeight="480px"
-  batchSelection
-  bind:selectedRowIds
-  columnsDefs={jtraclistColumns}
-  {rowData}
-  className="jtrac-list-dataTable"
-  pageShowFlag={false}
-  onLinkClick={onBtnLinkClickHandler} />
-
-<style>
-  :global(.jtrac-list-dataTable) {
-    max-height: 480px;
-    overflow-y: auto;
-  }
-
-  :global(.bx--data-table--md td) {
-    border-left: 1px solid #e5e5e5;
-  }
-</style>
+<div style="height:500px">
+  <Box width="70px" className="main-text" verticalAlign="middle">
+    <Button
+      kind="secondary"
+      class=" button-normal"
+      icon={TrashCan}
+      on:click={onBtnDeleteClickHandler}>删除</Button>
+  </Box>
+  <DataGrid
+    id="jtracList-mgmt-Grid"
+    columnDefs={jtracListColumns}
+    {rowData}
+    pageShowFlag={false}
+    onGridReady={onGridReadyHandler} />
+</div>

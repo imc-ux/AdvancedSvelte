@@ -5,7 +5,7 @@
  * © 2021 iMarketChina Co.,Ltd. All rights reserved.
  */ -->
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -13,8 +13,8 @@
   export let column = false;
   export let horizontalAlign = "left";
   export let verticalAlign = "stretch";
-  export let width = 'auto';
-  export let height = 'auto';
+  export let width = "auto";
+  export let height = "auto";
   export let f = 0;
 
   let classes = [];
@@ -28,11 +28,16 @@
     ]
       .filter(Boolean)
       .join(" "),
-    style: `${getJustifyComtent(horizontalAlign)};${getAlignItems(verticalAlign)};${getWidthOrHeight('width',width)};${getWidthOrHeight('height',height)};${$$restProps.style};${getFlexGrow(f)}`,
+    style: `${getJustifyComtent(horizontalAlign)};${getAlignItems(
+      verticalAlign
+    )};${getWidthOrHeight("width", width)};${getWidthOrHeight(
+      "height",
+      height
+    )};${$$restProps.style};${getFlexGrow(f)}`,
   };
 
-  function getFlexGrow(f){
-    return `flex-grow:${f}`
+  function getFlexGrow(f) {
+    return `flex-grow:${f}`;
   }
 
   function getJustifyComtent(hor) {
@@ -65,12 +70,12 @@
     }
   }
 
-  function getWidthOrHeight(type,value) {
+  function getWidthOrHeight(type, value) {
     switch (typeof value) {
-      case 'string':
-        return `${type}:${value}`
-      case 'number':
-        return `${type}:${value}px`
+      case "string":
+        return `${type}:${value}`;
+      case "number":
+        return `${type}:${value}px`;
       default:
         break;
     }

@@ -1,6 +1,6 @@
 import { makeAutoObservable, flow } from 'mobx';
 import { GetUserList, SearchTaskList } from '@/action/TaskMgmtMainAction';
-import { modifyTaskInfo, GetUserPermission } from '@/action/TaskModifyAction';
+import { modifyTaskInfo, GetUserPermission, GetUserActivePermission } from '@/action/TaskModifyAction';
 import { UsersInfo } from '@/vo/userManager/index';
 import { taskModifyInfo, userPermission } from '@/vo/taskManager/index';
 import { UserProfile } from 'carbon-icons-svelte';
@@ -11,6 +11,7 @@ class ModifyTask {
   taskListResult: any = null;
   taskModifyResult: any = null;
   userPermissionResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -59,6 +60,18 @@ class ModifyTask {
     } catch (error) {
       this.pending = false;
       this.userPermissionResult = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getUserActivePermissionResult = error;
     }
   });
 }

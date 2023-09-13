@@ -20,8 +20,7 @@
   .main-bottom {
     margin-top: 15px;
     min-width: 1100px;
-    height: 30px;
-    line-height: 30px;
+
     justify-content: center;
     align-items: center;
   }

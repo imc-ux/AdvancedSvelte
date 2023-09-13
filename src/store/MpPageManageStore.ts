@@ -1,5 +1,5 @@
 import { makeAutoObservable, flow } from 'mobx';
-import { GetUserList, GetMpPageMgmtType, GetMpPageMgmtList } from '@/action/MpPageManageAction';
+import { GetUserList, GetMpPageMgmtType, GetMpPageMgmtList, GetUserActivePermission } from '@/action/MpPageManageAction';
 import { UsersInfo } from '@/vo/userManager/index';
 
 class MpPageManager {
@@ -7,6 +7,7 @@ class MpPageManager {
   userListResult: any = null;
   getMpPageMgmtTypeResult: any = null;
   getMpPageMgmtListResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -45,6 +46,18 @@ class MpPageManager {
     } catch (error) {
       this.pending = false;
       this.getMpPageMgmtListResult = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getUserActivePermissionResult = error;
     }
   });
 }

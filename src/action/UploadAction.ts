@@ -21,3 +21,8 @@ export function UpdateMultJtracStatus(info?: any): Promise<UJsonRespond> {
 export function DeleteJtracInfo(info?: any): Promise<UJsonRespond> {
   return callRestfulService(MUploadManagerKey.DeleteJtracInfo, info);
 }
+
+//获取权限方法
+export function GetUserActivePermission(info: string): Promise<UJsonRespond> {
+  return callRestfulService(MUploadManagerKey.GetUserActivePermission, info);
+}

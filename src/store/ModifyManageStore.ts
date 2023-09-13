@@ -7,6 +7,7 @@ import {
   UpdateMpPageInfo,
   GetPageIdsByType,
   GetJtracNosByPageId,
+  GetUserActivePermission,
 } from '@/action/ModifyPageManageAction';
 
 class modifyPageManager {
@@ -18,6 +19,7 @@ class modifyPageManager {
   updateMpPageInfoResult: any = null;
   getPageIdsByTypeResult: any = null;
   getJtracsByPageIdResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -104,6 +106,18 @@ class modifyPageManager {
     } catch (error) {
       this.pending = false;
       this.getJtracsByPageIdResult = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getUserActivePermissionResult = error;
     }
   });
 }

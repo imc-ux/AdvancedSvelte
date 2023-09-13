@@ -1,8 +1,18 @@
-const uploadColumns = [
+import {
+  CheckRenderer,
+  LinkButton_Label,
+  Label_Label,
+  Label_LinkButtonButtonBatchInput,
+  LinkButtonButtonBatchInput_Label,
+  LinkButtonOrLabel_LabelBatchInput,
+} from "@/components/renderers/index";
+import DocumentBlank from "carbon-icons-svelte/lib/DocumentBlank.svelte";
+
+export const uploadColumns = [
   {
     value: "JtracNo",
     key: "jtracNo",
-    width: "130px",
+    width: "150px",
   },
   {
     value: "系统区分",
@@ -22,7 +32,7 @@ const uploadColumns = [
   {
     value: "负责人",
     key: "clientDeveloperName",
-    width: "130px",
+    width: "100px",
   },
   {
     value: "后台负责人",
@@ -32,7 +42,7 @@ const uploadColumns = [
   {
     value: "状态",
     key: "statusChange",
-    width: "80px",
+    width: "90px",
   },
   {
     value: "文件列表",
@@ -54,4 +64,118 @@ const uploadColumns = [
   },
 ];
 
-export default uploadColumns;
+const uploadSveletColumn = [
+  {
+    headerName: "",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "",
+        width: 40,
+        field: "selected",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        cellRenderer: CheckRenderer,
+      },
+    ],
+  },
+  {
+    headerName: "Jtrac No",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "日期",
+        width: 150,
+        field: "jtracNo*createDate",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        cellRenderer: LinkButton_Label,
+      },
+    ],
+  },
+  {
+    headerName: "系统区分",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "文件列表",
+        width: 400,
+        field: "versionNo*fileListChange*srFileList",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-left-align", "cell-border"],
+        upClassName: "hor-left",
+        downClassName: "hor-left",
+        icon: DocumentBlank,
+        cellRenderer: Label_LinkButtonButtonBatchInput,
+      },
+    ],
+  },
+  {
+    headerName: "前台负责人",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "后台负责人",
+        width: 100,
+        field: "clientDeveloperName*bizDeveloperName",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        cellRenderer: Label_Label,
+      },
+    ],
+  },
+  {
+    headerName: "代码检查负责人",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "紧急程度",
+        width: 100,
+        field: "reviewerName*urgencyFlag",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        cellRenderer: Label_Label,
+      },
+    ],
+  },
+  {
+    headerName: "模块列表",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-left-align", "cell-border"],
+    children: [
+      {
+        headerName: "直接冲突",
+        width: 400,
+        field: "moduleListChange*srModuleList*conflictFiles",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        upClassName: "hor-left",
+        icon: DocumentBlank,
+        cellRenderer: LinkButtonButtonBatchInput_Label,
+      },
+    ],
+  },
+  {
+    headerName: "状态",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "Detail",
+        width: 300,
+        field: "statusChange*detailFlag*detail",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        downClassName: "hor-left",
+        cellRenderer: LinkButtonOrLabel_LabelBatchInput,
+      },
+    ],
+  },
+];
+
+export default uploadSveletColumn;

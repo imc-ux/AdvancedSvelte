@@ -14,3 +14,8 @@ export function SearchTaskList(info: any): Promise<UJsonRespond> {
 export function GetUserPermission(info: userPermission): Promise<UJsonRespond> {
   return callRestfulService(MTaskManageKey.GetUserPermission, info);
 }
+
+//获取权限
+export function GetUserActivePermission(info: string): Promise<UJsonRespond> {
+  return callRestfulService(MTaskManageKey.GetUserActivePermission, info);
+}

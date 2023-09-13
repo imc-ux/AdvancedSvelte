@@ -7,6 +7,8 @@ html {
 
 body {
   font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  @include body-bgc();
+  min-height: 0px !important;
 }
 
 .main-body {
@@ -150,6 +152,7 @@ input {
 .bx--btn {
   outline: none;
   height: 28px;
+  line-height: normal;
 }
 
 .bx--btn--ghost {
@@ -382,7 +385,6 @@ input {
   padding: 1rem 1rem 1rem 1rem;
   border-bottom: 1px solid rgba(10, 10, 10, 0.25);
   border-radius: 2px;
-  background-color: #fff;
   color: #0a0a0a;
   font-size: 13px;
   font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
@@ -446,6 +448,10 @@ option {
 
 .margin_right {
   margin-right: 5px;
+}
+
+.btn-margin-left {
+  margin-left: 5px;
 }
 
 .padding_right_left {
@@ -1402,18 +1408,23 @@ body.waiting * {
 
 .ag-header {
   color: #ffffff;
-  background-color: #08adaa !important;
+  @include themifyListSelf('background-color', $theme-color);
   border-right: 1px solid #efefef !important;
 }
 
 .cell-center-align {
   text-align: center;
-  line-height: 35px;
+  padding: 0px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .cell-left-align {
   text-align: left;
-  line-height: 35px;
+  padding: 0px 5px;
+  display: flex;
+  align-items: center;
 }
 
 .cell-border {
@@ -1421,32 +1432,118 @@ body.waiting * {
   border-bottom: 1px solid #e6e6e6;
 }
 
-.cell-left-align > span > a {
-  height: 35px;
-  line-height: 35px;
-  margin-top: 0px;
+// .cell-left-align > span > a {
+//   // height: 35px;
+//   // // line-height: 35px;
+//   // margin-top: 0px;
+// }
+
+// .cell-center-align > span > div > label {
+//   height: 35px !important;
+//   // line-height: 35px !important;
+//   margin-top: 0px;
+// }
+
+// .cell-center-align > span > div > div {
+//   margin-top: 13px !important;
+// }
+
+// .cell-center-align > span > a {
+//   height: 35px !important;
+//   // line-height: 35px !important;
+//   margin-top: 3px;
+// }
+
+.cell-left-align > div > span > span > p {
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
+  font-size: 13px;
+  padding-right: 0px;
 }
 
-.cell-center-align > span > div > label {
-  height: 35px !important;
-  line-height: 35px !important;
-  margin-top: 0px;
+.cell-center-align > div > span > span > p {
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
+  font-size: 13px;
+  padding-right: 0px;
 }
 
-.cell-center-align > span > div > div {
-  margin-top: 12px !important;
+.ag-row-hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
 }
 
-.cell-center-align > span > a {
-  height: 35px !important;
-  line-height: 35px !important;
-  margin-top: 3px;
+.ag-cell-wrapper {
+  width: 100%;
 }
 
-.cell-left-align > span > p {
-  height: 35px !important;
-  line-height: 35px !important;
-  margin-top: 0px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
-  font-size: 14px;
+.status-color > div > span > span > p {
+  color: var(--status-color);
+}
+
+.ag-checkbox-input-wrapper::after {
+  margin-left: 30;
+  font-size: 20px;
+}
+
+.ag-cell-value > span > .svelte-select {
+  min-height: 20px !important;
+}
+
+.cell-center-align > div > .ag-cell-value > span > .checkBoxRenderer {
+  align-items: center;
+}
+
+.ag-header-cell-text {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ag-body-viewport {
+  width: 100% !important;
+}
+
+.ag-body-vertical-scroll {
+  display: none;
+}
+
+.ag-row {
+  position: relative !important;
+  transform: none !important;
+}
+
+.ag-center-cols-viewport {
+  overflow-x: hidden !important;
+}
+
+.ag-center-cols-container {
+  border-left: 1px solid #e6e6e6;
+}
+
+.ag-body-horizontal-scroll-viewport {
+  overflow-x: auto;
+}
+
+.hor-left {
+  text-align: left;
+}
+
+.hor-right {
+  text-align: right;
+}
+
+.hor-center {
+  text-align: center;
+}
+
+.cell-image > .ag-cell-wrapper > .ag-cell-value > span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.position-absolute {
+  position: absolute;
+  z-index: 2000;
 }

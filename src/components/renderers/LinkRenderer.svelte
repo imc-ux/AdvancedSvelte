@@ -1,22 +1,23 @@
 <script>
-  import { Link } from 'carbon-components-svelte';
-  // import { createEventDispatcher } from "svelte";
+  import { Link } from "carbon-components-svelte";
+  import RENDERER_EVENT from "@/constant/Renderer";
 
   export let params;
-  let title = '';
+  let title = "";
   export let value = params.value;
-  // const dispatch = createEventDispatcher();
 
   $: props = {
-    class: 'link',
+    class: "link",
     ...$$restProps,
   };
 
   function onLinkClickHandler(e) {
-    const event = new CustomEvent('LinkButtonClick', {
-      bubbles: true,
-      detail: params,
-    });
+    const event = {
+      type: RENDERER_EVENT.Renderer_LinkButton,
+      value: params.data,
+      value1: params.value,
+      field: params.colDef.field,
+    };
     params.api.dispatchEvent(event);
   }
 
@@ -25,18 +26,23 @@
     const containerWidth = e.target.offsetWidth;
     if (value) {
       if (textWidth > containerWidth) title = value;
-      else title = '';
+      else title = "";
     }
   }
 </script>
 
-<Link {...props} {title} on:click={onLinkClickHandler} on:mouseenter={onMouseEnterHandler} href="#">
+<Link
+  {...props}
+  {title}
+  on:click={onLinkClickHandler}
+  on:mouseenter={onMouseEnterHandler}
+  href="#">
   {value}
 </Link>
 
 <style lang="scss">
-  @import '../../styles/theme/var';
-  @import '../../styles/theme/mixin';
+  @import "../../styles/theme/var";
+  @import "../../styles/theme/mixin";
 
   :global(.bx--link) {
     margin-top: 4px;
@@ -44,19 +50,19 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    @include themifyListIpt('color', $theme-color);
+    @include themifyListIpt("color", $theme-color);
   }
 
   :global(.bx--link:visited) {
-    @include themifyList('color', $theme-color);
+    @include themifyList("color", $theme-color);
   }
 
   :global(.bx--link:hover) {
-    @include themifyListIpt('color', $theme-color);
+    @include themifyListIpt("color", $theme-color);
   }
 
   :global(.bx--link:active) {
     outline: none;
-    @include themifyList('color', $theme-color);
+    @include themifyList("color", $theme-color);
   }
 </style>

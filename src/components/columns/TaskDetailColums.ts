@@ -1,27 +1,43 @@
-export const taskDetailColumns = [
+import { LabelRenderer } from '@/components/renderers/index';
+
+const taskDetailColumns = [
   {
-    value: '修改类型',
-    key: 'changeItemName',
-    width: '30px',
+    headerName: '修改类型',
+    field: 'changeItemName',
+    width: 30,
+    headerClass: ['center-aligned', 'ag-header'],
+    cellClass: ['cell-center-align', 'cell-border'],
   },
   {
-    value: '值',
-    key: 'changeContent',
-    width: '30px',
+    headerName: '值',
+    field: 'changeContent',
+    width: 30,
+    headerClass: ['center-aligned', 'ag-header'],
+    cellClass: ['cell-center-align', 'cell-border'],
+    cellRenderer: LabelRenderer,
   },
   {
-    value: '备注',
-    key: 'changeRemark',
-    width: '50px',
+    headerName: '备注',
+    field: 'changeRemark',
+    width: 50,
+    headerClass: ['center-aligned', 'ag-header'],
+    cellClass: ['cell-left-align', 'cell-border'],
+    cellRenderer: LabelRenderer,
   },
   {
-    value: '修改者',
-    key: 'changerUserName',
-    width: '30px',
+    headerName: '修改者',
+    field: 'changerUserName',
+    width: 30,
+    headerClass: ['center-aligned', 'ag-header'],
+    cellClass: ['cell-center-align', 'cell-border'],
   },
   {
-    value: '修改时间',
-    key: 'changeDate',
-    width: '50px',
+    headerName: '修改时间',
+    field: 'changeDate',
+    width: 50,
+    headerClass: ['center-aligned', 'ag-header'],
+    cellClass: ['cell-center-align', 'cell-border'],
   },
 ];
+
+export default taskDetailColumns;

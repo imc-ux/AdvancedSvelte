@@ -19,6 +19,7 @@ export enum MTaskManageKey {
   GetUserList = 'getUserList',
   SearchTaskList = 'searchTaskList',
   GetUserPermission = 'getUserPermission',
+  GetUserActivePermission = 'getUserActivePermission',
 }
 
 export enum MTaskDetailKey {
@@ -29,6 +30,7 @@ export enum MTaskDetailKey {
 export enum MTaskModifyKey {
   modifyTaskInfo = 'modifyTaskInfo',
   GetUserPermission = 'getUserPermission',
+  GetUserActivePermission = 'getUserActivePermission',
 }
 
 export enum MMessageManagerKey {
@@ -47,6 +49,7 @@ export enum MPageManagerKey {
   GetAllPageIds = 'getAllPageIds',
   GetPageIdsByType = 'getPageIdsByType',
   GetJtracNosByPageId = 'getJtracNosByPageId',
+  GetUserActivePermission = 'getUserActivePermission',
 }
 
 export enum MUploadManagerKey {
@@ -55,6 +58,7 @@ export enum MUploadManagerKey {
   SearchUniqJtracList = 'searchUniqJtracList',
   UpdateMultJtracStatus = 'updateMultJtracStatus',
   DeleteJtracInfo = 'deleteJtracInfo',
+  GetUserActivePermission = 'getUserActivePermission',
 }
 
 export enum MReadJtracKey {
@@ -85,4 +89,20 @@ export enum MAddTaskKey {
   GetUserList = 'getUserList',
   AddTaskInfo = 'addTaskInfo',
   SearchTaskList = 'searchTaskList',
+}
+
+export enum MUserMgmtMainKey {
+  GetUserPermission = 'getUserPermission',
+  GetUserList = 'getUserList',
+  ModifyUserMulti = 'modifyUserMulti',
+  GetUserActivePermission = 'getUserActivePermission',
+}
+
+export enum MModifyUserKey {
+  ModifyUser = 'modifyUser',
+  GetUserActivePermission = 'getUserActivePermission',
+}
+
+export enum MAddUserKey {
+  AddUser = 'addUser',
 }

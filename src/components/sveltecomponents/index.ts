@@ -23,6 +23,7 @@ import Pagination from '@/components/sveltecomponents/Pagination.svelte';
 import DataGridEx from '@/components/sveltecomponents/DataGridEx.svelte';
 import ProgressBar from '@/components/sveltecomponents/Slider.svelte';
 import Slider from '@/components/sveltecomponents/Slider.svelte';
+import ImageUpload from '@/components/sveltecomponents/ImageUpload.svelte';
 
 export {
   Button, // 15 files    59 results
@@ -50,4 +51,5 @@ export {
   DataGridEx,
   ProgressBar,
   Slider,
+  ImageUpload,
 };

@@ -16,6 +16,7 @@
   export let onClose;
   export let remove;
   export let size;
+
   let popRef = null;
   let sizeRef = null;
 

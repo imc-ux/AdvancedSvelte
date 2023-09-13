@@ -111,8 +111,7 @@
 
 <div
   class="svelte-autocomplete-select {classes.container ?? ''}"
-  bind:clientHeight={containerHeight}
->
+  bind:clientHeight={containerHeight}>
   <input
     id={inputId}
     type="text"
@@ -128,8 +127,7 @@
     autocapitalize="none"
     autocomplete="off"
     {placeholder}
-    {name}
-  />
+    {name} />
   <span bx--list-box__label
     ><svg
       xmlns="http://www.w3.org/2000/svg"
@@ -141,36 +139,34 @@
       aria-hidden="true"
       class="bx--select__arrow"
       ><path d="M16 22L6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z" /></svg
-    ></span
-  >
+    ></span>
   <slot name="icon" {value} {isExpanded} />
+  <!-- svelte-ignore a11y-role-has-required-aria-props -->
   <div
     class:isExpanded
     class="svelte-autocomplete-results-container {classes.results ?? ''}"
     role="combobox"
     aria-expanded={isExpanded}
-    aria-owns={listId}
-  >
+    aria-owns={listId}>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       class="svelte-autocomplete-select-overlay {classes.overlay ?? ''}"
       on:click={hideResults}
-      style="position: absolute;"
-    />
+      style="position: absolute;" />
     <ul
       id={listId}
       class="svelte-autocomplete-select-list {classes.list ??
         ''} {matches?.length > 0 ? 'has-options' : ''}"
       style="top: {containerHeight}px;height:100px;overflow-y:auto;z-index:9100;"
-      role="listbox"
-    >
+      role="listbox">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       {#each matches as match, index (match)}
         <slot name="option" {matches} {match} {index} {handleSubmit}>
           <li
             class="svelte-autocomplete-select-option {classes.option ?? ''}"
             on:click={() => handleSubmit(match)}
             aria-selected={index === highlightIndex}
-            role="option"
-          >
+            role="option">
             {getValue(match)}
           </li>
         </slot>

@@ -49,14 +49,34 @@ export const jtracNoTypeList = [
 ];
 
 export const systemTypeList = [
-  { name: "mp", id: "mp", module: "" },
-  { name: "buyer", id: "buyer", module: "h5_buyer.jsp" },
-  { name: "gerp", id: "gerp", module: "gerp.jsp" },
-  { name: "buyerExp", id: "buyerExp", module: "h5_buyerExp.jsp" },
-  { name: "supplier", id: "supplier", module: "h5_supplier.jsp" },
-  { name: "buyerMenu", id: "buyerMenu", module: "Buyer.jsp" },
-  { name: "buyerExpMenu", id: "buyerExpMenu", module: "BuyerExport.jsp" },
-  { name: "supplierMenu", id: "supplierMenu", module: "Supplier.jsp" },
+  { name: "mp", id: "mp", module: "", imk: "mp" },
+  { name: "buyer", id: "buyer", module: "h5_buyer.jsp", imk: "buyer" },
+  { name: "gerp", id: "gerp", module: "gerp.jsp", imk: "gerp" },
+  {
+    name: "buyerExp",
+    id: "buyerExp",
+    module: "h5_buyerExp.jsp",
+    imk: "buyerExp",
+  },
+  {
+    name: "supplier",
+    id: "supplier",
+    module: "h5_supplier.jsp",
+    imk: "supplier",
+  },
+  { name: "buyerMenu", id: "buyerMenu", module: "Buyer.jsp", imk: "buyerMenu" },
+  {
+    name: "buyerExpMenu",
+    id: "buyerExpMenu",
+    module: "BuyerExport.jsp",
+    imk: "buyerExpMenu",
+  },
+  {
+    name: "supplierMenu",
+    id: "supplierMenu",
+    module: "Supplier.jsp",
+    imk: "supplierMenu",
+  },
   { name: "其他", id: "其他", module: "" },
 ];
 
@@ -148,4 +168,16 @@ export const managementTypeList = [
   { code: "gr", name: "GR Management" },
   { code: "quotation", name: "Quotation Management" },
   { code: "settle", name: "Settle Management" },
+];
+
+export const userTypeList = [
+  { id: "", value: "" },
+  { id: "U", value: "前台" },
+  { id: "P", value: "后台" },
+];
+
+export const blockFlagList = [
+  { id: "", value: "" },
+  { id: "Y", value: "Y" },
+  { id: "N", value: "N" },
 ];

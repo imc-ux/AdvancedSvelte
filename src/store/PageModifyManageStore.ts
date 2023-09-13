@@ -7,6 +7,7 @@ import {
   UpdateMpPageInfo,
   GetPageIdsByType,
   GetJtracNosByPageId,
+  GetUserActivePermission,
 } from '@/action/PageModifyManageAction';
 
 class papeModifyManager {
@@ -18,6 +19,7 @@ class papeModifyManager {
   updateMpPageInfoResult: any = null;
   getPageIdsByTypeResult: any = null;
   getJtracNosByPageIdResult: any = null;
+  getUserActivePermissionResult: any = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -101,6 +103,18 @@ class papeModifyManager {
       const res = yield GetJtracNosByPageId(params, mark);
       this.pending = false;
       this.getJtracNosByPageIdResult = res;
+    } catch (error) {
+      this.pending = false;
+      this.getJtracNosByPageIdResult = error;
+    }
+  });
+
+  getUserActivePermission = flow(function* (params: string, mark: any) {
+    this.pending = true;
+    try {
+      const res = yield GetUserActivePermission(params, mark);
+      this.pending = false;
+      this.getUserActivePermissionResult = res;
     } catch (error) {
       this.pending = false;
       this.getJtracNosByPageIdResult = error;

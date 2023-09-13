@@ -1,0 +1,52 @@
+@mixin themifyList($key, $valueMap) {
+  // theme list
+  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
+    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
+    yellow-theme, grey-theme, dark-blue-theme;
+
+  @each $theme in $themes {
+    :global([data-theme="#{$theme}"]) & {
+      #{$key}: map-get($valueMap, $theme);
+    }
+  }
+}
+
+@mixin themifyListIpt($key, $valueMap) {
+  // theme list
+  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
+    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
+    yellow-theme, grey-theme, dark-blue-theme;
+
+  @each $theme in $themes {
+    :global([data-theme="#{$theme}"]) & {
+      #{$key}: map-get($valueMap, $theme) !important;
+    }
+  }
+}
+
+// 不添加:global
+@mixin themifyListSelf($key, $valueMap) {
+  // theme list
+  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
+    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
+    yellow-theme, grey-theme, dark-blue-theme;
+
+  @each $theme in $themes {
+    [data-theme="#{$theme}"] & {
+      #{$key}: map-get($valueMap, "" + $theme);
+    }
+  }
+}
+
+@mixin themifyListSelfIpt($key, $valueMap) {
+  // theme list
+  $themes: green-theme, blue-theme, orange-theme, red-theme, pink-theme,
+    purple-theme, light-green-theme, light-blue-theme, dark-orange-theme,
+    yellow-theme, grey-theme, dark-blue-theme;
+
+  @each $theme in $themes {
+    [data-theme="#{$theme}"] & {
+      #{$key}: map-get($valueMap, $theme) !important;
+    }
+  }
+}

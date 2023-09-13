@@ -1,0 +1,125 @@
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+td {
+  text-align: center;
+}
+
+.bg-blue {
+  background: #e5f7ff;
+}
+
+.bg-title {
+  background: #52aed4;
+}
+
+.font-white {
+  color: #fff;
+}
+
+.border-bottom {
+  border-bottom: 1px solid rgba(10, 10, 10, 0.25);
+}
+
+.popbg {
+  margin-top: 1rem;
+  border-radius: 5px;
+  background-color: #fefefe;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
+  margin-bottom: 25px;
+  padding: 22px;
+  border-top: 3px solid #1779ba;
+}
+
+.invisible {
+  display: none;
+}
+
+.t-center {
+  text-align: center;
+}
+
+.eng-font {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.lh30 {
+  line-height: 30px;
+}
+
+.cursor-p {
+  cursor: pointer;
+}
+
+.text-hidden {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pop-bottom-button {
+  width: 532px !important;
+  margin: 5px auto 0 !important;
+}
+
+.pop-content-container {
+  height: 480px;
+  padding: 0 0 0 35px !important;
+  overflow: auto;
+}
+
+.pop-content-padding {
+  padding-right: 16px !important;
+  padding-top: 16px !important;
+}
+
+.dis-inb {
+  display: inline-block;
+}
+
+.dis-flex {
+  display: flex;
+}
+
+.noClick {
+  pointer-events: none;
+  background-color: #e6e6e6;
+}
+
+/*no data样式*/
+.searchnodata {
+  position: absolute;
+  width: 100%;
+  font-size: 14px;
+  font-family: Helvetica;
+  text-align: center;
+  color: #888888;
+  background-color: #fefefe;
+}
+
+/*
+  所有页面高度占满整个页面
+*/
+.content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 20px;
+}
+
+.ag-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+}

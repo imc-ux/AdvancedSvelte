@@ -119,6 +119,7 @@
         pageCount = Math.ceil(userList.data?.[0]?.totalCount / pageSize);
         rowData.forEach((i) => {
           i.selected = false;
+          i.password = i.password.toLocaleUpperCase();
         });
       }
     }

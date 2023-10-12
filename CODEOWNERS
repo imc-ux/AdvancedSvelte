@@ -17,6 +17,8 @@
 # anywhere in your repository.
 css/  @bloossom 
 
+CODEOWNERS   @ythyhvh
+
 # ###############以下是例子，不生效
 
 # Teams can be specified as code owners as well. Teams should

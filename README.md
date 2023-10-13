@@ -1,15 +1,25 @@
-# AdvancedSvelte: Upload infomation  mp management  User management, message board and task management pages
+# AdvancedSvelte: Upload infomation  Mp management  User management, Message board and Task management pages
 
-[![typescript v4.7.4](https://img.shields.io/badge/typescript-v4.7.4-f1f1b8.svg)](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-7.html) 
-[![webpack v5.73.0](https://img.shields.io/badge/types/webpack-v5.73.0-c5c8a9.svg)](https://webpack.js.org/guides/installation/) 
-[![css/loader v6.7.1](https://img.shields.io/badge/css/loader-v6.7.1-f7bc99.svg)](https://webpack.js.org/loaders/css-loader/#root) 
-[![webpack-cli v4.10.0](https://img.shields.io/badge/webpack/cli-v4.10.0-eeeadf.svg)](https://webpack.js.org/guides/installation/) 
-[![mini/css/extract/plugin v2.6.1](https://img.shields.io/badge/mini/css/extract/plugin-v2.6.1-e1a6a2.svg)](https://webpack.js.org/plugins/mini-css-extract-plugin/#root)
+> Construction
+
+[![svelte v3.58.0](https://img.shields.io/badge/svelte-v3.58.0-00DC82.svg)](https://svelte.dev/)
+
+> Component
+
+[![ag-grid-community v29.2.0](https://img.shields.io/badge/agGridCommunity-v29.2.0-c5c8a9.svg)](https://www.ag-grid.com/)
+[![date-picker-svelte v2.4.3](https://img.shields.io/badge/datePickerSvelte-v2.4.3-f7bc99.svg)](https://madewithsvelte.com/date-picker-svelte)
+[![bytemd v1.21.0](https://img.shields.io/badge/bytemd-v1.21.0-eeeadf.svg)](https://bytemd.js.org/)
+[![moment v2.18.1](https://img.shields.io/badge/moment-v2.18.1-e1a6a2.svg)](https://momentjs.com/)
+[![copy-to-clipboard v3.0.5](https://img.shields.io/badge/copyToClipboard-v3.0.5-e1a6a2.svg)](https://www.npmjs.com/package/copy-to-clipboard)
+[![svelte-paginate v0.1.0](https://img.shields.io/badge/sveltePaginate-v0.1.0-eeeadf.svg)](https://www.npmjs.com/package/svelte-paginate)
+[![svelte-select v5.0.0](https://img.shields.io/badge/svelteSelect-v5.0.0-c5c8a9.svg)](https://github.com/rob-balfre/svelte-select)
 
 ## Introduction
- 此 Svelte 项目用于开发 UX 系统 上传系统、MP管理页面、用户管理 留言板和任务管理页面
+
+此 Svelte 项目用于开发 UX 系统 上传系统、MP管理页面、用户管理 留言板和任务管理页面
 
 ## Table of Contents
+
 - [Technologies](#Technologies)
 - [Development](#Development)
   - [上传系统](http://127.0.0.1:7070/uploadSvelte.html)
@@ -24,8 +34,12 @@
 
 ## Technologies
 
-AdvancedSvelte uses the following technologies: 
+AdvancedSvelte uses the following technologies:
 
+- [svelte](https://svelte.dev/)
+- [TypeScript](https://www.typescriptlang.org)
+- [ag-grid-community](https://www.ag-grid.com/)
+- [bytemd](https://bytemd.js.org/)
 
 ## Development
 
@@ -33,48 +47,18 @@ clone this repository
 
 ```bash
 git clone git@github.com:imc-ux/AdvancedSvelte.git
-```
-
-
-
-
-## Production
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# yarn
-yarn install
 
 # npm
 npm install
 
-# pnpm
-pnpm install
-```
-
-## Development Server
+# Development Server
 
 Start the development server on http://127.0.0.1:7070/
 
-```bash
-npm run server
+# server run
+
+npm run server 
+
 ```
 
 ## Production
@@ -83,4 +67,3 @@ Build the application for production:
 
 ```bash
 npm run build
-```

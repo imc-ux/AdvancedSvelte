@@ -1,20 +1,8 @@
 <h1 align="center">Cusys based on svelte</h1>
 
-# AdvancedSvelte: Upload infomation  Mp management  User management, Message board and Task management pages
-
-> Construction
-
 [![svelte v3.58.0](https://img.shields.io/badge/svelte-v3.58.0-00DC82.svg)](https://svelte.dev/)
-
-> Component
-
 [![ag-grid-community v29.2.0](https://img.shields.io/badge/agGridCommunity-v29.2.0-c5c8a9.svg)](https://www.ag-grid.com/)
-[![date-picker-svelte v2.4.3](https://img.shields.io/badge/datePickerSvelte-v2.4.3-f7bc99.svg)](https://madewithsvelte.com/date-picker-svelte)
-[![bytemd v1.21.0](https://img.shields.io/badge/bytemd-v1.21.0-eeeadf.svg)](https://bytemd.js.org/)
-[![moment v2.18.1](https://img.shields.io/badge/moment-v2.18.1-e1a6a2.svg)](https://momentjs.com/)
-[![copy-to-clipboard v3.0.5](https://img.shields.io/badge/copyToClipboard-v3.0.5-e1a6a2.svg)](https://www.npmjs.com/package/copy-to-clipboard)
-[![svelte-paginate v0.1.0](https://img.shields.io/badge/sveltePaginate-v0.1.0-eeeadf.svg)](https://www.npmjs.com/package/svelte-paginate)
-[![svelte-select v5.0.0](https://img.shields.io/badge/svelteSelect-v5.0.0-c5c8a9.svg)](https://github.com/rob-balfre/svelte-select)
+
 
 ## Introduction
 

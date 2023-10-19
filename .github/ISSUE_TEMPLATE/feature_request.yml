@@ -1,7 +1,7 @@
 name: "💡 Feature request"
 description: Create a report to help us improve
 title: "[页面名称]: "
-labels: ["💡 Feature request"]
+labels: ["💡 Feature Request"]
 projects: []
 assignees:
   - ythyhvh, kimcy99

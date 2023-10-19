@@ -6,7 +6,7 @@
 
 ## Introduction
 
-此 Svelte 项目用于开发 UX 系统 上传系统、MP管理页面、用户管理 留言板和任务管理页面
+此 Svelte 项目用于开发 UX 系统 上传管理页面、MP管理页面、用户管理 留言板和任务管理页面
 
 ## Table of Contents
 

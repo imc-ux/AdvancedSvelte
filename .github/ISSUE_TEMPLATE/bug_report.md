@@ -2,8 +2,8 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: ''
-assignees: ''
+labels: "\U0001F41B Bug"
+assignees: liujinhai8410, foster7n15, kimcy99
 
 ---
 

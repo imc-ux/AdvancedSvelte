@@ -1,13 +1,13 @@
 <script lang="ts">
-  import "@/styles/core/white.css";
-  import "@/styles/core/index.scss";
-  import { onMount, onDestroy } from "svelte";
-  import { Box, Text } from "@/components/sveltecomponents";
-  import { Image } from "@/components/sveltecomponents/index";
-  import { UsersInfo } from "@/vo/userManager";
-  import userMgmtMainStore from "@/store/UserMgmtMainStore";
-  import { deepClone } from "@/utils/CommonUtils";
-  import { autorun } from "mobx";
+  import '@/styles/core/white.css';
+  import '@/styles/core/index.scss';
+  import { onMount, onDestroy } from 'svelte';
+  import { Box, Text } from '@/components/sveltecomponents';
+  import { Image } from '@/components/sveltecomponents/index';
+  import { UsersInfo } from '@/vo/userManager';
+  import userMgmtMainStore from '@/store/UserMgmtMainStore';
+  import { deepClone } from '@/utils/CommonUtils';
+  import { autorun } from 'mobx';
 
   export let params;
   let id: string;
@@ -15,7 +15,7 @@
   let ip: string;
   let userType: string;
   let blockFlag: string;
-  let figure: string = "";
+  let figure: string = '';
 
   onMount(() => {
     const info: UsersInfo = {};
@@ -95,11 +95,11 @@
 </div>
 
 <style lang="scss">
-  @import "../../../styles/theme/var";
-  @import "../../../styles/theme/mixin";
+  @import '../../../styles/theme/var';
+  @import '../../../styles/theme/mixin';
 
   :global(.background_gray_border) {
-    @include themifyListIpt("background-color", $theme-color);
+    @include themifyListIpt('background-color', $theme-color);
     color: #fff;
     border: 1px solid #dedede !important;
     border-collapse: collapse;
@@ -107,7 +107,7 @@
   }
 
   :global(.background_gray) {
-    @include themifyListIpt("background-color", $theme-color);
+    @include themifyListIpt('background-color', $theme-color);
     color: #fff;
     border-right: 1px solid #dedede !important;
     border-left: 1px solid #dedede !important;

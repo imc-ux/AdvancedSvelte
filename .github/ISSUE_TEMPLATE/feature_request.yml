@@ -26,7 +26,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id:feat-screenshot
+    id: feat-screenshot
     attributes:
       label: Screenshot
       description: 

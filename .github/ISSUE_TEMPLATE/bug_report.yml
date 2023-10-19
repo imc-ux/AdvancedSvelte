@@ -15,15 +15,13 @@ body:
     attributes:
       label: Describe the bug
       description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
-      placeholder: 
     validations:
       required: true 
-   - type: textarea
+  - type: textarea
     id: bug-screenshots
     attributes:
       label: Screenshots
-      description: Add screenshots to help explain your problem.!
-      placeholder:    
+      description: Add screenshots to help explain your problem.!   
   - type: dropdown
     id: browsers
     attributes:

@@ -121,7 +121,7 @@
         CustomAlert(PageManageAlert.INTERNET_ERROR, AlertIcon.ERROR);
         return;
       }
-      value.data?.forEach((elem) => {
+      value.data?.forEach(elem => {
         elem.linkCodes = linkCodes;
         elem.labelCodes = labelCodes;
         if (!elem.developerName || elem.developerName === 'null') {
@@ -135,7 +135,7 @@
           elem.management = '';
           elem.managementName = '';
         } else {
-          let info = managementTypeList.find((v) => v.code === elem.management);
+          let info = managementTypeList.find(v => v.code === elem.management);
           if (info) {
             elem.managementName = info.name;
           } else {
@@ -300,7 +300,7 @@
           <Text>Type</Text>
         </Box>
         <Box f={1} class="ul-top main-advancedSelect">
-          <AdvancedSelect options={types} onSubmit={(v) => onTypeSelectHandler(v)} bind:value={selectedValue} />
+          <AdvancedSelect options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedValue} />
         </Box>
       </Box>
       <Box f={1} class="margin-left-Max ul-top box-width">
@@ -324,7 +324,7 @@
 
     <Box f={1} horizontalAlign="right" class="ul-top">
       <Box class="itemStyle margin_top_s selected-height">
-        <AdvancedSelect options={itemPages} bind:value={selectedItemValue} onSubmit={(v) => onItemSelectHandler(v)} />
+        <AdvancedSelect options={itemPages} bind:value={selectedItemValue} onSubmit={v => onItemSelectHandler(v)} />
       </Box>
       <Button kind="tertairy" icon={Search} class="button-normal margin_right margin_top_s button-main-style" on:click={onBtnSearchClickHandler}
         >SEARCH</Button

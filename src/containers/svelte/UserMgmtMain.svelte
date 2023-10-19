@@ -101,7 +101,7 @@
       removeWaiting();
       if (!userList.error) {
         rowData = userList.data;
-        rowData.forEach((value) => {
+        rowData.forEach(value => {
           if (value.usertype === 'U') {
             value.show = '前台';
           } else if (value.usertype === 'P') {
@@ -117,7 +117,7 @@
         });
         pageSize = itemCodeSelected;
         pageCount = Math.ceil(userList.data?.[0]?.totalCount / pageSize);
-        rowData.forEach((i) => {
+        rowData.forEach(i => {
           i.selected = false;
           i.password = i.password.toLocaleUpperCase();
         });
@@ -173,11 +173,11 @@
   }
 
   function onSaveBtnClickHandler() {
-    rowData?.forEach((row) => {
+    rowData?.forEach(row => {
       if (row.selected) {
         selectedRows.push(row);
       } else {
-        selectedRows = selectedRows.filter((value) => value.id !== row.id);
+        selectedRows = selectedRows.filter(value => value.id !== row.id);
       }
     });
     if (!selectedRows?.length) {
@@ -200,7 +200,7 @@
   function onDownLoadBtnClickHandler(data: any[]) {
     const filename = '用户信息.xlsx';
     data = JSON.parse(JSON.stringify(data));
-    data.forEach((row) => {
+    data.forEach(row => {
       if (row.usertype === 'U') {
         row.usertype = '前台';
       }
@@ -218,12 +218,12 @@
       changedKeys(row, 'ip', 'IP');
       dataDownloadChoose(row);
     });
-    userMgmtColumns.forEach((value) => {
+    userMgmtColumns.forEach(value => {
       if (value.headerName) {
         if (value.headerName === '头像') {
           value.width = 450;
         }
-        if (!arrHeadTitleName.some((i) => i === value.headerName)) {
+        if (!arrHeadTitleName.some(i => i === value.headerName)) {
           arrHeadTitleName.push(value.headerName);
           arrHeadTitleNameWidth.push({ wpx: value.width });
         }
@@ -250,7 +250,10 @@
   }
 
   function onAddBtnClickHandler() {
-    CreatePop('新增用户', AddUser, {}, onClosePopHandler, { width: '600px', height: '450px' });
+    CreatePop('新增用户', AddUser, {}, onClosePopHandler, {
+      width: '600px',
+      height: '450px',
+    });
   }
 
   function onSearchBtnClickHandler() {
@@ -331,7 +334,10 @@
   }
 
   function onOpenModifyPopupHandler(e) {
-    CreatePop('修改用户信息', ModifyUser, e.value, onClosePopHandler, { width: '600px', height: '500px' });
+    CreatePop('修改用户信息', ModifyUser, e.value, onClosePopHandler, {
+      width: '600px',
+      height: '500px',
+    });
   }
 
   function onClosePopHandler(data: string) {
@@ -361,11 +367,15 @@
     </div>
     <div class="vertical-align flex-residue">
       <div class="text-margin"><Text>ID</Text></div>
-      <div class="flex-residue"><Input bind:value={userId} on:Input={onIdChangeHandler} /></div>
+      <div class="flex-residue">
+        <Input bind:value={userId} on:Input={onIdChangeHandler} />
+      </div>
     </div>
     <div class="vertical-align flex-residue">
       <div class="text-margin"><Text>姓名</Text></div>
-      <div class="flex-residue"><Input bind:value={userName} on:Input={onNameChangeHandler} /></div>
+      <div class="flex-residue">
+        <Input bind:value={userName} on:Input={onNameChangeHandler} />
+      </div>
     </div>
     <div class="vertical-align flex-residue">
       <div class="text-margin"><Text>block</Text></div>

@@ -32,7 +32,7 @@ body:
       description: 
     validations:
       required: false 
-   - type: dropdown
+  - type: dropdown
     id: importance
     attributes:
       label: Importance

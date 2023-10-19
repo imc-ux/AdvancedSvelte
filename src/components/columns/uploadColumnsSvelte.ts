@@ -1,7 +1,7 @@
 import {
   CheckRenderer,
   LinkButton_Label,
-  Label_Label,
+  LinkButton_LinkButton,
   Label_LinkButtonButtonBatchInput,
   LinkButtonButtonBatchInput_Label,
   LinkButtonOrLabel_LabelBatchInput,
@@ -119,27 +119,12 @@ const uploadSveletColumn = [
     cellClass: ["cell-center-align", "cell-border"],
     children: [
       {
-        headerName: "后台负责人",
+        headerName: "代码检查负责人",
         width: 100,
-        field: "clientDeveloperName*bizDeveloperName",
+        field: "clientDeveloperName*reviewerName",
         headerClass: ["center-aligned", "ag-header"],
         cellClass: ["cell-center-align", "cell-border"],
-        cellRenderer: Label_Label,
-      },
-    ],
-  },
-  {
-    headerName: "代码检查负责人",
-    headerClass: ["center-aligned", "ag-header"],
-    cellClass: ["cell-center-align", "cell-border"],
-    children: [
-      {
-        headerName: "紧急程度",
-        width: 100,
-        field: "reviewerName*urgencyFlag",
-        headerClass: ["center-aligned", "ag-header"],
-        cellClass: ["cell-center-align", "cell-border"],
-        cellRenderer: Label_Label,
+        cellRenderer: LinkButton_LinkButton,
       },
     ],
   },

@@ -1066,6 +1066,10 @@
       );
     }
   }
+
+  function dateFromInputHandler(e) {}
+
+  function dateToInputHandler(e) {}
 </script>
 
 <Box column class="outter">

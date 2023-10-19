@@ -15,19 +15,7 @@ body:
     attributes:
       label: Describe the bug
       description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
-      placeholder: ## Steps To Reproduce
-
-                  1.
-                  2.
-                  
-                  ## The current behavior
-                  
-                  
-                  ## The expected behavior
-                  
-                  
-                  ## Screenshots
-                  If applicable, add screenshots to help explain your problem.
+      placeholder: If applicable, add screenshots to help explain your problem.
     validations:
       required: true 
   - type: dropdown

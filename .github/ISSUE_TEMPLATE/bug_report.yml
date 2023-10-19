@@ -18,10 +18,12 @@ body:
     validations:
       required: true 
   - type: textarea
-    id: bug-screenshots
+    id: bug-screenshot
     attributes:
-      label: Screenshots
-      description: Add screenshots to help explain your problem.!   
+      label: Screenshot
+      description: 
+    validations:
+      required: false 
   - type: dropdown
     id: browsers
     attributes:

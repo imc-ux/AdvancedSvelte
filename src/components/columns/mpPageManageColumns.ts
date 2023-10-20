@@ -1,4 +1,4 @@
-import { LinkRenderer } from "@/components/renderers/index";
+import { LinkRenderer, LabelRenderer } from "@/components/renderers/index";
 
 const pageManageColumns = [
   {
@@ -22,6 +22,7 @@ const pageManageColumns = [
     width: 300,
     headerClass: ["center-aligned", "ag-header"],
     cellClass: ["cell-center-align", "cell-border"],
+    cellRenderer: LabelRenderer,
   },
   {
     headerName: "Type",

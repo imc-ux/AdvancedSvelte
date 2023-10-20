@@ -1,19 +1,24 @@
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { onMount, onDestroy } from 'svelte';
-  import { AdvancedSelect, Button, Input, Text } from '@/components/sveltecomponents';
-  import Save from 'carbon-icons-svelte/lib/Save.svelte';
-  import { userTypeList } from '@/constant/constant';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { AddUserAlert } from '@/constant/alert/user';
-  import addUserStore from '@/store/AddUserStore';
-  import { autorun } from 'mobx';
-  import { deepClone } from '@/utils/CommonUtils';
-  import { removeWaiting, setWaiting } from '@/utils/loaderUtils';
-  import { Md5 } from 'ts-md5';
-  import { UsersInfo } from '@/vo/userManager';
-  import { ImageUpload } from '@/components/sveltecomponents/index';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import { onMount, onDestroy } from "svelte";
+  import {
+    AdvancedSelect,
+    Button,
+    Input,
+    Text,
+  } from "@/components/sveltecomponents";
+  import Save from "carbon-icons-svelte/lib/Save.svelte";
+  import { userTypeList } from "@/constant/constant";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { AddUserAlert } from "@/constant/alert/user";
+  import addUserStore from "@/store/AddUserStore";
+  import { autorun } from "mobx";
+  import { deepClone } from "@/utils/CommonUtils";
+  import { removeWaiting, setWaiting } from "@/utils/loaderUtils";
+  import { Md5 } from "ts-md5";
+  import { UsersInfo } from "@/vo/userManager";
+  import { ImageUpload } from "@/components/sveltecomponents/index";
 
   export let onClose;
   let passWord: string;
@@ -22,15 +27,15 @@
   let name: string;
   let userTypeCodeSelected;
   let userTypeSelected;
-  let ip: string = '';
+  let ip: string = "";
   let usertypeList = userTypeList.slice(1);
-  usertypeList.unshift({ id: '', value: '--请选择--' });
-  let imageSrc: string = '';
+  usertypeList.unshift({ id: "", value: "--请选择--" });
+  let imageSrc: string = "";
   let figure: string;
   let isUpload: boolean = false;
 
   onMount(() => {
-    userTypeCodeSelected = '';
+    userTypeCodeSelected = "";
     userTypeSelected = usertypeList[0];
   });
 
@@ -45,10 +50,10 @@
       removeWaiting();
       if (!addUser.error) {
         CustomAlert(AddUserAlert.SAVE_SUCCESS, AlertIcon.SUCCESS);
-        onClose('Y');
+        onClose("Y");
       } else {
         CustomAlert(AddUserAlert.INTERNET_ERROR, AlertIcon.ERROR);
-        onClose('Y');
+        onClose("Y");
       }
     }
   });
@@ -85,9 +90,9 @@
     const info: UsersInfo = {};
     info.id = id;
     info.name = name;
-    info.password = Md5.hashStr(passWord?.trim().toLocaleUpperCase());
+    info.password = Md5.hashStr(passWord?.trim()).toLocaleUpperCase();
     info.usertype = userTypeCodeSelected;
-    info.blockflag = 'N';
+    info.blockflag = "N";
     info.ip = ip;
     if (isUpload) {
       info.figure = figure;
@@ -97,11 +102,11 @@
   }
 
   function validate() {
-    if (id?.trim() === '') {
+    if (id?.trim() === "") {
       CustomAlert(AddUserAlert.ID_IS_NOT_NULL, AlertIcon.ERROR);
       return false;
     }
-    if (name?.trim() === '') {
+    if (name?.trim() === "") {
       CustomAlert(AddUserAlert.NAME_IS_NOT_NULL, AlertIcon.ERROR);
       return false;
     }
@@ -109,14 +114,17 @@
       CustomAlert(AddUserAlert.USER_TYPE_IS_NOT_NULL, AlertIcon.ERROR);
       return false;
     }
-    if (userTypeCodeSelected?.trim() === 'U') {
-      if (passWord?.trim() === '') {
+    if (userTypeCodeSelected?.trim() === "U") {
+      if (passWord?.trim() === "") {
         CustomAlert(AddUserAlert.FRON_USER_PSW_IS_NOT_NULL, AlertIcon.ERROR);
         return false;
       }
     }
     if (passWord?.trim() !== confirmPassword?.trim()) {
-      CustomAlert(AddUserAlert.THE_TWO_PSW_INPUT_ARE_INCONSISTENT, AlertIcon.ERROR);
+      CustomAlert(
+        AddUserAlert.THE_TWO_PSW_INPUT_ARE_INCONSISTENT,
+        AlertIcon.ERROR
+      );
       return false;
     }
     return true;
@@ -132,7 +140,13 @@
 
 <div>
   <div class="btn-align-right">
-    <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Save} on:click={onSaveBtnClickHandler}>保存</Button>
+    <Button
+      class="button-normal button-text-vertical-align"
+      size="small"
+      kind="tertiary"
+      icon={Save}
+      on:click={onSaveBtnClickHandler}>保存</Button
+    >
   </div>
   <div class="add-user">
     <div class="flex">
@@ -170,7 +184,11 @@
         <Text>密码</Text>
       </div>
       <div class="right-div add-input">
-        <Input type="password" bind:value={passWord} on:input={onPswChangeHandler} />
+        <Input
+          type="password"
+          bind:value={passWord}
+          on:input={onPswChangeHandler}
+        />
       </div>
     </div>
 
@@ -179,7 +197,11 @@
         <Text>确认密码</Text>
       </div>
       <div class="right-div add-input">
-        <Input type="password" bind:value={confirmPassword} on:input={onConfirmPswChangeHandler} />
+        <Input
+          type="password"
+          bind:value={confirmPassword}
+          on:input={onConfirmPswChangeHandler}
+        />
       </div>
     </div>
     <div class="flex">
@@ -202,8 +224,8 @@
 </div>
 
 <style lang="scss">
-  @import '../../../styles/theme/var';
-  @import '../../../styles/theme/mixin';
+  @import "../../../styles/theme/var";
+  @import "../../../styles/theme/mixin";
 
   .btn-align-right {
     display: flex;
@@ -218,7 +240,7 @@
 
   .left-div {
     width: 150px;
-    @include themifyList('background-color', $theme-color);
+    @include themifyList("background-color", $theme-color);
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -254,7 +276,9 @@
     min-height: 30px !important;
   }
 
-  :global(.add-input > .bx--text-input-wrapper > .bx--text-input__field-outer-wrapper) {
+  :global(.add-input
+      > .bx--text-input-wrapper
+      > .bx--text-input__field-outer-wrapper) {
     flex-direction: column;
     justify-content: center;
   }

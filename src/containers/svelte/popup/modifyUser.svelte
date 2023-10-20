@@ -1,20 +1,25 @@
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { onMount, onDestroy } from 'svelte';
-  import { AdvancedSelect, Button, Input, Text } from '@/components/sveltecomponents';
-  import Save from 'carbon-icons-svelte/lib/Save.svelte';
-  import { userTypeList, blockFlagList } from '@/constant/constant';
-  import { UserInfo } from '@/utils/Settings';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { ModifyUserAlert } from '@/constant/alert/user';
-  import modifyUserStore from '@/store/ModifyUser';
-  import { autorun } from 'mobx';
-  import { deepClone } from '@/utils/CommonUtils';
-  import { removeWaiting, setWaiting } from '@/utils/loaderUtils';
-  import { Md5 } from 'ts-md5';
-  import { ImageUpload } from '@/components/sveltecomponents/index';
-  import { getImagesServerUrl } from '@/utils/CommonUtils';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import { onMount, onDestroy } from "svelte";
+  import {
+    AdvancedSelect,
+    Button,
+    Input,
+    Text,
+  } from "@/components/sveltecomponents";
+  import Save from "carbon-icons-svelte/lib/Save.svelte";
+  import { userTypeList, blockFlagList } from "@/constant/constant";
+  import { UserInfo } from "@/utils/Settings";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { ModifyUserAlert } from "@/constant/alert/user";
+  import modifyUserStore from "@/store/ModifyUser";
+  import { autorun } from "mobx";
+  import { deepClone } from "@/utils/CommonUtils";
+  import { removeWaiting, setWaiting } from "@/utils/loaderUtils";
+  import { Md5 } from "ts-md5";
+  import { ImageUpload } from "@/components/sveltecomponents/index";
+  import { getImagesServerUrl } from "@/utils/CommonUtils";
 
   export let params;
   export let onClose;
@@ -28,7 +33,7 @@
   let blockFlagCodeSelected: string;
   let blockFlagSelected;
   let ip: string;
-  let imageSrc: string = '';
+  let imageSrc: string = "";
   let figure: string;
   let isNewPsw: boolean = false;
   let isOldPsw: boolean = false;
@@ -47,8 +52,8 @@
     userTypeSelected = usertypeList.find((i) => i.id === params.usertype);
     blockFlagCodeSelected = params.blockflag;
     blockFlagSelected = blockflagList.find((i) => i.id === params.blockflag);
-    document.getElementById('user-id').style.cursor = 'not-allowed';
-    if (params.figure === 'figures/figure000.jpg') {
+    document.getElementById("user-id").style.cursor = "not-allowed";
+    if (params.figure === "figures/figure000.jpg") {
       isImgDisplay = false;
     }
   });
@@ -65,21 +70,23 @@
       removeWaiting();
       if (!modifyValue.error) {
         CustomAlert(ModifyUserAlert.SAVE_SUCCESS, AlertIcon.SUCCESS);
-        onClose('Y');
+        onClose("Y");
       } else {
         CustomAlert(ModifyUserAlert.INTERNET_ERROR, AlertIcon.ERROR);
-        onClose('Y');
+        onClose("Y");
       }
     }
   });
 
   const getUserActivePermissionList = autorun(() => {
     if (modifyUserStore.getUserActivePermissionResult) {
-      const permissionList = deepClone(modifyUserStore.getUserActivePermissionResult);
+      const permissionList = deepClone(
+        modifyUserStore.getUserActivePermissionResult
+      );
       modifyUserStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!permissionList.error) {
-        permissionData = permissionList.data.split(',');
+        permissionData = permissionList.data.split(",");
       }
     }
   });
@@ -148,8 +155,14 @@
   }
 
   function validate() {
-    if (newPassWord?.trim() !== '' && newPassWord?.trim() !== confirmPassword?.trim()) {
-      CustomAlert(ModifyUserAlert.THE_TWO_PSW_INPUT_ARE_INCONSISTENT, AlertIcon.ERROR);
+    if (
+      newPassWord?.trim() !== "" &&
+      newPassWord?.trim() !== confirmPassword?.trim()
+    ) {
+      CustomAlert(
+        ModifyUserAlert.THE_TWO_PSW_INPUT_ARE_INCONSISTENT,
+        AlertIcon.ERROR
+      );
       return false;
     }
     return true;
@@ -162,9 +175,15 @@
 </script>
 
 <div>
-  {#if UserInfo.userId === id?.trim() || permissionData?.includes('U_B')}
+  {#if UserInfo.userId === id?.trim() || permissionData?.includes("U_B")}
     <div class="btn-align-right">
-      <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Save} on:click={onSaveBtnClickHandler}>保存</Button>
+      <Button
+        class="button-normal button-text-vertical-align"
+        size="small"
+        kind="tertiary"
+        icon={Save}
+        on:click={onSaveBtnClickHandler}>保存</Button
+      >
     </div>
   {:else}
     <div class="btn-align-right" style="height:33px" />
@@ -220,7 +239,11 @@
         <Text>旧密码</Text>
       </div>
       <div class="right-div modify-input">
-        <Input type="password" bind:value={oldPassWord} on:input={onOldPswChangeHandler} />
+        <Input
+          type="password"
+          bind:value={oldPassWord}
+          on:input={onOldPswChangeHandler}
+        />
       </div>
     </div>
     <div class="flex">
@@ -228,7 +251,11 @@
         <Text>新密码</Text>
       </div>
       <div class="right-div modify-input">
-        <Input type="password" bind:value={newPassWord} on:input={onNewPswChangeHandler} />
+        <Input
+          type="password"
+          bind:value={newPassWord}
+          on:input={onNewPswChangeHandler}
+        />
       </div>
     </div>
     <div class="flex">
@@ -236,7 +263,11 @@
         <Text>确认密码</Text>
       </div>
       <div class="right-div modify-input">
-        <Input type="password" bind:value={confirmPassword} on:input={onConfirmPswChangeHandler} />
+        <Input
+          type="password"
+          bind:value={confirmPassword}
+          on:input={onConfirmPswChangeHandler}
+        />
       </div>
     </div>
     <div class="flex">
@@ -252,15 +283,19 @@
         <Text>头像</Text>
       </div>
       <div class="right-div modify-input">
-        <ImageUpload value={imageSrc} on:imageUpload={onImageUploadHandler} {isImgDisplay} />
+        <ImageUpload
+          value={imageSrc}
+          on:imageUpload={onImageUploadHandler}
+          {isImgDisplay}
+        />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  @import '../../../styles/theme/var';
-  @import '../../../styles/theme/mixin';
+  @import "../../../styles/theme/var";
+  @import "../../../styles/theme/mixin";
 
   .btn-align-right {
     display: flex;
@@ -275,7 +310,7 @@
 
   .left-div {
     width: 150px;
-    @include themifyList('background-color', $theme-color);
+    @include themifyList("background-color", $theme-color);
     color: #ffffff;
     display: flex;
     flex-direction: column;
@@ -311,7 +346,9 @@
     min-height: 30px !important;
   }
 
-  :global(.modify-input > .bx--text-input-wrapper > .bx--text-input__field-outer-wrapper) {
+  :global(.modify-input
+      > .bx--text-input-wrapper
+      > .bx--text-input__field-outer-wrapper) {
     flex-direction: column;
     justify-content: center;
   }

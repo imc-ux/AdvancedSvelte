@@ -126,9 +126,6 @@ module.exports = {
       },
       {
         test: /\.(png|svg|gif)$/,
-<<<<<<< .mine
-        use: "url-loader",
-=======
         type: "asset",
         parser: {
           dataUrlCondition: {
@@ -138,7 +135,6 @@ module.exports = {
         generator: {
           filename: "static/uploadlist/svelteImg/[name][ext]",
         },
->>>>>>> .r78279
       },
       {
         test: /\.(.t|j|mj)s$/,
@@ -150,19 +146,10 @@ module.exports = {
     ],
   },
   resolve: {
-<<<<<<< .mine
     modules: [path.join(__dirname, "src"), "node_modules"],
-    extensions: [".js", ".ts", ".tsx", ".svelte", "module"],
-=======
-    modules: [path.join(__dirname, "src"), "node_modules"],
->>>>>>> .r78279
     alias: {
-<<<<<<< .mine
-      "@": path.join(__dirname, "src"),
-=======
       "@": path.join(__dirname, "src"),
       svelte: path.resolve("node_modules", "svelte"),
->>>>>>> .r78279
     },
     extensions: [".js", ".ts", ".tsx", ".svelte", "module"],
     mainFields: ["svelte", "browser", "module", "main"],

@@ -93,7 +93,7 @@
   function getUserActivePermission() {
     const info = UserInfo.userId;
     setWaiting();
-    pageStore.getUserActivePermission(info, popId);
+    pageStore.getUserActivePermission(info);
   }
 
   const disposerPerson = autorun(() => {
@@ -165,7 +165,7 @@
       countOver();
       if (!value.error) {
         if (value.data.length > 0) {
-          info = value.data.find((v) => v.code === params);
+          info = value.data.find(v => v.code === params);
           if (info) {
             person = info.developerName;
             checkPerson = info.reviewerName;
@@ -199,8 +199,8 @@
             jtracs = [];
             if (info.relatedPops) {
               let pageArray = info.relatedPops.split(',');
-              pageArray?.forEach((elem) => {
-                const relatedPopName = popsOptions.find((value) => value.code === elem);
+              pageArray?.forEach(elem => {
+                const relatedPopName = popsOptions.find(value => value.code === elem);
                 if (elem) {
                   pages.push({
                     name: relatedPopName?.name,
@@ -213,9 +213,9 @@
             renderers = [];
             if (info.relatedRenderers) {
               let renderArray = info.relatedRenderers.split(',');
-              renderArray?.forEach((elem) => {
+              renderArray?.forEach(elem => {
                 if (elem) {
-                  const relatedRendererName = renderersOptions.find((value) => value.code === elem);
+                  const relatedRendererName = renderersOptions.find(value => value.code === elem);
                   renderers.push({
                     name: relatedRendererName?.name,
                     code: elem,
@@ -251,14 +251,14 @@
         jtracsOptions = value.data
 
           .split(',')
-          .filter((item) => {
+          .filter(item => {
             if (regExp.test(item)) {
               return true;
             } else {
               return false;
             }
           })
-          .map((elem) => ({
+          .map(elem => ({
             jtracNo: elem,
             name: elem,
           }));
@@ -610,7 +610,7 @@
       verticalAlign="middle"
     >
       {#if modifyMode}
-        <AdvancedSelect bind:value={selectedManagementValue} options={managementList} onSubmit={(v) => onManagementSubmitHandler(v)} />
+        <AdvancedSelect bind:value={selectedManagementValue} options={managementList} onSubmit={v => onManagementSubmitHandler(v)} />
       {:else}
         <Text class="ellipsis typeText pop-text-align modify-line-height">{managementName}</Text>
       {/if}
@@ -679,14 +679,14 @@
                         optionIdentifier="type"
                         labelIdentifier="code"
                         bind:value={selectedPopsValue}
-                        onSubmit={(v) => handleSubmit(v, i)}
+                        onSubmit={v => handleSubmit(v, i)}
                       />
                     {/if}
                     {#if page.code && page.code !== '--请选择--'}
-                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeletePage(i)} />
+                      <IconButton currentIcon={Close} on:click={v => onbtnDeletePage(i)} />
                     {/if}
                   {:else}
-                    <Link title={`${page.name}(${page.code})`} class="ellipsis popupLink " on:click={(v) => onbtnPopLinkHandler(v, page)}
+                    <Link title={`${page.name}(${page.code})`} class="ellipsis popupLink " on:click={v => onbtnPopLinkHandler(v, page)}
                       >{page.name}({page.code})</Link
                     >
                   {/if}
@@ -709,14 +709,14 @@
                         optionIdentifier="type"
                         labelIdentifier="code"
                         bind:value={selectedPopsValue}
-                        onSubmit={(v) => handleSubmit(v, i)}
+                        onSubmit={v => handleSubmit(v, i)}
                       />
                     {/if}
                     {#if page.code}
-                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeletePage(i)} />
+                      <IconButton currentIcon={Close} on:click={v => onbtnDeletePage(i)} />
                     {/if}
                   {:else}
-                    <Link title="{page.name}({page.code})" class="ellipsis popupLink " on:click={(v) => onbtnPopLinkHandler(v, page)}
+                    <Link title="{page.name}({page.code})" class="ellipsis popupLink " on:click={v => onbtnPopLinkHandler(v, page)}
                       >{page.name}({page.code})</Link
                     >
                   {/if}
@@ -750,15 +750,14 @@
                         optionIdentifier="type"
                         labelIdentifier="code"
                         bind:value={selectedRendererValue}
-                        onSubmit={(v) => handleRendererSubmit(v, i)}
+                        onSubmit={v => handleRendererSubmit(v, i)}
                       />
                     {/if}
                     {#if renderer.code}
-                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeleteRendererPage(i)} />
+                      <IconButton currentIcon={Close} on:click={v => onbtnDeleteRendererPage(i)} />
                     {/if}
                   {:else}
-                    <Link title={renderer.code} class="ellipsis popupLink" on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
-                      >{renderer.code}</Link
+                    <Link title={renderer.code} class="ellipsis popupLink" on:click={v => onbtnRendererLinkHandler(v, renderer)}>{renderer.code}</Link
                     >
                   {/if}
                 </Box>
@@ -780,15 +779,14 @@
                         optionIdentifier="type"
                         labelIdentifier="code"
                         bind:value={selectedRendererValue}
-                        onSubmit={(v) => handleRendererSubmit(v, i)}
+                        onSubmit={v => handleRendererSubmit(v, i)}
                       />
                     {/if}
                     {#if renderer.code}
-                      <IconButton currentIcon={Close} on:click={(v) => onbtnDeleteRendererPage(i)} />
+                      <IconButton currentIcon={Close} on:click={v => onbtnDeleteRendererPage(i)} />
                     {/if}
                   {:else}
-                    <Link title={renderer.code} class="ellipsis popupLink" on:click={(v) => onbtnRendererLinkHandler(v, renderer)}
-                      >{renderer.name}</Link
+                    <Link title={renderer.code} class="ellipsis popupLink" on:click={v => onbtnRendererLinkHandler(v, renderer)}>{renderer.name}</Link
                     >
                   {/if}
                 </Box>
@@ -807,11 +805,11 @@
         {#each jtracsOptions as jtrac, i}
           {#if i < jtracsOptions.length - 1}
             <Box height={28} class=" popup-position select-height-pop related-padding-left" horizontalAlign="left" verticalAlign="middle">
-              <Link title={jtrac.jtracNo} class="ellipsis popupLink " on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.jtracNo}</Link>
+              <Link title={jtrac.jtracNo} class="ellipsis popupLink " on:click={v => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.jtracNo}</Link>
             </Box>
           {:else if i === jtracsOptions.length - 1}
             <Box height={28} horizontalAlign="left" verticalAlign="middle" class="popup-position select-height-pop related-padding-left">
-              <Link title={jtrac.name} class="ellipsis popupLink " on:click={(v) => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.name}</Link>
+              <Link title={jtrac.name} class="ellipsis popupLink " on:click={v => onbtnJtracLinkHandler(v, jtrac)}>{jtrac.name}</Link>
             </Box>
           {/if}
         {/each}

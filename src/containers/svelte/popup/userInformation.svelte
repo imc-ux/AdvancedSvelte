@@ -2,7 +2,7 @@
   import '@/styles/core/white.css';
   import '@/styles/core/index.scss';
   import { onMount, onDestroy } from 'svelte';
-  import { Box, Text } from '@/components/sveltecomponents';
+  import { Box, Text, Tabs } from '@/components/sveltecomponents';
   import { Image } from '@/components/sveltecomponents/index';
   import { UsersInfo } from '@/vo/userManager';
   import userMgmtMainStore from '@/store/UserMgmtMainStore';
@@ -16,12 +16,18 @@
   let userType: string;
   let blockFlag: string;
   let figure: string = '';
+  let labelList: any[];
+  let showTabs: boolean = false;
 
   onMount(() => {
+    labelList = params.userName.split(',');
+    if (labelList.length > 1) {
+      showTabs = true;
+    }
     const info: UsersInfo = {};
     info.iPageCount = 20;
     info.iStart = 0;
-    info.id = params.userId;
+    info.id = params.userId.split(',')[0];
     userMgmtMainStore.getUserList(info);
   });
   onDestroy(() => {
@@ -41,9 +47,22 @@
       }
     }
   });
+
+  function onTabsChangeHandle(event) {
+    const info: UsersInfo = {};
+    info.iPageCount = 20;
+    info.iStart = 0;
+    info.id = params.userId.split(',')[event.detail.data];
+    userMgmtMainStore.getUserList(info);
+  }
 </script>
 
 <div>
+  {#if showTabs}
+    <Box class="tabs">
+      <Tabs {labelList} on:change={onTabsChangeHandle} />
+    </Box>
+  {/if}
   <Box>
     <Box class="background_gray_border left_box svelte-lnhus4-font">
       <Text class="left_text">ID</Text>
@@ -154,5 +173,10 @@
   :global(.border_bottom_right) {
     border-right: 1px solid #dedede !important;
     border-bottom: 1px solid #dedede !important;
+  }
+
+  :global(.tabs) {
+    height: 40px;
+    margin-bottom: 8px;
   }
 </style>

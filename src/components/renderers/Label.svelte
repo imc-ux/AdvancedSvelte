@@ -6,10 +6,10 @@
  */ -->
 <script>
   export let cell;
-  let title = '';
+  let title = "";
 
   $: props = {
-    class: 'label',
+    class: "label",
     ...$$restProps,
   };
 
@@ -18,7 +18,7 @@
     const containerWidth = e.target.offsetWidth;
     if (cell.value) {
       if (textWidth > containerWidth) title = cell.value;
-      else title = '';
+      else title = "";
     }
   }
 </script>

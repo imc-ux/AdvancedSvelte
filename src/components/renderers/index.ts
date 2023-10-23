@@ -11,6 +11,7 @@ import imageUploadRenderer from '@/components/renderers/ImageUploadRenderer.svel
 import linkButton_LabelRenderer from '@/components/renderers/LinkButton_Label.svelte';
 import label_labelRenderer from '@/components/renderers/Label_Label.svelte';
 import iconButton_labelRenderer from '@/components/renderers/IconButton_Label.svelte';
+import linkButton_linkButton from '@/components/renderers/LinkButton_LinkButton.svelte';
 import label_Input from '@/components/renderers/Lable_Input.svelte';
 import image from '@/components/renderers/Image.svelte';
 import linkButtonButtonBatchInput_label from '@/components/renderers/LinkButtonButtonBatchInput_Label.svelte';
@@ -50,6 +51,7 @@ const LinkButtonButtonBatchInput_LinkButtonButtonBatchInput = rendererWrapper(li
 const IconButton_LabelBatchInput = rendererWrapper(iconButton_labelBatchInput);
 const Label_LinkButtonButtonBatchInput = rendererWrapper(label_linkButtonButtonBatchInput);
 const LinkButtonOrLabel_LabelBatchInput = rendererWrapper(linkButtonOrLabel_labelBatchInput);
+const LinkButton_LinkButton = rendererWrapper(linkButton_linkButton);
 
 export {
   Label,
@@ -69,6 +71,7 @@ export {
   Lable_Input,
   LinkButtonButtonBatchInput_Label,
   Image,
+  LinkButton_LinkButton,
   LinkButtonButtonBatchInput_LinkButtonButtonBatchInput,
   IconButton_LabelBatchInput,
   Label_LinkButtonButtonBatchInput,

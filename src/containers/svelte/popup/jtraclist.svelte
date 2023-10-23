@@ -139,8 +139,8 @@
     let statusArr: string[] = [];
     for (let i = 0; i < rowData.length; i++) {
       if (rowData[i].selected) {
-        checkArr.push(rowData[i].data.nid);
-        statusArr.push(rowData[i].data.status);
+        checkArr.push(rowData[i].nid);
+        statusArr.push(rowData[i].status);
       }
     }
     if (checkArr.length === 0) {

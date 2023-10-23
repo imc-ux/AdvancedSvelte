@@ -37,10 +37,10 @@
   import { UsersInfo } from "@/vo/userManager/index";
   import { JtracListSearchInfo, JtracInfo } from "@/vo/uploadManager/index";
   import { CreatePop } from "@/components/Popup";
+  import { PaginationNav } from "svelte-paginate";
   import AddJtrac from "@/containers/svelte/popup/AddJtrac.svelte";
   import conflictdetail from "@/containers/svelte/popup/conflictdetail.svelte";
   import filelist from "@/containers/svelte/popup/filelist.svelte";
-  import userInformation from "@/containers/svelte/popup/userInformation.svelte";
   import jtraclist from "@/containers/svelte/popup/jtraclist.svelte";
   import fileDetail from "@/containers/svelte/popup/fileDetail.svelte";
   import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
@@ -57,10 +57,6 @@
 
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
-  let initDateFrom: Date = new Date();
-  let initDateTo: Date = new Date();
-  let dateFromStr: string = "";
-  let dateToStr: string = "";
   let selectedUploader: string = "";
   let jtracNo: string = "";
   let modules: string = "";
@@ -107,8 +103,7 @@
     const date = new Date();
     dateFrom = subMonths(date, 3);
     dateTo = date;
-    initDateFrom = dateFrom;
-    initDateTo = dateTo;
+
     setWaiting();
     searchUploader();
     getUserActivePermission();
@@ -449,10 +444,14 @@
   }
 
   function onBtnClearClickHandler() {
-    dateFrom = initDateFrom;
-    dateTo = initDateTo;
-    dateFromStr = format(dateFrom, "yyyy-MM-dd");
-    dateToStr = format(dateTo, "yyyy-MM-dd");
+    let datePickerLeft = <HTMLTextAreaElement>(
+      document.getElementsByClassName("bx--date-picker__input")[0]
+    );
+    let datePickerRight = <HTMLTextAreaElement>(
+      document.getElementsByClassName("bx--date-picker__input")[1]
+    );
+    datePickerLeft.value = "";
+    datePickerRight.value = "";
     dateEmpty = true;
     selectedUploader = "";
     selectedUploaderValue = uploaderList[0];
@@ -1065,34 +1064,12 @@
           height: "600px",
         }
       );
-    } else if (e.field === "clientDeveloperName") {
-      CreatePop(
-        "用户信息",
-        userInformation,
-        { userId: e.value.clientDeveloperId },
-        null,
-        {
-          width: "600px",
-          height: "400px",
-        }
-      );
-    } else if (e.field === "reviewerName") {
-      CreatePop(
-        "用户信息",
-        userInformation,
-        { userId: e.value.reviewer },
-        null,
-        {
-          width: "600px",
-          height: "400px",
-        }
-      );
     }
   }
 
-  function dateToInputHandler(e: CustomEvent<any>): void {
-    throw new Error("Function not implemented.");
-  }
+  function dateFromInputHandler(e) {}
+
+  function dateToInputHandler(e) {}
 </script>
 
 <Box column class="outter">
@@ -1105,16 +1082,14 @@
         <Box width="370px">
           <DateInput
             bind:value={dateFrom}
-            bind:text={dateFromStr}
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
-            on:Input={dateToInputHandler}
+            on:Input={dateFromInputHandler}
           />
           <DateInput
             class="margin-left-s"
             bind:value={dateTo}
-            bind:text={dateToStr}
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
@@ -1303,8 +1278,8 @@
 </Box>
 
 <style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
+  @import "../../../styles/theme/var";
+  @import "../../../styles/theme/mixin";
 
   :global(.linkButton) {
     display: flex;

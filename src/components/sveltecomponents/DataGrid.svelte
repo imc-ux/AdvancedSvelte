@@ -83,7 +83,7 @@
   <div style="flex:1" {id} class="grid-font-family" />
   {#if pageShowFlag}
     {#if rowData && rowData.length > 0}
-      <div style="height:95px">
+      <div style="height:45px">
         <Pagination
           total={rowData?.[0]?.totalCount}
           {pageCount}

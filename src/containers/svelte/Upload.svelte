@@ -51,6 +51,10 @@
 
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
+  let initDateFrom: Date = new Date();
+  let initDateTo: Date = new Date();
+  let dateFromStr: string = '';
+  let dateToStr: string = '';
   let selectedUploader: string = '';
   let jtracNo: string = '';
   let modules: string = '';
@@ -97,7 +101,8 @@
     const date = new Date();
     dateFrom = subMonths(date, 3);
     dateTo = date;
-
+    initDateFrom = dateFrom;
+    initDateTo = dateTo;
     setWaiting();
     searchUploader();
     getUserActivePermission();
@@ -420,10 +425,10 @@
   }
 
   function onBtnClearClickHandler() {
-    let datePickerLeft = <HTMLTextAreaElement>document.getElementsByClassName('bx--date-picker__input')[0];
-    let datePickerRight = <HTMLTextAreaElement>document.getElementsByClassName('bx--date-picker__input')[1];
-    datePickerLeft.value = '';
-    datePickerRight.value = '';
+    dateFrom = initDateFrom;
+    dateTo = initDateTo;
+    dateFromStr = format(dateFrom, 'yyyy-MM-dd');
+    dateToStr = format(dateTo, 'yyyy-MM-dd');
     dateEmpty = true;
     selectedUploader = '';
     selectedUploaderValue = uploaderList[0];
@@ -1007,10 +1012,18 @@
           <Text>提交时间</Text>
         </Box>
         <Box width="370px">
-          <DateInput bind:value={dateFrom} format="yyyy-MM-dd" valid={true} closeOnSelection={true} on:Input={dateFromInputHandler} />
+          <DateInput
+            bind:value={dateFrom}
+            bind:text={dateFromStr}
+            format="yyyy-MM-dd"
+            valid={true}
+            closeOnSelection={true}
+            on:Input={dateFromInputHandler}
+          />
           <DateInput
             class="margin-left-s"
             bind:value={dateTo}
+            bind:text={dateToStr}
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}

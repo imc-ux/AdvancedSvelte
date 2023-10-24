@@ -57,6 +57,10 @@
 
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
+  let initDateFrom: Date = new Date();
+  let initDateTo: Date = new Date();
+  let dateFromStr: string = "";
+  let dateToStr: string = "";
   let selectedUploader: string = "";
   let jtracNo: string = "";
   let modules: string = "";
@@ -103,7 +107,8 @@
     const date = new Date();
     dateFrom = subMonths(date, 3);
     dateTo = date;
-
+    initDateFrom = dateFrom;
+    initDateTo = dateTo;
     setWaiting();
     searchUploader();
     getUserActivePermission();
@@ -444,14 +449,10 @@
   }
 
   function onBtnClearClickHandler() {
-    let datePickerLeft = <HTMLTextAreaElement>(
-      document.getElementsByClassName("bx--date-picker__input")[0]
-    );
-    let datePickerRight = <HTMLTextAreaElement>(
-      document.getElementsByClassName("bx--date-picker__input")[1]
-    );
-    datePickerLeft.value = "";
-    datePickerRight.value = "";
+    dateFrom = initDateFrom;
+    dateTo = initDateTo;
+    dateFromStr = format(dateFrom, "yyyy-MM-dd");
+    dateToStr = format(dateTo, "yyyy-MM-dd");
     dateEmpty = true;
     selectedUploader = "";
     selectedUploaderValue = uploaderList[0];
@@ -1104,17 +1105,21 @@
         <Box width="370px">
           <DateInput
             bind:value={dateFrom}
+            bind:text={dateFromStr}
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
-            on:Input={dateToInputHandler} />
+            on:Input={dateToInputHandler}
+          />
           <DateInput
             class="margin-left-s"
             bind:value={dateTo}
+            bind:text={dateToStr}
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
-            on:Input={dateToInputHandler} />
+            on:Input={dateToInputHandler}
+          />
         </Box>
       </Box>
       <Box f={1} height="30px" class="box-width">
@@ -1122,7 +1127,8 @@
           width="55px"
           className="main-text "
           class="text-min-width"
-          verticalAlign="middle">
+          verticalAlign="middle"
+        >
           <Text>提交人</Text>
         </Box>
         <Box f={1} class="components-height select-width">
@@ -1131,7 +1137,8 @@
             optionIdentifier="id"
             labelIdentifier="name"
             onSubmit={(v) => onUploaderSelectHandler(v)}
-            bind:value={selectedUploaderValue} />
+            bind:value={selectedUploaderValue}
+          />
         </Box>
       </Box>
       <Box width="100px" />
@@ -1144,7 +1151,8 @@
             <BatchInput
               bind:value={jtracNo}
               bind:dataTotal={jtracNoTotal}
-              on:blur={onJtracNoChangeHandler} />
+              on:blur={onJtracNoChangeHandler}
+            />
           </Box>
         </Box>
       </Box>
@@ -1161,7 +1169,8 @@
               bind:checked={value.checked}
               labelText={value.defaultValue}
               {value}
-              on:change={onCheckBoxChangeHandler} />
+              on:change={onCheckBoxChangeHandler}
+            />
           {/each}
         </Box>
       </Box>
@@ -1170,14 +1179,16 @@
           width="55px"
           className="main-text "
           class="text-min-width"
-          verticalAlign="middle">
+          verticalAlign="middle"
+        >
           <Text>模块</Text>
         </Box>
         <Box f={1} class="input-box">
           <BatchInput
             bind:value={modules}
             bind:dataTotal={moduleTotal}
-            on:blur={onModulesChangeHandler} />
+            on:blur={onModulesChangeHandler}
+          />
         </Box>
       </Box>
       <Box width="100px" />
@@ -1192,7 +1203,8 @@
         </Box>
         <IconButton
           currentIcon={Close}
-          on:click={onBtnClearExModulesClickHandler} />
+          on:click={onBtnClearExModulesClickHandler}
+        />
       </Box>
     </Box>
   </Box>
@@ -1204,47 +1216,54 @@
           size="small"
           kind="tertiary"
           icon={Add}
-          on:click={onBtnAddJtracClickHandler}>新增</Button>
+          on:click={onBtnAddJtracClickHandler}>新增</Button
+        >
       {/if}
       {#if permissionData.includes("J_E")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
-          on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button>
+          on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button
+        >
       {/if}
       {#if permissionData.includes("J_D")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
-          on:click={onBtnUpdateStatus45ClickHandler}>45</Button>
+          on:click={onBtnUpdateStatus45ClickHandler}>45</Button
+        >
       {/if}
       {#if permissionData.includes("J_B")}
         <Button
           kind="tertiary"
           icon={TrashCan}
           class="margin-left-s button-normal"
-          on:click={onBtnDeleteClickHandler}>删除</Button>
+          on:click={onBtnDeleteClickHandler}>删除</Button
+        >
       {/if}
       <Button
         kind="tertiary"
         icon={Download}
         class="margin-left-s button-normal"
-        on:click={onBtnDownloadClickHandler}>下载</Button>
+        on:click={onBtnDownloadClickHandler}>下载</Button
+      >
       {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Checkmark}
           class="margin-left-s button-normal"
-          on:click={onBtnSumitClickHandler}>确认全部冲突</Button>
+          on:click={onBtnSumitClickHandler}>确认全部冲突</Button
+        >
       {/if}
       {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Collaborate}
           class="margin-left-s button-normal"
-          on:click={onBtnCheckStatusClickHandler}>查看状态</Button>
+          on:click={onBtnCheckStatusClickHandler}>查看状态</Button
+        >
       {/if}
       <Box width="120px" height="30px" class="margin-left-s margin_top">
         <AdvancedSelect
@@ -1252,7 +1271,8 @@
           optionIdentifier="code"
           labelIdentifier="name"
           onSubmit={(v) => onPageSizeSelectHandler(v)}
-          bind:value={selectedPageSizeValue} />
+          bind:value={selectedPageSizeValue}
+        />
       </Box>
     </Box>
     <Box f={1} horizontalAlign="right">
@@ -1260,12 +1280,14 @@
         kind="secondary"
         class=" button-normal"
         icon={Search}
-        on:click={onBtnSearchClickHandler}>SEARCH</Button>
+        on:click={onBtnSearchClickHandler}>SEARCH</Button
+      >
       <Button
         kind="secondary"
         icon={Reset}
         class="margin-left-s button-normal"
-        on:click={onBtnClearClickHandler}>RESET</Button>
+        on:click={onBtnClearClickHandler}>RESET</Button
+      >
     </Box>
   </Box>
   <DataGrid
@@ -1276,7 +1298,8 @@
     {pageCount}
     headerRows={2}
     onGridReady={onGridReadyHandler}
-    {onPageChange} />
+    {onPageChange}
+  />
 </Box>
 
 <style lang="scss">

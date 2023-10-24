@@ -252,7 +252,7 @@
 
           .split(',')
           .filter(item => {
-            if (regExp.test(item)) {
+            if (regExp.test(item?.trim())) {
               return true;
             } else {
               return false;
@@ -489,7 +489,7 @@
   }
 
   function onbtnJtracLinkHandler(v, page) {
-    CreatePop('Jtrac详细', fileDetail, { jtracNo: page.jtracNo });
+    CreatePop('Jtrac详细', fileDetail, { jtracNo: page.jtracNo?.trim() });
   }
 
   function onbtnDeleteRendererPage(i) {

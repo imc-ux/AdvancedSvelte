@@ -8,6 +8,7 @@
   import userMgmtMainStore from '@/store/UserMgmtMainStore';
   import { deepClone } from '@/utils/CommonUtils';
   import { autorun } from 'mobx';
+  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
 
   export let params;
   let id: string;
@@ -17,10 +18,12 @@
   let blockFlag: string;
   let figure: string = '';
   let labelList: any[];
+  let idList: any[];
   let showTabs: boolean = false;
 
   onMount(() => {
     labelList = params.userName.split(',');
+    idList = params.userId.split(',');
     if (labelList.length > 1) {
       showTabs = true;
     }
@@ -28,6 +31,7 @@
     info.iPageCount = 20;
     info.iStart = 0;
     info.id = params.userId.split(',')[0];
+    setWaiting();
     userMgmtMainStore.getUserList(info);
   });
   onDestroy(() => {
@@ -37,6 +41,7 @@
   const searchUserList = autorun(() => {
     if (userMgmtMainStore.userListResult) {
       const userList = deepClone(userMgmtMainStore.userListResult);
+      removeWaiting();
       if (!userList.error) {
         id = userList.data[0].id;
         name = userList.data[0].name;
@@ -52,7 +57,8 @@
     const info: UsersInfo = {};
     info.iPageCount = 20;
     info.iStart = 0;
-    info.id = params.userId.split(',')[event.detail.data];
+    info.id = idList[event.detail.data];
+    setWaiting();
     userMgmtMainStore.getUserList(info);
   }
 </script>

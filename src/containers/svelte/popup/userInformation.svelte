@@ -1,14 +1,9 @@
 <script lang="ts">
   import '@/styles/core/white.css';
   import '@/styles/core/index.scss';
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { Box, Text, Tabs } from '@/components/sveltecomponents';
-  import { Image } from '@/components/sveltecomponents/index';
-  import { UsersInfo } from '@/vo/userManager';
-  import userMgmtMainStore from '@/store/UserMgmtMainStore';
-  import { deepClone } from '@/utils/CommonUtils';
-  import { autorun } from 'mobx';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
+  import { getImagesServerUrl } from '@/utils/CommonUtils';
 
   export let params;
   let id: string;
@@ -17,49 +12,30 @@
   let userType: string;
   let blockFlag: string;
   let figure: string = '';
+  let tabList: any[];
   let labelList: any[];
-  let idList: any[];
   let showTabs: boolean = false;
 
   onMount(() => {
-    labelList = params.userName.split(',');
-    idList = params.userId.split(',');
+    tabList = params.userInfoList;
+    labelList = params.tabName;
     if (labelList.length > 1) {
       showTabs = true;
     }
-    const info: UsersInfo = {};
-    info.iPageCount = 20;
-    info.iStart = 0;
-    info.id = params.userId.split(',')[0];
-    setWaiting();
-    userMgmtMainStore.getUserList(info);
-  });
-  onDestroy(() => {
-    searchUserList();
-  });
-
-  const searchUserList = autorun(() => {
-    if (userMgmtMainStore.userListResult) {
-      const userList = deepClone(userMgmtMainStore.userListResult);
-      removeWaiting();
-      if (!userList.error) {
-        id = userList.data[0].id;
-        name = userList.data[0].name;
-        ip = userList.data[0].ip;
-        userType = userList.data[0].usertype;
-        blockFlag = userList.data[0].blockflag;
-        figure = userList.data[0].figure;
-      }
-    }
+    tabsUserInfoChange(0);
   });
 
   function onTabsChangeHandle(event) {
-    const info: UsersInfo = {};
-    info.iPageCount = 20;
-    info.iStart = 0;
-    info.id = idList[event.detail.data];
-    setWaiting();
-    userMgmtMainStore.getUserList(info);
+    tabsUserInfoChange(event.detail.data);
+  }
+
+  function tabsUserInfoChange(index) {
+    id = tabList[index].id;
+    name = tabList[index].name;
+    ip = tabList[index].ip;
+    userType = tabList[index].usertype;
+    blockFlag = tabList[index].blockflag;
+    figure = tabList[index].figure;
   }
 </script>
 
@@ -114,7 +90,8 @@
       <Text class="left_text">头像</Text>
     </Box>
     <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
-      <Image style="width: 95px;height: 95px" src={figure} />
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <img style="width: 95px;height: 95px" src={getImagesServerUrl() + figure} />
     </Box>
   </Box>
 </div>

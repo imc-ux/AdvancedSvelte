@@ -1556,8 +1556,9 @@ body.waiting * {
   font-weight: 500;
   line-height: inherit;
   text-align: center;
-    color: #fff;
+  color: #fff;
   background-color: #08adaa;
+  @include themifyListSelf('background-color', $theme-color);
   border: 1px solid #cacaca;
 }
 
@@ -1589,22 +1590,26 @@ a.bx--tabs__nav-link:active {
 
 .invalid.svelte-1bsxr9h {
   border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   background-color: #fff;
 }
 
 .invalid.svelte-1bsxr9h:focus {
   border-color: #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   box-shadow: none;
 }
 
 .input.svelte-1bsxr9h:focus {
   border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   background-color: #fff;
 }
 
 input.svelte-1bsxr9h:focus {
   background-color: #fff;
   border-color: #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   box-shadow: none;
 }
 
@@ -1616,7 +1621,8 @@ input.svelte-1bsxr9h {
 }
 
 select.svelte-w239uu:focus+select.dummy-select.svelte-w239uu {
-  border-color: #08adaa;
+  border: 1px solid#08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   box-shadow: none;
 }
 
@@ -1627,7 +1633,8 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
 }
 
 .date-time-picker.svelte-w239uu.svelte-w239uu:focus {
-  border-color: #08adaa;
+  border: 1px solid#08adaa;
+  @include themifyListSelf('border-color', $theme-color);
   box-shadow: none;
 }
 
@@ -1645,7 +1652,9 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
 .cell.selected.svelte-w239uu.svelte-w239uu {
   color: #fff;
   background: #08adaa;
+  @include themifyListSelf('background-color', $theme-color);
   border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
 }
 
 .cell.svelte-w239uu.svelte-w239uu {
@@ -1657,6 +1666,7 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
   box-shadow: none;
   border-radius: 0px;
   border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
 }
 
 .page-button.svelte-w239uu.svelte-w239uu {
@@ -1664,14 +1674,9 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
   border: 1px solid transparent;
 }
 
-.svelte-select-list.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5 {
-  box-shadow: none;
-  border-radius: 0px;
-  border: 1px solid #08adaa;
-}
-
 .ag-select-agg-func-virtual-list-item:hover {
   background-color: #08adaa;
+  @include themifyListSelf('background-color', $theme-color);
 }
 
 input.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5::placeholder {
@@ -1681,4 +1686,29 @@ input.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5::placeholder {
 .bx--tabs__nav-item:hover:not(.bx--tabs__nav-item--selected):not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link {
   border-bottom: 1px solid #cacaca;
   color: #161616;
+}
+
+input.svelte-1vabmef {
+  background-color: #fff;
+  border: 1px solid #cacaca;
+  border-radius: 0px;
+  height: 30px;
+}
+
+input.svelte-1vabmef:focus {
+  background-color: #fff;
+  border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
+  box-shadow: none;
+}
+
+.invalid.svelte-1vabmef {
+  border: 1px solid #cacaca;
+  background-color: #fff
+}
+
+.invalid.svelte-1vabmef:focus {
+  border: 1px solid #08adaa;
+  @include themifyListSelf('border-color', $theme-color);
+  box-shadow: none
 }

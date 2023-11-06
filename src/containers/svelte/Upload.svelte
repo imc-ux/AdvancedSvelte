@@ -26,6 +26,7 @@
   import { IconButton } from '@/components/renderers/index';
   import uploadSveletColumn from '@/components/columns/uploadColumnsSvelte';
   import pageStore from '@/store/UploadStore';
+  import userMgmtMainStore from '@/store/UserMgmtMainStore';
   import { autorun } from 'mobx';
   import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
   import { UsersInfo } from '@/vo/userManager/index';
@@ -78,6 +79,7 @@
   let permissionData: any[] = [];
   let arrHeadTitleNameWidth: any[] = [];
   let arrHeadTitleName: any[] = [];
+  let userInformationList: any[] = [];
   let checkBoxArr: any[] = [
     { defaultValue: '待检查', checked: true },
     { defaultValue: '待上传', checked: true },
@@ -106,6 +108,7 @@
     setWaiting();
     searchUploader();
     getUserActivePermission();
+    getUserList();
   });
 
   onDestroy(() => {
@@ -114,6 +117,7 @@
     upLoadListSearch();
     UpdateStatus();
     upLoadListDelete();
+    searchUserList();
     window.removeEventListener('message', themeChangeHandler, false);
   });
 
@@ -153,6 +157,15 @@
       removeWaiting();
       if (!value.error) {
         permissionData = value.data.split(',');
+      }
+    }
+  });
+
+  const searchUserList = autorun(() => {
+    if (userMgmtMainStore.userListResult) {
+      const userList = deepClone(userMgmtMainStore.userListResult);
+      if (!userList.error) {
+        userInformationList = userList.data;
       }
     }
   });
@@ -346,6 +359,13 @@
     const info = UserInfo.userId;
     setWaiting();
     pageStore.getUserActivePermission(info);
+  }
+
+  function getUserList() {
+    const info: UsersInfo = {};
+    info.iPageCount = 100;
+    info.iStart = 0;
+    userMgmtMainStore.getUserList(info);
   }
 
   function onBtnAddJtracClickHandler() {
@@ -993,25 +1013,30 @@
         height: '600px',
       });
     } else if (e.field === 'clientDeveloperName') {
-      CreatePop(
-        '用户信息',
-        userInformation,
-        {
-          userId: e.value.clientDeveloperIds,
-          userName: e.value.clientDeveloperName,
-        },
-        null,
-        {
-          width: '600px',
-          height: '400px',
-        }
-      );
+      openUserInfoPop(e.value.clientDeveloperName.split(','), e.value.clientDeveloperIds.split(','));
     } else if (e.field === 'reviewerName') {
-      CreatePop('用户信息', userInformation, { userId: e.value.reviewer, userName: e.value.reviewerName }, null, {
+      openUserInfoPop(e.value.reviewerName.split(','), e.value.reviewer.split(','));
+    }
+  }
+
+  function openUserInfoPop(labelList, idList) {
+    const userInfoList = [];
+    idList.forEach(data => {
+      userInfoList.push(userInformationList.find(info => info.id === data));
+    });
+    CreatePop(
+      '用户信息',
+      userInformation,
+      {
+        tabName: labelList,
+        userInfoList: userInfoList,
+      },
+      null,
+      {
         width: '600px',
         height: '400px',
-      });
-    }
+      }
+    );
   }
 
   function dateToInputHandler(e: CustomEvent<any>): void {

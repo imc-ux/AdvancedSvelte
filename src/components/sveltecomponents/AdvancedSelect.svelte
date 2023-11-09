@@ -2,7 +2,7 @@
   import Select from 'svelte-select';
   export let options = [];
   export let value = null;
-  export let onSubmit = (a) => {};
+  export let onSubmit = a => {};
   export let optionIdentifier = 'code';
   export let labelIdentifier = 'name';
   export let disabled = false;
@@ -106,6 +106,7 @@
 
   :global(.svelte-15ynnp5::-webkit-input-placeholder) {
     font-size: 13px;
+    color: #000;
   }
 
   :global(.svelte-select-list > .list-item) {

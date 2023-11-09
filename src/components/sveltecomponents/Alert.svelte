@@ -7,19 +7,19 @@
 */
 -->
 <script>
-  import '@/styles/core/white.css';
-  import { Box, Image, Button } from '@/components/sveltecomponents';
-  import { Modal } from 'carbon-components-svelte';
-  import { onMount } from 'svelte';
-  import icon_delete from '../../../static/uploadsys/images/alert/alert_icon_delete.png';
-  import icon_question from '../../../static/uploadsys/images/alert/alert_icon_question.png';
-  import icon_succeed from '../../../static/uploadsys/images/alert/alert_icon_succeed.png';
-  import icon_warning from '../../../static/uploadsys/images/alert/alert_icon_warning.png';
+  import "@/styles/core/white.css";
+  import { Box, Image, Button } from "@/components/sveltecomponents";
+  import { Modal } from "carbon-components-svelte";
+  import { onMount } from "svelte";
+  import icon_delete from "../../../static/uploadsys/images/alert/alert_icon_delete.png";
+  import icon_question from "../../../static/uploadsys/images/alert/alert_icon_question.png";
+  import icon_succeed from "../../../static/uploadsys/images/alert/alert_icon_succeed.png";
+  import icon_warning from "../../../static/uploadsys/images/alert/alert_icon_warning.png";
 
-  export let text = '';
-  export let size = 'xs';
+  export let text = "";
+  export let size = "xs";
   export let passiveModal = true;
-  export let title = '';
+  export let title = "";
   export let icon = 1;
   export let remove = undefined;
   export let onClose;
@@ -28,11 +28,13 @@
   let alertRef = null;
 
   onMount(() => {
-    let titleDiv = alertRef.getElementsByClassName('bx--modal-header')[0];
-    titleDiv.addEventListener('mousedown', mouseDown);
-    div = alertRef.getElementsByClassName('bx--modal-container bx--modal-container--xs')[0];
-    titleDiv.removeChild(alertRef.getElementsByClassName('bx--modal-close')[0]);
-    titleDiv.style.height = '28px';
+    let titleDiv = alertRef.getElementsByClassName("bx--modal-header")[0];
+    titleDiv.addEventListener("mousedown", mouseDown);
+    div = alertRef.getElementsByClassName(
+      "bx--modal-container bx--modal-container--xs"
+    )[0];
+    titleDiv.removeChild(alertRef.getElementsByClassName("bx--modal-close")[0]);
+    titleDiv.style.height = "28px";
   });
 
   $: props = {
@@ -44,12 +46,12 @@
   }
 
   function onYesBtnClickHandler() {
-    onClose?.('Y');
+    onClose?.("Y");
     remove();
   }
 
   function onNoBtnClickHandler() {
-    onClose?.('N');
+    onClose?.("N");
     remove();
   }
 
@@ -90,8 +92,8 @@
     if (y > winHei) {
       y = winHei;
     }
-    div.style.top = y + 'px';
-    div.style.left = x + 'px';
+    div.style.top = y + "px";
+    div.style.left = x + "px";
   }
 </script>
 
@@ -123,10 +125,18 @@
   </Box>
   <Box class="btn-margin">
     {#if icon !== 2}
-      <Button kind="tertiary" on:click={handlerClose} class="agree-button">确定</Button>
+      <Button kind="tertiary" on:click={handlerClose} class="agree-button"
+        >确定</Button
+      >
     {:else}
-      <Button kind="tertiary" on:click={onYesBtnClickHandler} class="opt-button">Yes</Button>
-      <Button kind="tertiary" on:click={onNoBtnClickHandler} class="opt-button right-button">No</Button>
+      <Button kind="tertiary" on:click={onYesBtnClickHandler} class="opt-button"
+        >Yes</Button
+      >
+      <Button
+        kind="tertiary"
+        on:click={onNoBtnClickHandler}
+        class="opt-button right-button">No</Button
+      >
     {/if}
   </Box>
 </Modal>
@@ -170,14 +180,14 @@
 
   :global(.agree-button) {
     margin-bottom: 0px;
-    height: 24px;
+    min-height: 24px;
     font-size: 13px;
     margin: auto;
   }
 
   :global(.opt-button) {
     margin-bottom: 0px;
-    height: 24px;
+    min-height: 24px;
     font-size: 13px;
   }
 </style>

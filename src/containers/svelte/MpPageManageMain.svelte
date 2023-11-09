@@ -8,6 +8,7 @@
  */
  -->
 <script lang="ts">
+
   import "@/styles/core/white.css";
   import "@/styles/core/index.scss";
   import {
@@ -43,12 +44,13 @@
   import XLSX from "xlsx";
 
   let selectedType: string = "";
+
   let selectedItem: number = 20;
   let searchType: string = "search";
   let rowData: any[] | null = null;
   let bizList = [];
-  let userID: string = "";
-  let userName: string = "";
+  let userID: string = '';
+  let userName: string = '';
   let pageSize = 20;
   let userIDTotal = 0;
   let userNameTotal = 0;
@@ -59,8 +61,8 @@
   let currentPage = 0;
   let pageCount: number = 10;
   let permissionData: any[] = [];
-  const linkCodes = ["code"];
-  const labelCodes = ["name", "developerName"];
+  const linkCodes = ['code'];
+  const labelCodes = ['name', 'developerName'];
 
   let gridApi: any;
 
@@ -68,24 +70,24 @@
     setWaiting();
     searchBizDebeloper();
     getUserActivePermission();
-    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-leaf";
-    if (currentTheme.includes("-theme")) {
-      currentTheme = "ux-leaf";
+    let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
+    if (currentTheme.includes('-theme')) {
+      currentTheme = 'ux-leaf';
     }
-    document.body.setAttribute("data-theme", currentTheme);
-    window.addEventListener("message", themeChangeHandler, false);
+    document.body.setAttribute('data-theme', currentTheme);
+    window.addEventListener('message', themeChangeHandler, false);
   });
 
   onDestroy(() => {
     disposer();
     disposerSearch();
     getPermission();
-    window.removeEventListener("message", themeChangeHandler, false);
+    window.removeEventListener('message', themeChangeHandler, false);
   });
 
   function themeChangeHandler(e: MessageEvent) {
-    if (e.data.type === "theme-changed") {
-      document.body.setAttribute("data-theme", e.data.data);
+    if (e.data.type === 'theme-changed') {
+      document.body.setAttribute('data-theme', e.data.data);
     }
   }
 
@@ -116,7 +118,7 @@
       pageStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!permisisonList.error) {
-        permissionData = permisisonList.data?.split(",");
+        permissionData = permisisonList.data?.split(',');
       }
     }
   });
@@ -133,38 +135,38 @@
       value.data?.forEach((elem) => {
         elem.linkCodes = linkCodes;
         elem.labelCodes = labelCodes;
-        if (!elem.developerName || elem.developerName === "null") {
-          elem.developerName = "";
+        if (!elem.developerName || elem.developerName === 'null') {
+          elem.developerName = '';
         }
-        if (!elem.reviewerName || elem.reviewerName === "null") {
-          elem.reviewerName = "";
+        if (!elem.reviewerName || elem.reviewerName === 'null') {
+          elem.reviewerName = '';
         }
 
-        if (!elem.management || elem.management === "null") {
-          elem.management = "";
-          elem.managementName = "";
+        if (!elem.management || elem.management === 'null') {
+          elem.management = '';
+          elem.managementName = '';
         } else {
           let info = managementTypeList.find((v) => v.code === elem.management);
           if (info) {
             elem.managementName = info.name;
           } else {
-            elem.managementName = "";
+            elem.managementName = '';
           }
         }
-        if (elem.type === "buyer") {
-          elem.typeName = "Buyer主页";
-        } else if (elem.type === "supplier") {
-          elem.typeName = "Supplier主页";
-        } else if (elem.type === "gerp") {
-          elem.typeName = "GERP主页";
-        } else if (elem.type === "buyerExp") {
-          elem.typeName = "BuyerEXP主页";
-        } else if (elem.type === "main") {
-          elem.typeName = "MP主页";
-        } else if (elem.type === "pop") {
-          elem.typeName = "Popup";
-        } else if (elem.type === "renderer") {
-          elem.typeName = "Renderer";
+        if (elem.type === 'buyer') {
+          elem.typeName = 'Buyer主页';
+        } else if (elem.type === 'supplier') {
+          elem.typeName = 'Supplier主页';
+        } else if (elem.type === 'gerp') {
+          elem.typeName = 'GERP主页';
+        } else if (elem.type === 'buyerExp') {
+          elem.typeName = 'BuyerEXP主页';
+        } else if (elem.type === 'main') {
+          elem.typeName = 'MP主页';
+        } else if (elem.type === 'pop') {
+          elem.typeName = 'Popup';
+        } else if (elem.type === 'renderer') {
+          elem.typeName = 'Renderer';
         }
       });
       if (searchType === "search") {
@@ -232,17 +234,17 @@
 
   function searchBizDebeloper() {
     const info: UsersInfo = {};
-    info.blockflag = "N";
-    info.usertype = "U";
+    info.blockflag = 'N';
+    info.usertype = 'U';
     info.iStart = 0;
     info.iPageCount = 10;
     pageStore.getUserList(info);
   }
 
   function onBtnAddClickHandler() {
-    CreatePop("MP管理页面-新增", addPageManager, {}, onBtnCloseHandler, {
-      width: "630px",
-      height: "680px",
+    CreatePop('MP管理页面-新增', addPageManager, {}, onBtnCloseHandler, {
+      width: '630px',
+      height: '680px',
     });
   }
 
@@ -275,9 +277,9 @@
   }
 
   function onBtnClearClickHandler() {
-    userID = "";
-    userName = "";
-    selectedType = "";
+    userID = '';
+    userName = '';
+    selectedType = '';
     selectedItem = 20;
     userIDTotal = 0;
     userNameTotal = 0;
@@ -287,18 +289,19 @@
   }
 
   function onBtnLinkHandler(e: any) {
-    CreatePop("MP管理页面-详细", modifyManager, e.value, onBtnCloseHandler, {
-      width: "900px",
-      height: "700px",
+    CreatePop('MP管理页面-详细', modifyManager, e.value, onBtnCloseHandler, {
+      width: '900px',
+      height: '700px',
     });
   }
 
   function onBtnCheckBoxHandler(e: any) {
+    console.log(e.value);
     e.value.selected = e.value1;
   }
 
   function onBtnCloseHandler(data: any) {
-    if (data === "Y") {
+    if (data === 'Y') {
       if (searchInfo) {
         const info = {
           code: searchInfo.code,
@@ -346,10 +349,7 @@
   function onGridReadyHandler(params: GridReadyEvent) {
     gridApi = params.api;
     gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
-    gridApi?.addEventListener(
-      Renderer.Renderer_Select_Check_Box,
-      onBtnCheckBoxHandler
-    );
+    gridApi?.addEventListener(Renderer.Renderer_Select_Check_Box, onBtnCheckBoxHandler);
   }
 </script>
 
@@ -357,18 +357,11 @@
   <Box column class="grid-x  mp-top-box">
     <Box f={1} class="grid-x margin-bottom" verticalAlign="middle">
       <Box width="427px" height="30px">
-        <Box
-          width="60px"
-          className="main-text"
-          verticalAlign="middle"
-          horizontalAlign="compact">
+        <Box width="60px" className="main-text" verticalAlign="middle" horizontalAlign="compact">
           <Text>ID</Text>
         </Box>
         <Box f={1} class="mp-input-box">
-          <BatchInput
-            bind:value={userID}
-            bind:dataTotal={userIDTotal}
-            mode={1} />
+          <BatchInput bind:value={userID} bind:dataTotal={userIDTotal} mode={1} />
         </Box>
       </Box>
       <Box width="50px" />
@@ -386,34 +379,26 @@
           <Text>Type</Text>
         </Box>
         <Box f={1} class="ul-top main-advancedSelect">
+
           <AdvancedSelect
             options={types}
             onSubmit={(v) => onTypeSelectHandler(v)}
             bind:value={selectedValue} />
+
         </Box>
       </Box>
       <Box f={1} class="margin-left-Max ul-top box-width">
         <Box width="82px" className="main-text" verticalAlign="middle">
           <Text>页面负责人</Text>
         </Box>
-        <Box
-          f={1}
-          flexDisplay={false}
-          width="auto"
-          class="main-advancedSelect select-height"
-          horizontalAlign="left"
-          verticalAlign="middle">
-          <MultiSelect
-            f={1}
-            dataProvider={bizList}
-            bind:selectedIds={selectedDeveloperValue}
-            class="popTextHeight "
-            direction="bottom" />
+        <Box f={1} flexDisplay={false} width="auto" class="main-advancedSelect select-height" horizontalAlign="left" verticalAlign="middle">
+          <MultiSelect f={1} dataProvider={bizList} bind:selectedIds={selectedDeveloperValue} class="popTextHeight " direction="bottom" />
         </Box>
       </Box>
     </Box>
   </Box>
   <Box class="margin-bottom ">
+
     <Box f={2} horizontalAlign="left">
       {#if permissionData?.includes("M_A")}
         <Button
@@ -437,16 +422,10 @@
           bind:value={selectedItemValue}
           onSubmit={(v) => onItemSelectHandler(v)} />
       </Box>
-      <Button
-        kind="tertairy"
-        icon={Search}
-        class="button-normal margin_right margin_top_s button-main-style"
-        on:click={onBtnSearchClickHandler}>SEARCH</Button>
-      <Button
-        kind="tertairy"
-        icon={Reset}
-        class="button-normal margin_top_s button-main-style"
-        on:click={onBtnClearClickHandler}>RESET</Button>
+      <Button kind="tertairy" icon={Search} class="button-normal margin_right margin_top_s button-main-style" on:click={onBtnSearchClickHandler}
+        >SEARCH</Button
+      >
+      <Button kind="tertairy" icon={Reset} class="button-normal margin_top_s button-main-style" on:click={onBtnClearClickHandler}>RESET</Button>
     </Box>
   </Box>
   <DataGrid
@@ -456,12 +435,13 @@
     {pageCount}
     {currentPage}
     onPageChange={onPageChangeHandler}
-    onGridReady={onGridReadyHandler} />
+    onGridReady={onGridReadyHandler}
+  />
 </Box>
 
 <style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
+  @import '../../styles/theme/var';
+  @import '../../styles/theme/mixin';
 
   :global(.outter) {
     display: flex !important;
@@ -508,8 +488,7 @@
 
   :global(.button-normal) {
     font-size: 13px;
-    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
-      "微软雅黑";
+    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
     color: #08adaa;
   }
 

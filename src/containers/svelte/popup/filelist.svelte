@@ -7,43 +7,50 @@
  */
  -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { Button, Input, Box, Text, TextArea, AdvancedSelect } from '@/components/sveltecomponents';
-  import { onMount, onDestroy } from 'svelte';
-  import pageStore from '@/store/filelistStore';
-  import { autorun } from 'mobx';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { PermissionList, JtracInfo } from '@/vo/uploadManager/index';
-  import { UsersInfo } from '@/vo/userManager/index';
-  import { UserInfo, VERSION_REGEXP } from '@/utils/Settings';
-  import * as utils from '@/utils/CommonUtils';
-  import copy from 'copy-to-clipboard';
-  import { urgencyList } from '@/constant/constant';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
-  import { FileListAlert } from '@/constant/alert/upload';
-  import { deepClone } from '@/utils/CommonUtils';
-  import Copy from 'carbon-icons-svelte/lib/Copy.svelte';
-  import Save from 'carbon-icons-svelte/lib/Save.svelte';
-  import Checkmark from 'carbon-icons-svelte/lib/Checkmark.svelte';
-  import { systemTypeList } from '@/constant/constant';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import {
+    Button,
+    Input,
+    Box,
+    Text,
+    TextArea,
+    AdvancedSelect,
+  } from "@/components/sveltecomponents";
+  import { onMount, onDestroy } from "svelte";
+  import pageStore from "@/store/filelistStore";
+  import { autorun } from "mobx";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { PermissionList, JtracInfo } from "@/vo/uploadManager/index";
+  import { UsersInfo } from "@/vo/userManager/index";
+  import { UserInfo, VERSION_REGEXP } from "@/utils/Settings";
+  import * as utils from "@/utils/CommonUtils";
+  import copy from "copy-to-clipboard";
+  import { urgencyList } from "@/constant/constant";
+  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
+  import { FileListAlert } from "@/constant/alert/upload";
+  import { deepClone } from "@/utils/CommonUtils";
+  import Copy from "carbon-icons-svelte/lib/Copy.svelte";
+  import Save from "carbon-icons-svelte/lib/Save.svelte";
+  import Checkmark from "carbon-icons-svelte/lib/Checkmark.svelte";
+  import { systemTypeList } from "@/constant/constant";
 
   export let params: any;
   export let onClose;
-  let jtracNo: string = '';
-  let version: string = '';
-  let detail: string = '';
-  let list: string = '';
-  let nid: string = '';
-  let selectedReviewer: string = '';
-  let selectedBizDeveloper: string = '';
-  let selectedUrgency: string = '';
-  let selectedSystemFlag: string = '';
+  let jtracNo: string = "";
+  let version: string = "";
+  let detail: string = "";
+  let list: string = "";
+  let nid: string = "";
+  let selectedReviewer: string = "";
+  let selectedBizDeveloper: string = "";
+  let selectedUrgency: string = "";
+  let selectedSystemFlag: string = "";
   let reviewerList: any[] = [];
   let bizDeveloperList: any[] = [];
   let permissionData: any[] = [];
   let isReviewer: boolean = false;
-  let maxHeight: string = '29px';
+  let maxHeight: string = "68px";
 
   onMount(() => {
     searchPerson();
@@ -70,13 +77,16 @@
       if (!value.error) {
         let values = value.data;
         let user: {} = {
-          id: '',
-          name: '--请选择--',
+          id: "",
+          name: "--请选择--",
         };
         values.unshift(user);
         reviewerList = values;
         selectedReviewer = params.info.reviewer;
-        if (selectedReviewer === UserInfo.userId && params.info.status === 'R') {
+        if (
+          selectedReviewer === UserInfo.userId &&
+          params.info.status === "R"
+        ) {
           isReviewer = true;
         }
       }
@@ -91,12 +101,12 @@
       if (!value.error) {
         let values = value.data;
         let user: any = {
-          blockFlag: '',
-          id: '',
-          name: '--请选择--',
-          password: '',
-          permissionGroup: '',
-          userType: '',
+          blockFlag: "",
+          id: "",
+          name: "--请选择--",
+          password: "",
+          permissionGroup: "",
+          userType: "",
         };
         values.unshift(user);
         bizDeveloperList = values;
@@ -122,7 +132,7 @@
       pageStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!permissionList.error) {
-        permissionData = permissionList.data.split(',');
+        permissionData = permissionList.data.split(",");
       }
     }
   });
@@ -132,9 +142,9 @@
       const value = deepClone(pageStore.updateJtracInfoResult);
       pageStore.updateJtracInfoResult = null;
       if (!value.error) {
-        CustomAlert(value.msg, AlertIcon.SUCCESS, onClose('Y'));
+        CustomAlert(value.msg, AlertIcon.SUCCESS, onClose("Y"));
       } else {
-        CustomAlert(value.msg, AlertIcon.ERROR, onClose('Y'));
+        CustomAlert(value.msg, AlertIcon.ERROR, onClose("Y"));
       }
     }
   });
@@ -145,7 +155,7 @@
       pageStore.updateMultJtracStatusResult = null;
       removeWaiting();
       if (!value.error) {
-        onClose('Y');
+        onClose("Y");
       } else {
         CustomAlert(value.msg, AlertIcon.ERROR);
       }
@@ -153,7 +163,7 @@
   });
 
   function getPerson(list: any[], id: string) {
-    let value: any = { id: '', name: '--请选择--' };
+    let value: any = { id: "", name: "--请选择--" };
     list.forEach((data) => {
       if (data.id === id) value = data;
     });
@@ -166,13 +176,13 @@
 
   function searchPerson() {
     setWaiting();
-    pageStore.getUserCheckPersonList(['O']);
+    pageStore.getUserCheckPersonList(["O"]);
   }
 
   function searchBizDeveloper() {
     let info: UsersInfo = {};
-    info.blockflag = 'N';
-    info.usertype = 'P';
+    info.blockflag = "N";
+    info.usertype = "P";
     info.iStart = 0;
     info.iPageCount = 20;
     setWaiting();
@@ -200,13 +210,13 @@
     selectedSystemFlag = params.info.systemType;
     nid = params.info.nid;
     selectedUrgency = params.info.urgencyFlag;
-    if (params.info.file === 'A') {
-      list = params.info.filelist.replace(/,/g, '\r');
-    } else if (params.info.file === 'B') {
-      list = params.info.modulelist.replace(/,/g, '\r');
+    if (params.info.file === "A") {
+      list = params.info.filelist.replace(/,/g, "\r");
+    } else if (params.info.file === "B") {
+      list = params.info.modulelist.replace(/,/g, "\r");
     }
     setTimeout(() => {
-      maxHeight = document.getElementById('textArea').scrollHeight + 3 + 'px';
+      maxHeight = document.getElementById("textArea").scrollHeight + 3 + "px";
     }, 1);
   }
 
@@ -221,7 +231,9 @@
     let re: RegExp = /\n/g;
     let re2: RegExp = /\\/gi;
     let txtFileList: string;
-    txtFileList = distinctList(list.replace(re, ',').replace(/\r/g, ',').replace(re2, '/'));
+    txtFileList = distinctList(
+      list.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
+    );
     let info: JtracInfo = {};
     info.nid = nid;
     info.jtracNo = jtracNo.trim();
@@ -231,7 +243,7 @@
     info.urgencyFlag = selectedUrgency.trim();
     info.version = version.trim();
     info.detail = detail.trim();
-    if (params.info.file === 'A') {
+    if (params.info.file === "A") {
       info.fileList = txtFileList;
     } else {
       info.moduleList = txtFileList;
@@ -242,8 +254,8 @@
 
   function onBtnApproveClickHandler() {
     const info: JtracInfo = {};
-    info.status = 'A';
-    info.orgStatus = 'R';
+    info.status = "A";
+    info.orgStatus = "R";
     info.jtracNo = params.info.jtracNo;
     setWaiting();
     pageStore.updateMultJtracStatus(info);
@@ -251,15 +263,15 @@
 
   function distinctList(input: string): string {
     let existFiles: any[] = [];
-    let inputArray: any[] = input.split(',');
+    let inputArray: any[] = input.split(",");
     let outputArray: any[] = [];
     inputArray.forEach((data) => {
-      if (existFiles.indexOf(data) === -1 && data.trim() !== '') {
+      if (existFiles.indexOf(data) === -1 && data.trim() !== "") {
         existFiles.push(data);
         outputArray.push(data);
       }
     });
-    return outputArray.join(',');
+    return outputArray.join(",");
   }
 
   function validate() {
@@ -294,7 +306,7 @@
   }
 
   function onJtracNokeyupHandler(e: any) {
-    e.target.value.replace(/[^\d\-a-zA-z]/g, '');
+    e.target.value.replace(/[^\d\-a-zA-z]/g, "");
   }
 
   function onVersionChangeHandler(e: any) {
@@ -318,10 +330,10 @@
   }
 
   function switchToTextArea(value: string) {
-    if (!value) return '';
-    let result: string = value.replace(/\n/g, ',');
-    result = result.replace(/\s/g, ' ');
-    let resultNoEmpty = result.split(',').filter((v) => {
+    if (!value) return "";
+    let result: string = value.replace(/\n/g, ",");
+    result = result.replace(/\s/g, " ");
+    let resultNoEmpty = result.split(",").filter((v) => {
       return v && v.trim();
     });
     const resultNoRepeat: string[] = [];
@@ -330,7 +342,7 @@
         resultNoRepeat.push(v);
       }
     });
-    return resultNoRepeat.join('\n');
+    return resultNoRepeat.join("\n");
   }
 </script>
 
@@ -356,28 +368,57 @@
     >
       保存
     </Button>
-    <Button class="button-normal margin_bottom_s button-main-style" size="small" kind="tertiary" icon={Copy} on:click={onBtnCopyClickHandler}>
+    <Button
+      class="button-normal margin_bottom_s button-main-style"
+      size="small"
+      kind="tertiary"
+      icon={Copy}
+      on:click={onBtnCopyClickHandler}
+    >
       复制
     </Button>
   </Box>
   <Box class="typeLable">
-    <Box class="addPage-list background_border" horizontalAlign="compact" verticalAlign="middle">
+    <Box
+      class="addPage-list background_border"
+      horizontalAlign="compact"
+      verticalAlign="middle"
+    >
       <Text>JtracNo</Text>
     </Box>
-    <Box f={1} class="border_right_top padding-normal" horizontalAlign="left" verticalAlign="middle">
-      {#if permissionData.includes('J_F')}
-        <Input bind:value={jtracNo} on:keyup={onJtracNokeyupHandler} on:blur={onJtracNoChangeHandler} class="input popTextHeight" />
+    <Box
+      f={1}
+      class="border_right_top padding-normal"
+      horizontalAlign="left"
+      verticalAlign="middle"
+    >
+      {#if permissionData.includes("J_F")}
+        <Input
+          bind:value={jtracNo}
+          on:keyup={onJtracNokeyupHandler}
+          on:blur={onJtracNoChangeHandler}
+          class="input popTextHeight"
+        />
       {:else}
         <Input bind:value={jtracNo} disabled class="input popTextHeight" />
       {/if}
     </Box>
   </Box>
   <Box class="typeLable">
-    <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+    <Box
+      class="addPage-list background"
+      horizontalAlign="compact"
+      verticalAlign="middle"
+    >
       <Text>Version</Text>
     </Box>
-    <Box f={1} class="border_right padding-normal" horizontalAlign="left" verticalAlign="middle">
-      {#if permissionData.includes('J_F')}
+    <Box
+      f={1}
+      class="border_right padding-normal"
+      horizontalAlign="left"
+      verticalAlign="middle"
+    >
+      {#if permissionData.includes("J_F")}
         <AdvancedSelect
           options={systemTypeList}
           optionIdentifier="id"
@@ -386,22 +427,45 @@
           bind:value={selectedSystemFlag}
         />
         <div class="connector">-</div>
-        <Input bind:value={version} on:change={onVersionChangeHandler} class="input popTextHeight jtrac-input-width" />
+        <Input
+          bind:value={version}
+          on:change={onVersionChangeHandler}
+          class="input popTextHeight jtrac-input-width"
+        />
       {:else}
-        <AdvancedSelect options={systemTypeList} optionIdentifier="id" labelIdentifier="name" disabled bind:value={selectedSystemFlag} />
+        <AdvancedSelect
+          options={systemTypeList}
+          optionIdentifier="id"
+          labelIdentifier="name"
+          disabled
+          bind:value={selectedSystemFlag}
+        />
         <div class="connector">-</div>
-        <Input bind:value={version} disabled class="input popTextHeight jtrac-input-width" />
+        <Input
+          bind:value={version}
+          disabled
+          class="input popTextHeight jtrac-input-width"
+        />
       {/if}
     </Box>
   </Box>
   <div style="height:415px">
     <div style="height:413px;overflow:auto">
       <Box class="typeLable">
-        <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+        <Box
+          class="addPage-list background"
+          horizontalAlign="compact"
+          verticalAlign="middle"
+        >
           <Text>代码检查负责人</Text>
         </Box>
-        <Box f={1} class="border_right padding-normal popup-position popup-select-height" horizontalAlign="left" verticalAlign="middle">
-          {#if permissionData.includes('J_F')}
+        <Box
+          f={1}
+          class="border_right padding-normal popup-position popup-select-height"
+          horizontalAlign="left"
+          verticalAlign="middle"
+        >
+          {#if permissionData.includes("J_F")}
             <AdvancedSelect
               options={reviewerList}
               optionIdentifier="id"
@@ -410,31 +474,70 @@
               bind:value={selectedReviewer}
             />
           {:else}
-            <AdvancedSelect disabled options={reviewerList} optionIdentifier="id" labelIdentifier="name" bind:value={selectedReviewer} />
+            <AdvancedSelect
+              disabled
+              options={reviewerList}
+              optionIdentifier="id"
+              labelIdentifier="name"
+              bind:value={selectedReviewer}
+            />
           {/if}
         </Box>
       </Box>
       <Box class="typeLable">
-        <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+        <Box
+          class="addPage-list background"
+          horizontalAlign="compact"
+          verticalAlign="middle"
+        >
           <Text>列表</Text>
         </Box>
-        <Box f={1} class="border_right padding-normal" horizontalAlign="left" verticalAlign="middle">
-          <TextArea id="textArea" height={maxHeight} on:blur={onListBlurHandler} bind:value={list} class="textArea-bottom-margin" />
+        <Box
+          f={1}
+          class="border_right padding-normal"
+          horizontalAlign="left"
+          verticalAlign="middle"
+        >
+          <TextArea
+            id="textArea"
+            height={maxHeight}
+            on:blur={onListBlurHandler}
+            bind:value={list}
+            class="textArea-bottom-margin"
+          />
         </Box>
       </Box>
       <Box class="typeLable">
-        <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+        <Box
+          class="addPage-list background"
+          horizontalAlign="compact"
+          verticalAlign="middle"
+        >
           <Text>Detail</Text>
         </Box>
-        <Box f={1} class="border_right padding-normal" horizontalAlign="left" verticalAlign="middle">
+        <Box
+          f={1}
+          class="border_right padding-normal"
+          horizontalAlign="left"
+          verticalAlign="middle"
+        >
           <Input bind:value={detail} class="input popTextHeight" />
         </Box>
       </Box>
       <Box class="typeLable">
-        <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+        <Box
+          class="addPage-list background"
+          horizontalAlign="compact"
+          verticalAlign="middle"
+        >
           <Text>后台负责人</Text>
         </Box>
-        <Box f={1} class="border_right padding-normal popup-position popup-select-height" horizontalAlign="left" verticalAlign="middle">
+        <Box
+          f={1}
+          class="border_right padding-normal popup-position popup-select-height"
+          horizontalAlign="left"
+          verticalAlign="middle"
+        >
           <AdvancedSelect
             options={bizDeveloperList}
             optionIdentifier="id"
@@ -445,10 +548,19 @@
         </Box>
       </Box>
       <Box class="typeLable">
-        <Box class="addPage-list background" horizontalAlign="compact" verticalAlign="middle">
+        <Box
+          class="addPage-list background"
+          horizontalAlign="compact"
+          verticalAlign="middle"
+        >
           <Text>紧急程度</Text>
         </Box>
-        <Box f={1} class="border_right_bottom padding-normal popup-position popup-select-height" horizontalAlign="left" verticalAlign="middle">
+        <Box
+          f={1}
+          class="border_right_bottom padding-normal popup-position popup-select-height"
+          horizontalAlign="left"
+          verticalAlign="middle"
+        >
           <AdvancedSelect
             options={urgencyList}
             optionIdentifier="id"

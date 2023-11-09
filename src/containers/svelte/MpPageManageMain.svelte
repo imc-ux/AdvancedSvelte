@@ -22,6 +22,7 @@
   import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
   import Search from "carbon-icons-svelte/lib/Search.svelte";
   import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+  import Download from "carbon-icons-svelte/lib/Download.svelte";
   import pageColumn from "@/components/columns/mpPageManageColumns";
   import { UsersInfo } from "@/vo/userManager/index";
   import { onMount, onDestroy } from "svelte";
@@ -426,7 +427,7 @@
         class="button-normal button-main-style margin_top_s"
         size="small"
         kind="tertairy"
-        icon={Add}
+        icon={Download}
         on:click={onBtnDownLoadClickHandler}>下载</Button>
     </Box>
     <Box f={1} horizontalAlign="right" class="ul-top">

@@ -49,10 +49,13 @@
   }
 
   :global(.svelte-select-list) {
-    border: 1px solid #08adaa !important;
+    border-bottom: 1px solid #08adaa !important;
+    border-left: 1px solid #08adaa !important;
+    border-right: 1px solid #08adaa !important;
     @include themifyListIpt('border-color', $theme-color);
     border-radius: 0% !important;
     font-size: 13px;
+    margin-top: -6px !important;
   }
 
   :global(.svelte-select) {
@@ -106,7 +109,6 @@
 
   :global(.svelte-15ynnp5::-webkit-input-placeholder) {
     font-size: 13px;
-    color: #000;
   }
 
   :global(.svelte-select-list > .list-item) {

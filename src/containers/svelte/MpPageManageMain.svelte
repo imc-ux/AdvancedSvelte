@@ -8,34 +8,45 @@
  */
  -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { Button, Box, BatchInput, Text, AdvancedSelect, MultiSelect } from '@/components/sveltecomponents';
-  import Add from 'carbon-icons-svelte/lib/Add.svelte';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import Search from 'carbon-icons-svelte/lib/Search.svelte';
-  import Reset from 'carbon-icons-svelte/lib/Reset.svelte';
-  import pageColumn from '@/components/columns/mpPageManageColumns';
-  import { UsersInfo } from '@/vo/userManager/index';
-  import { onMount, onDestroy } from 'svelte';
-  import pageStore from '@/store/MpPageManageStore';
-  import { PageManageAlert } from '@/constant/alert/Base';
-  import { CreatePop } from '@/components/Popup';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
-  import { autorun } from 'mobx';
-  import { types, itemPages, managementTypeList } from '@/constant/constant';
-  import addPageManager from '@/containers/svelte/popup/addPageManager.svelte';
-  import modifyManager from '@/containers/svelte/popup/modifyManager.svelte';
-  import { deepClone } from '@/utils/CommonUtils';
-  import Storage from '@/utils/Storage';
-  import type { GridReadyEvent } from 'ag-grid-community';
-  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
-  import Renderer from '@/constant/Renderer';
-  import { UserInfo } from '@/utils/Settings';
 
-  let selectedType: string = '';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import {
+    Button,
+    Box,
+    BatchInput,
+    Text,
+    AdvancedSelect,
+    MultiSelect,
+  } from "@/components/sveltecomponents";
+  import Add from "carbon-icons-svelte/lib/Add.svelte";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import Search from "carbon-icons-svelte/lib/Search.svelte";
+  import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+  import Download from "carbon-icons-svelte/lib/Download.svelte";
+  import pageColumn from "@/components/columns/mpPageManageColumns";
+  import { UsersInfo } from "@/vo/userManager/index";
+  import { onMount, onDestroy } from "svelte";
+  import pageStore from "@/store/MpPageManageStore";
+  import { PageManageAlert } from "@/constant/alert/Base";
+  import { CreatePop } from "@/components/Popup";
+  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
+  import { autorun } from "mobx";
+  import { types, itemPages, managementTypeList } from "@/constant/constant";
+  import addPageManager from "@/containers/svelte/popup/addPageManager.svelte";
+  import modifyManager from "@/containers/svelte/popup/modifyManager.svelte";
+  import { deepClone } from "@/utils/CommonUtils";
+  import Storage from "@/utils/Storage";
+  import type { GridReadyEvent } from "ag-grid-community";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import Renderer from "@/constant/Renderer";
+  import { UserInfo } from "@/utils/Settings";
+  import XLSX from "xlsx";
+
+  let selectedType: string = "";
+
   let selectedItem: number = 20;
-
+  let searchType: string = "search";
   let rowData: any[] | null = null;
   let bizList = [];
   let userID: string = '';
@@ -121,7 +132,7 @@
         CustomAlert(PageManageAlert.INTERNET_ERROR, AlertIcon.ERROR);
         return;
       }
-      value.data?.forEach(elem => {
+      value.data?.forEach((elem) => {
         elem.linkCodes = linkCodes;
         elem.labelCodes = labelCodes;
         if (!elem.developerName || elem.developerName === 'null') {
@@ -135,7 +146,7 @@
           elem.management = '';
           elem.managementName = '';
         } else {
-          let info = managementTypeList.find(v => v.code === elem.management);
+          let info = managementTypeList.find((v) => v.code === elem.management);
           if (info) {
             elem.managementName = info.name;
           } else {
@@ -158,13 +169,68 @@
           elem.typeName = 'Renderer';
         }
       });
-      if (value.data.length > 0) {
-        pageSize = selectedItem;
+      if (searchType === "search") {
+        if (value.data.length > 0) {
+          pageSize = selectedItem;
+        }
+        rowData = value.data;
+        pageCount = Math.ceil(rowData?.[0]?.totalCount / pageSize);
+      } else {
+        downloadDataHandler(value.data);
       }
-      rowData = value.data;
-      pageCount = Math.ceil(rowData?.[0]?.totalCount / pageSize);
     }
   });
+
+  function downloadDataHandler(data: any[]) {
+    let filename = "MP管理.xlsx";
+    data = deepClone(data);
+    data.forEach((iData) => {
+      let reg = /[,]/g;
+      for (let n in iData) {
+        if (n === "code") {
+          iData["ID"] = iData[n];
+          delete iData[n];
+        } else if (n === "name") {
+          iData["Name"] = iData[n];
+          delete iData[n];
+        } else if (n === "managementName") {
+          iData["Management"] = iData[n];
+          delete iData[n];
+        } else if (n === "typeName") {
+          iData["Type"] = iData[n];
+          delete iData[n];
+        } else if (n === "developerName") {
+          iData["页面负责人"] = iData[n];
+          delete iData[n];
+        } else if (n === "reviewerName") {
+          iData["检查负责人"] = iData[n];
+          delete iData[n];
+        } else {
+          delete iData[n];
+        }
+      }
+    });
+    let arrHeadTitleName: any[] = [];
+    let arrHeadTitleNameWidth: any[] = [
+      { wpx: 400 },
+      { wpx: 300 },
+      { wpx: 200 },
+      { wpx: 200 },
+      { wpx: 150 },
+      { wpx: 150 },
+    ];
+    let arrTitle: any[] = pageColumn;
+    arrTitle.forEach((data) => {
+      if (data.value) {
+        arrHeadTitleName.push(data.value);
+      }
+    });
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
+    ws["!cols"] = arrHeadTitleNameWidth;
+    XLSX.utils.book_append_sheet(wb, ws);
+    XLSX.writeFile(wb, filename);
+  }
 
   function searchBizDebeloper() {
     const info: UsersInfo = {};
@@ -193,10 +259,21 @@
     if (selectedDeveloperValue.length > 0) {
       info.developer = selectedDeveloperValue.toString();
     }
+    searchType = "search";
     currentPage = 0;
     searchInfo = info;
     setWaiting();
     pageStore.getMpPageMgmtList(info);
+  }
+
+  function onBtnDownLoadClickHandler() {
+    if (rowData && rowData.length > 0) {
+      searchInfo.iStart = 0;
+      searchInfo.iPageCount = 100000;
+      searchType = "download";
+      setWaiting();
+      pageStore.getMpPageMgmtList(searchInfo);
+    }
   }
 
   function onBtnClearClickHandler() {
@@ -237,6 +314,7 @@
         };
         pageSize = info.item;
         currentPage = 0;
+        searchType = "search";
         setWaiting();
         pageStore.getMpPageMgmtList(info);
       }
@@ -253,6 +331,7 @@
       iPageCount: selectedItem,
     };
     currentPage = v.detail.page;
+    searchType = "search";
     setWaiting();
     pageStore.getMpPageMgmtList(info);
   }
@@ -300,7 +379,12 @@
           <Text>Type</Text>
         </Box>
         <Box f={1} class="ul-top main-advancedSelect">
-          <AdvancedSelect options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedValue} />
+
+          <AdvancedSelect
+            options={types}
+            onSubmit={(v) => onTypeSelectHandler(v)}
+            bind:value={selectedValue} />
+
         </Box>
       </Box>
       <Box f={1} class="margin-left-Max ul-top box-width">
@@ -314,17 +398,29 @@
     </Box>
   </Box>
   <Box class="margin-bottom ">
-    {#if permissionData?.includes('M_A')}
-      <Box f={2} horizontalAlign="left">
-        <Button class="button-normal button-main-style margin_top_s" size="small" kind="tertairy" icon={Add} on:click={onBtnAddClickHandler}
-          >新增</Button
-        >
-      </Box>
-    {/if}
 
+    <Box f={2} horizontalAlign="left">
+      {#if permissionData?.includes("M_A")}
+        <Button
+          class="button-normal button-main-style margin_top_s margin-right"
+          size="small"
+          kind="tertairy"
+          icon={Add}
+          on:click={onBtnAddClickHandler}>新增</Button>
+      {/if}
+      <Button
+        class="button-normal button-main-style margin_top_s"
+        size="small"
+        kind="tertairy"
+        icon={Download}
+        on:click={onBtnDownLoadClickHandler}>下载</Button>
+    </Box>
     <Box f={1} horizontalAlign="right" class="ul-top">
       <Box class="itemStyle margin_top_s selected-height">
-        <AdvancedSelect options={itemPages} bind:value={selectedItemValue} onSubmit={v => onItemSelectHandler(v)} />
+        <AdvancedSelect
+          options={itemPages}
+          bind:value={selectedItemValue}
+          onSubmit={(v) => onItemSelectHandler(v)} />
       </Box>
       <Button kind="tertairy" icon={Search} class="button-normal margin_right margin_top_s button-main-style" on:click={onBtnSearchClickHandler}
         >SEARCH</Button

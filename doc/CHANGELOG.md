@@ -1,3 +1,11 @@
+## [V1.0.6](https://github.com/imc-ux/AdvancedSvelte/releases/tag/v1.0.6) (2023-11-9)
+
+### Features
+- #6
+- #49
+### Bug Fixes
+- 
+
 ## [V1.0.4](https://github.com/imc-ux/AdvancedSvelte/releases/tag/v1.0.4) (2023-11-3)
 
 ### Features

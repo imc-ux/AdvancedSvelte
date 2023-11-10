@@ -34,10 +34,12 @@
   import Renderer from '@/constant/Renderer';
   import userInformation from '@/containers/svelte/popup/userInformation.svelte';
   import { UserInfo } from '@/utils/Settings';
+  import XLSX from 'xlsx';
+  import Download from 'carbon-icons-svelte/lib/Download.svelte';
 
   let selectedType: string = '';
   let selectedItem: number = 20;
-
+  let searchType: string = 'search';
   let rowData: any[] | null = null;
   let bizList = [];
   let userID: string = '';
@@ -179,13 +181,61 @@
           elem.typeName = 'Renderer';
         }
       });
-      if (value.data.length > 0) {
-        pageSize = selectedItem;
+      if (searchType === 'search') {
+        if (value.data.length > 0) {
+          pageSize = selectedItem;
+        }
+        rowData = value.data;
+        pageCount = Math.ceil(rowData?.[0]?.totalCount / pageSize);
+      } else {
+        downloadDataHandler(value.data);
       }
-      rowData = value.data;
-      pageCount = Math.ceil(rowData?.[0]?.totalCount / pageSize);
     }
   });
+
+  function downloadDataHandler(data: any[]) {
+    let filename = 'MP管理.xlsx';
+    data = deepClone(data);
+    data.forEach(iData => {
+      let reg = /[,]/g;
+      for (let n in iData) {
+        if (n === 'code') {
+          iData['ID'] = iData[n];
+          delete iData[n];
+        } else if (n === 'name') {
+          iData['Name'] = iData[n];
+          delete iData[n];
+        } else if (n === 'managementName') {
+          iData['Management'] = iData[n];
+          delete iData[n];
+        } else if (n === 'typeName') {
+          iData['Type'] = iData[n];
+          delete iData[n];
+        } else if (n === 'developerName') {
+          iData['页面负责人'] = iData[n];
+          delete iData[n];
+        } else if (n === 'reviewerName') {
+          iData['检查负责人'] = iData[n];
+          delete iData[n];
+        } else {
+          delete iData[n];
+        }
+      }
+    });
+    let arrHeadTitleName: any[] = [];
+    let arrHeadTitleNameWidth: any[] = [{ wpx: 400 }, { wpx: 300 }, { wpx: 200 }, { wpx: 200 }, { wpx: 150 }, { wpx: 150 }];
+    let arrTitle: any[] = pageColumn;
+    arrTitle.forEach(data => {
+      if (data.value) {
+        arrHeadTitleName.push(data.value);
+      }
+    });
+    let wb = XLSX.utils.book_new();
+    let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
+    ws['!cols'] = arrHeadTitleNameWidth;
+    XLSX.utils.book_append_sheet(wb, ws);
+    XLSX.writeFile(wb, filename);
+  }
 
   function searchBizDebeloper() {
     const info: UsersInfo = {};
@@ -214,10 +264,21 @@
     if (selectedDeveloperValue.length > 0) {
       info.developer = selectedDeveloperValue.toString();
     }
+    searchType = 'search';
     currentPage = 0;
     searchInfo = info;
     setWaiting();
     pageStore.getMpPageMgmtList(info);
+  }
+
+  function onBtnDownLoadClickHandler() {
+    if (rowData && rowData.length > 0) {
+      searchInfo.iStart = 0;
+      searchInfo.iPageCount = 100000;
+      searchType = 'download';
+      setWaiting();
+      pageStore.getMpPageMgmtList(searchInfo);
+    }
   }
 
   function onBtnClearClickHandler() {
@@ -264,6 +325,7 @@
         };
         pageSize = info.item;
         currentPage = 0;
+        searchType = 'search';
         setWaiting();
         pageStore.getMpPageMgmtList(info);
       }
@@ -300,6 +362,7 @@
       iPageCount: selectedItem,
     };
     currentPage = v.detail.page;
+    searchType = 'search';
     setWaiting();
     pageStore.getMpPageMgmtList(info);
   }
@@ -373,14 +436,20 @@
     </Box>
   </Box>
   <Box class="margin-bottom ">
-    {#if permissionData?.includes('M_A')}
-      <Box f={2} horizontalAlign="left">
-        <Button class="button-normal button-main-style margin_top_s" size="small" kind="tertairy" icon={Add} on:click={onBtnAddClickHandler}
-          >新增</Button
+    <Box f={2} horizontalAlign="left">
+      {#if permissionData?.includes('M_A')}
+        <Button
+          class="button-normal button-main-style margin_top_s margin-right"
+          size="small"
+          kind="tertairy"
+          icon={Add}
+          on:click={onBtnAddClickHandler}>新增</Button
         >
-      </Box>
-    {/if}
-
+      {/if}
+      <Button class="button-normal button-main-style margin_top_s" size="small" kind="tertairy" icon={Download} on:click={onBtnDownLoadClickHandler}
+        >下载</Button
+      >
+    </Box>
     <Box f={1} horizontalAlign="right" class="ul-top">
       <Box class="itemStyle margin_top_s selected-height">
         <AdvancedSelect options={itemPages} bind:value={selectedItemValue} onSubmit={v => onItemSelectHandler(v)} />

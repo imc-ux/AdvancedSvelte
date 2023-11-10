@@ -10,7 +10,7 @@
 <script lang="ts">
   import '@/styles/core/white.css';
   import '@/styles/core/index.scss';
-  import { Button, Box, BatchInput, Text, AdvancedSelect, MultiSelect } from '@/components/sveltecomponents';
+  import { Button, Box, BatchInput, Text, AdvancedSelect, MultiSelect, SelectEx, MultiSelectEx } from '@/components/sveltecomponents';
   import Add from 'carbon-icons-svelte/lib/Add.svelte';
   import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
   import Search from 'carbon-icons-svelte/lib/Search.svelte';
@@ -19,6 +19,7 @@
   import { UsersInfo } from '@/vo/userManager/index';
   import { onMount, onDestroy } from 'svelte';
   import pageStore from '@/store/MpPageManageStore';
+  import userMgmtMainStore from '@/store/UserMgmtMainStore';
   import { PageManageAlert } from '@/constant/alert/Base';
   import { CreatePop } from '@/components/Popup';
   import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
@@ -31,6 +32,7 @@
   import type { GridReadyEvent } from 'ag-grid-community';
   import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
   import Renderer from '@/constant/Renderer';
+  import userInformation from '@/containers/svelte/popup/userInformation.svelte';
   import { UserInfo } from '@/utils/Settings';
 
   let selectedType: string = '';
@@ -44,12 +46,13 @@
   let userIDTotal = 0;
   let userNameTotal = 0;
   let searchInfo: any = {};
-  let selectedValue: object = types[0];
+  let selectedValue: string = types[0].code;
   let selectedDeveloperValue = [];
   let selectedItemValue: object = itemPages[0];
   let currentPage = 0;
   let pageCount: number = 10;
   let permissionData: any[] = [];
+  let userInformationList: any[] = [];
   const linkCodes = ['code'];
   const labelCodes = ['name', 'developerName'];
 
@@ -59,6 +62,7 @@
     setWaiting();
     searchBizDebeloper();
     getUserActivePermission();
+    getUserList();
     let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
     if (currentTheme.includes('-theme')) {
       currentTheme = 'ux-leaf';
@@ -71,6 +75,7 @@
     disposer();
     disposerSearch();
     getPermission();
+    searchUserList();
     window.removeEventListener('message', themeChangeHandler, false);
   });
 
@@ -83,6 +88,13 @@
   function getUserActivePermission() {
     const info: string = UserInfo.userId;
     pageStore.getUserActivePermission(info);
+  }
+
+  function getUserList() {
+    const info: UsersInfo = {};
+    info.iPageCount = 100;
+    info.iStart = 0;
+    userMgmtMainStore.getUserList(info);
   }
 
   const disposer = autorun(() => {
@@ -108,6 +120,15 @@
       removeWaiting();
       if (!permisisonList.error) {
         permissionData = permisisonList.data?.split(',');
+      }
+    }
+  });
+
+  const searchUserList = autorun(() => {
+    if (userMgmtMainStore.userListResult) {
+      const userList = deepClone(userMgmtMainStore.userListResult);
+      if (!userList.error) {
+        userInformationList = userList.data;
       }
     }
   });
@@ -206,20 +227,26 @@
     selectedItem = 20;
     userIDTotal = 0;
     userNameTotal = 0;
-    selectedValue = types[0];
+    selectedValue = types[0].code;
     selectedDeveloperValue = [];
     selectedItemValue = itemPages[0];
+    initSelectInput();
   }
 
   function onBtnLinkHandler(e: any) {
-    CreatePop('MP管理页面-详细', modifyManager, e.value, onBtnCloseHandler, {
-      width: '900px',
-      height: '700px',
-    });
+    if (e.field === 'code') {
+      CreatePop('MP管理页面-详细', modifyManager, e.value, onBtnCloseHandler, {
+        width: '900px',
+        height: '700px',
+      });
+    } else if (e.field === 'developerName') {
+      openUserInfoPop(e.value.developerName.split(','), e.value.developer.split(','));
+    } else if (e.field === 'reviewerName') {
+      openUserInfoPop(e.value.reviewerName.split(','), e.value.reviewer.split(','));
+    }
   }
 
   function onBtnCheckBoxHandler(e: any) {
-    console.log(e.value);
     e.value.selected = e.value1;
   }
 
@@ -243,6 +270,26 @@
     }
   }
 
+  function openUserInfoPop(labelList, idList) {
+    const userInfoList = [];
+    idList.forEach(data => {
+      userInfoList.push(userInformationList.find(info => info.id === data));
+    });
+    CreatePop(
+      '用户信息',
+      userInformation,
+      {
+        tabName: labelList,
+        userInfoList: userInfoList,
+      },
+      null,
+      {
+        width: '600px',
+        height: '400px',
+      }
+    );
+  }
+
   function onPageChangeHandler(v: any) {
     const info = {
       code: searchInfo.code,
@@ -258,8 +305,12 @@
   }
 
   function onTypeSelectHandler(value: any) {
-    selectedType = value.code;
+    selectedType = value;
     selectedValue = value;
+  }
+
+  function onDeveloperSelectHandler(value: any) {
+    selectedDeveloperValue = value;
   }
 
   function onItemSelectHandler(value: any) {
@@ -271,6 +322,14 @@
     gridApi = params.api;
     gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
     gridApi?.addEventListener(Renderer.Renderer_Select_Check_Box, onBtnCheckBoxHandler);
+  }
+
+  function initSelectInput() {
+    let li = document.getElementsByClassName('be-select-dropdown__item');
+    for (let i = 0; i < li.length; i++) {
+      li[i].classList.remove('selected');
+    }
+    document.getElementsByClassName('be-select-dropdown__item')[0].classList.add('selected');
   }
 </script>
 
@@ -300,15 +359,15 @@
           <Text>Type</Text>
         </Box>
         <Box f={1} class="ul-top main-advancedSelect">
-          <AdvancedSelect options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedValue} />
+          <SelectEx options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedValue} />
         </Box>
       </Box>
-      <Box f={1} class="margin-left-Max ul-top box-width">
+      <Box f={1} class="margin-left-Max box-width">
         <Box width="82px" className="main-text" verticalAlign="middle">
           <Text>页面负责人</Text>
         </Box>
-        <Box f={1} flexDisplay={false} width="auto" class="main-advancedSelect select-height" horizontalAlign="left" verticalAlign="middle">
-          <MultiSelect f={1} dataProvider={bizList} bind:selectedIds={selectedDeveloperValue} class="popTextHeight " direction="bottom" />
+        <Box f={1} class="ul-top main-advancedSelect">
+          <MultiSelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} codeField="id" bind:value={selectedDeveloperValue} />
         </Box>
       </Box>
     </Box>

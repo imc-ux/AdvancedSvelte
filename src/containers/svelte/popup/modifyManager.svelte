@@ -339,7 +339,7 @@
       code: inputID,
       management: selectManagement,
       type: params.type,
-      developer: selectPersion.toString(),
+      developer: selectPersion.length > 0 ? selectPersion.toString():'',
       reviewer: selectChecker.toString(),
       relatedPops: relatedPops.toString(),
       relatedRenderers: relatedRenderers.toString(),

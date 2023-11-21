@@ -1549,6 +1549,11 @@ body.waiting * {
   z-index: 2000;
 }
 
+.ag-body-viewport.ag-layout-normal {
+  overflow-y: auto;
+  border: 1px solid #e6e6e6;
+}
+
 .bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link,
 .bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link:focus,
 .bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link:active {
@@ -1712,3 +1717,4 @@ input.svelte-1vabmef:focus {
   @include themifyListSelf('border-color', $theme-color);
   box-shadow: none
 }
+

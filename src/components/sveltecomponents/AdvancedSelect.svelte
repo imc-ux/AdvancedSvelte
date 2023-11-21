@@ -2,7 +2,7 @@
   import Select from 'svelte-select';
   export let options = [];
   export let value = null;
-  export let onSubmit = (a) => {};
+  export let onSubmit = a => {};
   export let optionIdentifier = 'code';
   export let labelIdentifier = 'name';
   export let disabled = false;
@@ -49,10 +49,13 @@
   }
 
   :global(.svelte-select-list) {
-    border: 1px solid #08adaa !important;
+    border-bottom: 1px solid #08adaa !important;
+    border-left: 1px solid #08adaa !important;
+    border-right: 1px solid #08adaa !important;
     @include themifyListIpt('border-color', $theme-color);
     border-radius: 0% !important;
     font-size: 13px;
+    margin-top: -6px !important;
   }
 
   :global(.svelte-select) {

@@ -1,13 +1,9 @@
 <script lang="ts">
   import '@/styles/core/white.css';
   import '@/styles/core/index.scss';
-  import { onMount, onDestroy } from 'svelte';
-  import { Box, Text } from '@/components/sveltecomponents';
-  import { Image } from '@/components/sveltecomponents/index';
-  import { UsersInfo } from '@/vo/userManager';
-  import userMgmtMainStore from '@/store/UserMgmtMainStore';
-  import { deepClone } from '@/utils/CommonUtils';
-  import { autorun } from 'mobx';
+  import { onMount } from 'svelte';
+  import { Box, Text, Tabs } from '@/components/sveltecomponents';
+  import { getImagesServerUrl } from '@/utils/CommonUtils';
 
   export let params;
   let id: string;
@@ -16,34 +12,39 @@
   let userType: string;
   let blockFlag: string;
   let figure: string = '';
+  let tabList: any[];
+  let labelList: any[];
+  let showTabs: boolean = false;
 
   onMount(() => {
-    const info: UsersInfo = {};
-    info.iPageCount = 20;
-    info.iStart = 0;
-    info.id = params.userId;
-    userMgmtMainStore.getUserList(info);
-  });
-  onDestroy(() => {
-    searchUserList();
+    tabList = params.userInfoList;
+    labelList = params.tabName;
+    if (labelList.length > 1) {
+      showTabs = true;
+    }
+    tabsUserInfoChange(0);
   });
 
-  const searchUserList = autorun(() => {
-    if (userMgmtMainStore.userListResult) {
-      const userList = deepClone(userMgmtMainStore.userListResult);
-      if (!userList.error) {
-        id = userList.data[0].id;
-        name = userList.data[0].name;
-        ip = userList.data[0].ip;
-        userType = userList.data[0].usertype;
-        blockFlag = userList.data[0].blockflag;
-        figure = userList.data[0].figure;
-      }
-    }
-  });
+  function onTabsChangeHandle(event) {
+    tabsUserInfoChange(event.detail.data);
+  }
+
+  function tabsUserInfoChange(index) {
+    id = tabList[index].id;
+    name = tabList[index].name;
+    ip = tabList[index].ip;
+    userType = tabList[index].usertype;
+    blockFlag = tabList[index].blockflag;
+    figure = tabList[index].figure;
+  }
 </script>
 
 <div>
+  {#if showTabs}
+    <Box class="tabs">
+      <Tabs {labelList} on:change={onTabsChangeHandle} />
+    </Box>
+  {/if}
   <Box>
     <Box class="background_gray_border left_box svelte-lnhus4-font">
       <Text class="left_text">ID</Text>
@@ -89,7 +90,8 @@
       <Text class="left_text">头像</Text>
     </Box>
     <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
-      <Image style="width: 95px;height: 95px" src={figure} />
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <img style="width: 95px;height: 95px" src={getImagesServerUrl() + figure} />
     </Box>
   </Box>
 </div>
@@ -154,5 +156,10 @@
   :global(.border_bottom_right) {
     border-right: 1px solid #dedede !important;
     border-bottom: 1px solid #dedede !important;
+  }
+
+  :global(.tabs) {
+    height: 40px;
+    margin-bottom: 8px;
   }
 </style>

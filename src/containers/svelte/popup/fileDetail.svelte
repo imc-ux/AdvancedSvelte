@@ -140,7 +140,7 @@
   });
 
   function searchJtracDetail() {
-    jtracStore.readJtrac(params.jtracNo);
+    jtracStore.readJtrac(params.jtracNo?.trim());
   }
 </script>
 
@@ -149,7 +149,8 @@
     <Box>
       <Box
         class="background_gray_border left_box svelte-lnhus4-font"
-        horizontalAlign="left">
+        horizontalAlign="left"
+      >
         <Text class="left_text">编号:</Text>
       </Box>
       <Box f={1} class="border_right_left_top right_box" horizontalAlign="left">
@@ -308,7 +309,8 @@
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
         <Text class="left_text"
-          >{jtracShowUI ? "Client Developer:" : "前台开发者:"}</Text>
+          >{jtracShowUI ? "Client Developer:" : "前台开发者:"}</Text
+        >
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{clientDeveloper}</Text>
@@ -317,7 +319,8 @@
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
         <Text class="left_text"
-          >{jtracShowUI ? "Biz Developer:" : "后台开发者:"}</Text>
+          >{jtracShowUI ? "Biz Developer:" : "后台开发者:"}</Text
+        >
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{bizDeveloper}</Text>

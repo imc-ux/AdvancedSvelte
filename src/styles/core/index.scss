@@ -1547,3 +1547,8 @@ body.waiting * {
   position: absolute;
   z-index: 2000;
 }
+
+.ag-body-viewport.ag-layout-normal {
+  overflow-y: auto;
+  border: 1px solid #e6e6e6;
+}

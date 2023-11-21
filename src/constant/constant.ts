@@ -9,6 +9,16 @@ export const types = [
   { name: "Renderer", code: "renderer" },
 ];
 
+export const itemTypes = [
+  { text: "Buyer主页", name: "Buyer主页", id: "buyer" },
+  { text: "Supplier主页", name: "Supplier主页", id: "supplier" },
+  { text: "GERP主页", name: "GERP主页", id: "gerp" },
+  { text: "BuyerEXP主页", name: "BuyerEXP主页", id: "buyerExp" },
+  { text: "MP主页", name: "MP主页", id: "main" },
+  { text: "Popup", name: "Popup", id: "pop" },
+  { text: "Renderer", name: "Renderer", id: "renderer" },
+];
+
 export const items = [
   { name: "20 Item", code: 20 },
   { name: "50 Item", code: 50 },

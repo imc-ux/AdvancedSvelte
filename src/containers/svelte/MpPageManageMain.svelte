@@ -31,7 +31,7 @@
   import { CreatePop } from "@/components/Popup";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
   import { autorun } from "mobx";
-  import { types, itemPages, managementTypeList } from "@/constant/constant";
+  import { types, itemTypes, itemPages, managementTypeList } from "@/constant/constant";
   import addPageManager from "@/containers/svelte/popup/addPageManager.svelte";
   import modifyManager from "@/containers/svelte/popup/modifyManager.svelte";
   import { deepClone } from "@/utils/CommonUtils";
@@ -53,7 +53,7 @@
   let userIDTotal = 0;
   let userNameTotal = 0;
   let searchInfo: any = {};
-  let selectedValue: object = types[0];
+  let selectedValue = [];
   let selectedDeveloperValue = [];
   let selectedItemValue: object = itemPages[0];
   let currentPage = 0;
@@ -250,13 +250,16 @@
     const info: any = {
       code: userID,
       name: userName,
-      type: selectedType,
       iStart: 0,
       iPageCount: selectedItem,
     };
     if (selectedDeveloperValue.length > 0) {
       info.developer = selectedDeveloperValue.toString();
     }
+    if (selectedValue.length > 0) {
+      info.type = selectedValue.toString();
+    }
+    console.log(info);
     searchType = "search";
     currentPage = 0;
     searchInfo = info;
@@ -277,11 +280,10 @@
   function onBtnClearClickHandler() {
     userID = "";
     userName = "";
-    selectedType = "";
     selectedItem = 20;
     userIDTotal = 0;
     userNameTotal = 0;
-    selectedValue = types[0];
+    selectedValue = [];
     selectedDeveloperValue = [];
     selectedItemValue = itemPages[0];
   }
@@ -331,12 +333,7 @@
     searchType = "search";
     setWaiting();
     pageStore.getMpPageMgmtList(info);
-  }
-
-  function onTypeSelectHandler(value: any) {
-    selectedType = value.code;
-    selectedValue = value;
-  }
+  }  
 
   function onItemSelectHandler(value: any) {
     selectedItem = value.code;
@@ -385,11 +382,13 @@
         <Box width="44px" className="main-text" verticalAlign="middle">
           <Text>Type</Text>
         </Box>
-        <Box f={1} class="ul-top main-advancedSelect">
-          <AdvancedSelect
-            options={types}
-            onSubmit={(v) => onTypeSelectHandler(v)}
-            bind:value={selectedValue} />
+        <Box f={1} flexDisplay={false} class="ul-top main-advancedSelect">
+          <MultiSelect
+            f={1}
+            dataProvider={itemTypes}
+            bind:selectedIds={selectedValue}
+            class="popTextHeight "
+            direction="bottom" />  
         </Box>
       </Box>
       <Box f={1} class="margin-left-Max ul-top box-width">
@@ -417,7 +416,7 @@
     <Box f={2} horizontalAlign="left">
       {#if permissionData?.includes("M_A")}
         <Button
-          class="button-normal button-main-style margin_top_s margin-right"
+          class="button-normal button-main-style margin_top_s margin_right"
           size="small"
           kind="tertairy"
           icon={Add}

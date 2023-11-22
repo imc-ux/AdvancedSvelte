@@ -283,10 +283,10 @@
   function onBtnClearClickHandler() {
     userID = '';
     userName = '';
-    selectedType = '';
     selectedItem = 20;
     userIDTotal = 0;
     userNameTotal = 0;
+    selectedType = '';
     selectedDeveloperValue = [];
     selectedItemValue = itemPages[0];
   }
@@ -422,12 +422,8 @@
           <Text>页面负责人</Text>
         </Box>
         <Box f={1} flexDisplay={false} width="auto" class="main-advancedSelect select-height" horizontalAlign="left" verticalAlign="middle">
-          <!-- <MultiSelect f={1} dataProvider={bizList} bind:selectedIds={selectedDeveloperValue} class="popTextHeight " direction="bottom" /> -->
           <SelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} bind:value={selectedDeveloperValue} multiple valueField="id" />
         </Box>
-        <!-- <Box f={1} class="ul-top main-advancedSelect">
-          <MultiSelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} codeField="id" bind:value={selectedDeveloperValue} />
-        </Box> -->
       </Box>
     </Box>
   </Box>
@@ -435,7 +431,7 @@
     <Box f={2} horizontalAlign="left">
       {#if permissionData?.includes('M_A')}
         <Button
-          class="button-normal button-main-style margin_top_s margin-right"
+          class="button-normal button-main-style margin_top_s margin_right"
           size="small"
           kind="tertairy"
           icon={Add}

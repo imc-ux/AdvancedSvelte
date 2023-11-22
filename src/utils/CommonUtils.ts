@@ -37,7 +37,10 @@ export function bodyBatchInput(e: any, text: string) {
   });
   document.addEventListener("mouseup", onWindowMouseUpListener);
   document.addEventListener("mousewheel", onWindowMouseUpListener);
-  function onWindowMouseUpListener() {
+  function onWindowMouseUpListener(e) {
+    if (e.target.type === 'textarea' || e.target.type === 'text') {
+      return;
+    }
     if (mountNodeCount === 1) {
       mountNodeCount = 0;
       document.body.removeChild(mountNode);

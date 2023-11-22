@@ -15,6 +15,7 @@ const pageManageColumns = [
     width: 300,
     headerClass: ['center-aligned', 'ag-header'],
     cellClass: ['cell-left-align', 'cell-border'],
+    cellRenderer: LabelRenderer,
   },
   {
     headerName: 'Management',
@@ -30,6 +31,7 @@ const pageManageColumns = [
     width: 100,
     headerClass: ['center-aligned', 'ag-header'],
     cellClass: ['cell-center-align', 'cell-border'],
+    cellRenderer: LabelRenderer,
   },
   {
     headerName: '页面负责人',

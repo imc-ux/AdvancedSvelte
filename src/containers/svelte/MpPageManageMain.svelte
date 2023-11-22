@@ -10,7 +10,7 @@
 <script lang="ts">
   import '@/styles/core/white.css';
   import '@/styles/core/index.scss';
-  import { Button, Box, BatchInput, Text, AdvancedSelect, MultiSelect, SelectEx, MultiSelectEx } from '@/components/sveltecomponents';
+  import { Button, Box, BatchInput, Text, AdvancedSelect, SelectEx } from '@/components/sveltecomponents';
   import Add from 'carbon-icons-svelte/lib/Add.svelte';
   import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
   import Search from 'carbon-icons-svelte/lib/Search.svelte';
@@ -48,10 +48,9 @@
   let userIDTotal = 0;
   let userNameTotal = 0;
   let searchInfo: any = {};
-  let selectedValue: string = types[0].code;
   let selectedDeveloperValue = [];
   let selectedItemValue: object = itemPages[0];
-  let currentPage = 0;
+  let currentPage = 1;
   let pageCount: number = 10;
   let permissionData: any[] = [];
   let userInformationList: any[] = [];
@@ -265,7 +264,7 @@
       info.developer = selectedDeveloperValue.toString();
     }
     searchType = 'search';
-    currentPage = 0;
+    currentPage = 1;
     searchInfo = info;
     setWaiting();
     pageStore.getMpPageMgmtList(info);
@@ -288,10 +287,8 @@
     selectedItem = 20;
     userIDTotal = 0;
     userNameTotal = 0;
-    selectedValue = types[0].code;
     selectedDeveloperValue = [];
     selectedItemValue = itemPages[0];
-    initSelectInput();
   }
 
   function onBtnLinkHandler(e: any) {
@@ -324,7 +321,7 @@
           item: selectedItem,
         };
         pageSize = info.item;
-        currentPage = 0;
+        currentPage = 1;
         searchType = 'search';
         setWaiting();
         pageStore.getMpPageMgmtList(info);
@@ -368,12 +365,15 @@
   }
 
   function onTypeSelectHandler(value: any) {
-    selectedType = value;
-    selectedValue = value;
+    selectedType = value.code;
   }
 
   function onDeveloperSelectHandler(value: any) {
-    selectedDeveloperValue = value;
+    let ValueArr = [];
+    value.forEach(data => {
+      ValueArr.push(data.id);
+    });
+    selectedDeveloperValue = ValueArr;
   }
 
   function onItemSelectHandler(value: any) {
@@ -385,14 +385,6 @@
     gridApi = params.api;
     gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
     gridApi?.addEventListener(Renderer.Renderer_Select_Check_Box, onBtnCheckBoxHandler);
-  }
-
-  function initSelectInput() {
-    let li = document.getElementsByClassName('be-select-dropdown__item');
-    for (let i = 0; i < li.length; i++) {
-      li[i].classList.remove('selected');
-    }
-    document.getElementsByClassName('be-select-dropdown__item')[0].classList.add('selected');
   }
 </script>
 
@@ -422,16 +414,20 @@
           <Text>Type</Text>
         </Box>
         <Box f={1} class="ul-top main-advancedSelect">
-          <SelectEx options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedValue} />
+          <SelectEx options={types} onSubmit={v => onTypeSelectHandler(v)} bind:value={selectedType} />
         </Box>
       </Box>
       <Box f={1} class="margin-left-Max box-width">
         <Box width="82px" className="main-text" verticalAlign="middle">
           <Text>页面负责人</Text>
         </Box>
-        <Box f={1} class="ul-top main-advancedSelect">
-          <MultiSelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} codeField="id" bind:value={selectedDeveloperValue} />
+        <Box f={1} flexDisplay={false} width="auto" class="main-advancedSelect select-height" horizontalAlign="left" verticalAlign="middle">
+          <!-- <MultiSelect f={1} dataProvider={bizList} bind:selectedIds={selectedDeveloperValue} class="popTextHeight " direction="bottom" /> -->
+          <SelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} bind:value={selectedDeveloperValue} multiple valueField="id" />
         </Box>
+        <!-- <Box f={1} class="ul-top main-advancedSelect">
+          <MultiSelectEx options={bizList} onSubmit={v => onDeveloperSelectHandler(v)} codeField="id" bind:value={selectedDeveloperValue} />
+        </Box> -->
       </Box>
     </Box>
   </Box>

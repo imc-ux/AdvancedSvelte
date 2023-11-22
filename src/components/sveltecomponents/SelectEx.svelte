@@ -7,14 +7,14 @@
 -->
 
 <script>
-  import '@brewer/beerui/assets/beer.css';
-  import { BeSelect, BeOption } from '@brewer/beerui/be-select';
+  import Svelecte from 'svelecte';
 
+  export let selection = null;
   export let value = null;
   export let onSubmit = a => {};
   export let options = [];
   export let labelField = 'name';
-  export let codeField = 'code';
+  export let valueField = 'code';
   export let placeholder = '--请选择--';
   export let clearable = false;
   export let disabled = false;
@@ -28,61 +28,46 @@
   }
 </script>
 
-<BeSelect {...props} bind:value on:change={onGetOptions} maxHeight="180px" {placeholder} {clearable} {disabled}>
-  {#each options as item, index}
-    <BeOption label={item[labelField]} value={item[codeField]} value-key={index} />
-  {/each}
-</BeSelect>
+<Svelecte
+  {...props}
+  {options}
+  bind:readSelection={selection}
+  bind:value
+  on:change={onGetOptions}
+  {placeholder}
+  {clearable}
+  {disabled}
+  {labelField}
+  {valueField}
+/>
 
 <style>
-  :global(.be-input--suffix .be-input__inner) {
-    height: 30px;
+  :global(.svelecte-control.svelte-17904zl) {
+    --sv-color: #161616;
+    --sv-min-height: 30px;
+    --sv-border-color: #cacaca;
+    --sv-active-border: 1px solid #08adaa;
+    --sv-placeholder-color: #161616;
+    --sv-loader-border: 3px solid #cacaca;
   }
 
-  :global(.be-select-dropdown__item.selected) {
-    color: #08adaa;
+  :global(.indicator-container.svelte-1l8hgl2) {
+    padding: 4px;
   }
 
-  :global(.be-input__inner:focus) {
-    border-color: #08adaa;
-    outline: none;
+  :global(
+      .svelecte-control .has-multiSelection .sv-item-content,
+      .svelecte-control .sv-dropdown-content .sv-item,
+      #dnd-action-dragged-el .sv-item-content
+    ) {
+    padding: 0px 0px 0px 6px;
   }
 
-  :global(.be-select-dropdown__item) {
-    color: #161616;
-    font-size: 13px;
-    height: 30px;
-    line-height: 30px;
+  :global(.sv-item) {
+    height: 24px;
   }
 
-  :global(.be-select-dropdown__item.selected) {
-    color: #08adaa;
-  }
-
-  :global(.be-input__inner) {
-    color: #161616;
-    font-size: 13px;
-    line-height: 30px;
-    border: 1px solid #cacaca;
-  }
-
-  :global(.be-input input::-webkit-input-placeholder) {
-    color: #161616;
-  }
-
-  :global(.be-input input::-moz-placeholder) {
-    color: #161616;
-  }
-
-  :global(.be-input input:-ms-input-placeholder) {
-    color: #161616;
-  }
-
-  :global(.be-icon) {
-    line-height: 30px;
-  }
-
-  :global(.main-advancedSelect > div) {
-    width: 100%;
+  :global(.svelecte-control .sv-item-content, #dnd-action-dragged-el .sv-item-content) {
+    line-height: 24px;
   }
 </style>

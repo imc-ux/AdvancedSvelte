@@ -25,7 +25,6 @@ import ProgressBar from '@/components/sveltecomponents/Slider.svelte';
 import Slider from '@/components/sveltecomponents/Slider.svelte';
 import ImageUpload from '@/components/sveltecomponents/ImageUpload.svelte';
 import SelectEx from '@/components/sveltecomponents/SelectEx.svelte';
-import MultiSelectEx from '@/components/sveltecomponents/MultiSelectEx.svelte';
 export {
   Button, // 15 files    59 results
   Input, //  9 files     19 rsults
@@ -54,5 +53,4 @@ export {
   Slider,
   ImageUpload,
   SelectEx,
-  MultiSelectEx,
 };

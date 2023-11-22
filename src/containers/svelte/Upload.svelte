@@ -89,7 +89,7 @@
   let searchInfo: any = {};
   let selectedUploaderValue: any = null;
   let selectedPageSizeValue: any = itemPages[0];
-  let currentPage: number = 0;
+  let currentPage: number = 1;
   let pageCount: number = 10;
   let gridApi: any;
 
@@ -397,7 +397,7 @@
       iPageCount: selectedPageSize,
     };
     page = 1;
-    currentPage = 0;
+    currentPage = 1;
     searchInfo = info;
     searchType = 'search';
     setWaiting();

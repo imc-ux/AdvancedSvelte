@@ -317,7 +317,6 @@ input {
 .bx--text-input:hover {
   background-color: #fff;
   outline: none;
-  // border: 2px solid #08adaa;
   border: none;
   @include themifyListSelf("border-color", $theme-color);
 }
@@ -1403,6 +1402,13 @@ body.waiting * {
 
 .index-textArea-bottom-margin:focus {
   outline: none;
+  border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.index-textArea-bottom-margin:hover {
+  border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
   border: 2px solid #08adaa;
   @include themifyListSelf("border-color", $theme-color);
   border-radius: 5px;

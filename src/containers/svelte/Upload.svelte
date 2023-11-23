@@ -8,6 +8,7 @@
  */
  -->
 <script lang="ts">
+<<<<<<< HEAD
   import "@/styles/core/white.css";
   import "@/styles/core/index.scss";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
@@ -54,6 +55,49 @@
   import Storage from "@/utils/Storage";
   import { DateInput } from "date-picker-svelte";
   import { format, subMonths } from "date-fns";
+=======
+  import '@/styles/core/white.css';
+  import '@/styles/core/index.scss';
+  import Add from 'carbon-icons-svelte/lib/Add.svelte';
+  import FolderParent from 'carbon-icons-svelte/lib/FolderParent.svelte';
+  import Download from 'carbon-icons-svelte/lib/Download.svelte';
+  import Checkmark from 'carbon-icons-svelte/lib/Checkmark.svelte';
+  import Collaborate from 'carbon-icons-svelte/lib/Collaborate.svelte';
+  import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
+  import Search from 'carbon-icons-svelte/lib/Search.svelte';
+  import Reset from 'carbon-icons-svelte/lib/Reset.svelte';
+  import Close from 'carbon-icons-svelte/lib/Close.svelte';
+  import type { GridReadyEvent } from 'ag-grid-community';
+  import { onMount, onDestroy } from 'svelte';
+  import { Checkbox } from 'carbon-components-svelte';
+  import { Button, Box, Text, AdvancedSelect, BatchInput } from '@/components/sveltecomponents';
+  import { IconButton } from '@/components/renderers/index';
+  import uploadSveletColumn from '@/components/columns/uploadColumnsSvelte';
+  import pageStore from '@/store/UploadStore';
+  import userMgmtMainStore from '@/store/UserMgmtMainStore';
+  import { autorun } from 'mobx';
+  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
+  import { UsersInfo } from '@/vo/userManager/index';
+  import { JtracListSearchInfo, JtracInfo } from '@/vo/uploadManager/index';
+  import { CreatePop } from '@/components/Popup';
+  import AddJtrac from '@/containers/svelte/popup/AddJtrac.svelte';
+  import conflictdetail from '@/containers/svelte/popup/conflictdetail.svelte';
+  import filelist from '@/containers/svelte/popup/filelist.svelte';
+  import userInformation from '@/containers/svelte/popup/userInformation.svelte';
+  import jtraclist from '@/containers/svelte/popup/jtraclist.svelte';
+  import fileDetail from '@/containers/svelte/popup/fileDetail.svelte';
+  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
+  import { itemPages, systemTypeList } from '@/constant/constant';
+  import XLSX from 'xlsx';
+  import { UserInfo, JTRAC_TITLE, JTRAC_TITLE_H5 } from '@/utils/Settings';
+  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
+  import { UploadAlert } from '@/constant/alert/upload';
+  import { deepClone } from '@/utils/CommonUtils';
+  import Renderer from '@/constant/Renderer';
+  import Storage from '@/utils/Storage';
+  import { DateInput } from 'date-picker-svelte';
+  import { format, subMonths } from 'date-fns';
+>>>>>>> 764a5d7f773e91cd00d8d320eed44d9fef1f1833
 
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
@@ -84,6 +128,7 @@
   let permissionData: any[] = [];
   let arrHeadTitleNameWidth: any[] = [];
   let arrHeadTitleName: any[] = [];
+  let userInformationList: any[] = [];
   let checkBoxArr: any[] = [
     { defaultValue: "待检查", checked: true },
     { defaultValue: "待上传", checked: true },
@@ -93,7 +138,7 @@
   let searchInfo: any = {};
   let selectedUploaderValue: any = null;
   let selectedPageSizeValue: any = itemPages[0];
-  let currentPage: number = 0;
+  let currentPage: number = 1;
   let pageCount: number = 10;
   let gridApi: any;
 
@@ -112,6 +157,7 @@
     setWaiting();
     searchUploader();
     getUserActivePermission();
+    getUserList();
   });
 
   onDestroy(() => {
@@ -120,7 +166,12 @@
     upLoadListSearch();
     UpdateStatus();
     upLoadListDelete();
+<<<<<<< HEAD
     window.removeEventListener("message", themeChangeHandler, false);
+=======
+    searchUserList();
+    window.removeEventListener('message', themeChangeHandler, false);
+>>>>>>> 764a5d7f773e91cd00d8d320eed44d9fef1f1833
   });
 
   function themeChangeHandler(e: MessageEvent) {
@@ -159,6 +210,15 @@
       removeWaiting();
       if (!value.error) {
         permissionData = value.data.split(",");
+      }
+    }
+  });
+
+  const searchUserList = autorun(() => {
+    if (userMgmtMainStore.userListResult) {
+      const userList = deepClone(userMgmtMainStore.userListResult);
+      if (!userList.error) {
+        userInformationList = userList.data;
       }
     }
   });
@@ -373,6 +433,13 @@
     pageStore.getUserActivePermission(info);
   }
 
+  function getUserList() {
+    const info: UsersInfo = {};
+    info.iPageCount = 100;
+    info.iStart = 0;
+    userMgmtMainStore.getUserList(info);
+  }
+
   function onBtnAddJtracClickHandler() {
     CreatePop("新增Jtrac", AddJtrac, {}, onPopCloseSearchHandler, {
       width: "750px",
@@ -402,7 +469,7 @@
       iPageCount: selectedPageSize,
     };
     page = 1;
-    currentPage = 0;
+    currentPage = 1;
     searchInfo = info;
     searchType = "search";
     setWaiting();
@@ -1055,43 +1122,36 @@
       onBtnFileLinkClickHandler(e.value);
     } else if (e.field === "moduleListChange") {
       onBtnModuleLinkClickHandler(e.value);
-    } else if (e.field === "detailFlag") {
-      CreatePop(
-        "查看详细",
-        jtraclist,
-        { jtracNo: e.value.jtracNo, jtracStatus: e.value.status },
-        onPopCloseSearchHandler,
-        {
-          width: "1100px",
-          height: "600px",
-        }
-      );
-    } else if (e.field === "clientDeveloperName") {
-      CreatePop(
-        "用户信息",
-        userInformation,
-        {
-          userId: e.value.clientDeveloperIds,
-          userName: e.value.clientDeveloperName,
-        },
-        null,
-        {
-          width: "600px",
-          height: "400px",
-        }
-      );
-    } else if (e.field === "reviewerName") {
-      CreatePop(
-        "用户信息",
-        userInformation,
-        { userId: e.value.reviewer, userName: e.value.reviewerName },
-        null,
-        {
-          width: "600px",
-          height: "400px",
-        }
-      );
+    } else if (e.field === 'detailFlag') {
+      CreatePop('查看详细', jtraclist, { jtracNo: e.value.jtracNo, jtracStatus: e.value.status }, onPopCloseSearchHandler, {
+        width: '1100px',
+        height: '600px',
+      });
+    } else if (e.field === 'clientDeveloperName') {
+      openUserInfoPop(e.value.clientDeveloperName.split(','), e.value.clientDeveloperIds.split(','));
+    } else if (e.field === 'reviewerName') {
+      openUserInfoPop(e.value.reviewerName.split(','), e.value.reviewer.split(','));
     }
+  }
+
+  function openUserInfoPop(labelList, idList) {
+    const userInfoList = [];
+    idList.forEach(data => {
+      userInfoList.push(userInformationList.find(info => info.id === data));
+    });
+    CreatePop(
+      '用户信息',
+      userInformation,
+      {
+        tabName: labelList,
+        userInfoList: userInfoList,
+      },
+      null,
+      {
+        width: '600px',
+        height: '400px',
+      }
+    );
   }
 
   function dateToInputHandler(e: CustomEvent<any>): void {

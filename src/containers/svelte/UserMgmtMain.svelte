@@ -45,7 +45,7 @@
   let rowData: any[] | null = null;
   let itemCodeSelected = 20;
   let itemSelected = items[0];
-  let currentPage = 0;
+  let currentPage = 1;
   let pageCount = 0;
   let pageSize = 20;
   let gridApi: any;
@@ -273,7 +273,7 @@
       info.blockflag = blockFlagCodeSelected;
     }
     searchInfo = info;
-    currentPage = 0;
+    currentPage = 1;
     setWaiting();
     userMgmtMainStore.getUserList(info);
   }
@@ -344,7 +344,7 @@
     if (data === 'Y') {
       if (searchInfo) {
         setWaiting();
-        currentPage = 0;
+        currentPage = 1;
         userMgmtMainStore.getUserList(searchInfo);
       }
     }
@@ -390,7 +390,7 @@
       </div>
     </div>
   </div>
-  <div class="flex  ">
+  <div class="flex">
     <div class="flex button-left">
       {#if permissionData.includes('U_B')}
         <div id="save">
@@ -414,7 +414,7 @@
         </div>
       {/if}
     </div>
-    <div class="flex  flex-residue" style="justify-content:flex-end ;">
+    <div class="flex flex-residue" style="justify-content:flex-end ;">
       <div class="select-width button-margin-right">
         <AdvancedSelect options={items} bind:value={itemSelected} onSubmit={onItemSelectedHandler} />
       </div>

@@ -301,11 +301,14 @@ input {
 .bx--text-input {
   outline: none;
   height: 30px;
-  border: 1px solid #cacaca;
+  // border: 2px solid #cacaca;
+  border: none;
+  border-radius: 5px;
   background-color: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  box-sizing: content-box;
   font-size: 13px;
   font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
     "微软雅黑" !important;
@@ -314,14 +317,77 @@ input {
 .bx--text-input:hover {
   background-color: #fff;
   outline: none;
-  border: 1px solid #08adaa;
+  border: none;
   @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--text-input:focus {
   background-color: #fff;
   outline: none;
-  border: 1px solid #08adaa;
+  // border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.input-outer-border {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #cacaca;
+  border-radius: 5px;
+  cursor: text;
+}
+
+.input-outer-border-hover {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.input-outer-box {
+  padding: 0px 2px;
+}
+
+.input-outer-border:hover {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.zindex-8 {
+  z-index: 8;
+}
+
+.zindex-9 {
+  z-index: 9;
+}
+
+.zindex-10 {
+  z-index: 10;
+}
+
+.transparent-background {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.input-place-holder {
+  position: absolute;
+  line-height: 13px !important;
+  background: linear-gradient(rgba(255, 255, 255, 0) 55%, white 55%);
+  z-index: 9;
+  margin-left: 5px !important;
+  padding: 0 10px 0 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.2s;
+}
+
+.input-place-holder-move {
+  top: 0;
+  font-size: 13px;
+  transform: translateY(-55%);
+}
+
+.input-place-holder:hover + .input-outer-border {
+  border: 2px solid #08adaa;
   @include themifyListSelf("border-color", $theme-color);
 }
 
@@ -1291,7 +1357,11 @@ body.waiting * {
 }
 
 .textArea-bottom-margin {
-  border: 1px solid #cacaca;
+  // border: 1px solid #cacaca;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
   min-height: 45px;
   height: 100px;
   padding-left: 20px;
@@ -1303,17 +1373,19 @@ body.waiting * {
 
 .textArea-bottom-margin:focus {
   outline: none;
-  border: 1px solid #08adaa;
+  // border: 1px solid #08adaa;
   @include themifyListSelf("border-color", $theme-color);
 }
 
 .textArea-bottom-margin:hover {
-  border: 1px solid #08adaa;
+  border: none;
+  // border: 1px solid #08adaa;
   @include themifyListSelf("border-color", $theme-color);
 }
 
 .index-textArea-bottom-margin {
   border: 1px solid #cacaca;
+  border-radius: 5px;
   min-height: 30px;
   height: 150px;
   padding-left: 20px;
@@ -1337,6 +1409,15 @@ body.waiting * {
 .index-textArea-bottom-margin:hover {
   border: 1px solid #08adaa;
   @include themifyListSelf("border-color", $theme-color);
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+  border-radius: 5px;
+}
+
+.index-textArea-bottom-margin:hover {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+  border-radius: 5px;
 }
 
 .bx--text-area:active {

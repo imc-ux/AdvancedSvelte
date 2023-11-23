@@ -8,60 +8,66 @@
  */
  -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import Add from 'carbon-icons-svelte/lib/Add.svelte';
-  import FolderParent from 'carbon-icons-svelte/lib/FolderParent.svelte';
-  import Download from 'carbon-icons-svelte/lib/Download.svelte';
-  import Checkmark from 'carbon-icons-svelte/lib/Checkmark.svelte';
-  import Collaborate from 'carbon-icons-svelte/lib/Collaborate.svelte';
-  import TrashCan from 'carbon-icons-svelte/lib/TrashCan.svelte';
-  import Search from 'carbon-icons-svelte/lib/Search.svelte';
-  import Reset from 'carbon-icons-svelte/lib/Reset.svelte';
-  import Close from 'carbon-icons-svelte/lib/Close.svelte';
-  import type { GridReadyEvent } from 'ag-grid-community';
-  import { onMount, onDestroy } from 'svelte';
-  import { Checkbox } from 'carbon-components-svelte';
-  import { Button, Box, Text, AdvancedSelect, BatchInput } from '@/components/sveltecomponents';
-  import { IconButton } from '@/components/renderers/index';
-  import uploadSveletColumn from '@/components/columns/uploadColumnsSvelte';
-  import pageStore from '@/store/UploadStore';
-  import userMgmtMainStore from '@/store/UserMgmtMainStore';
-  import { autorun } from 'mobx';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { UsersInfo } from '@/vo/userManager/index';
-  import { JtracListSearchInfo, JtracInfo } from '@/vo/uploadManager/index';
-  import { CreatePop } from '@/components/Popup';
-  import AddJtrac from '@/containers/svelte/popup/AddJtrac.svelte';
-  import conflictdetail from '@/containers/svelte/popup/conflictdetail.svelte';
-  import filelist from '@/containers/svelte/popup/filelist.svelte';
-  import userInformation from '@/containers/svelte/popup/userInformation.svelte';
-  import jtraclist from '@/containers/svelte/popup/jtraclist.svelte';
-  import fileDetail from '@/containers/svelte/popup/fileDetail.svelte';
-  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
-  import { itemPages, systemTypeList } from '@/constant/constant';
-  import XLSX from 'xlsx';
-  import { UserInfo, JTRAC_TITLE, JTRAC_TITLE_H5 } from '@/utils/Settings';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
-  import { UploadAlert } from '@/constant/alert/upload';
-  import { deepClone } from '@/utils/CommonUtils';
-  import Renderer from '@/constant/Renderer';
-  import Storage from '@/utils/Storage';
-  import { DateInput } from 'date-picker-svelte';
-  import { format, subMonths } from 'date-fns';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import Add from "carbon-icons-svelte/lib/Add.svelte";
+  import FolderParent from "carbon-icons-svelte/lib/FolderParent.svelte";
+  import Download from "carbon-icons-svelte/lib/Download.svelte";
+  import Checkmark from "carbon-icons-svelte/lib/Checkmark.svelte";
+  import Collaborate from "carbon-icons-svelte/lib/Collaborate.svelte";
+  import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
+  import Search from "carbon-icons-svelte/lib/Search.svelte";
+  import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+  import Close from "carbon-icons-svelte/lib/Close.svelte";
+  import type { GridReadyEvent } from "ag-grid-community";
+  import { onMount, onDestroy } from "svelte";
+  import { Checkbox } from "carbon-components-svelte";
+  import {
+    Button,
+    Box,
+    Text,
+    AdvancedSelect,
+    BatchInput,
+  } from "@/components/sveltecomponents";
+  import { IconButton } from "@/components/renderers/index";
+  import uploadSveletColumn from "@/components/columns/uploadColumnsSvelte";
+  import pageStore from "@/store/UploadStore";
+  import userMgmtMainStore from "@/store/UserMgmtMainStore";
+  import { autorun } from "mobx";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { UsersInfo } from "@/vo/userManager/index";
+  import { JtracListSearchInfo, JtracInfo } from "@/vo/uploadManager/index";
+  import { CreatePop } from "@/components/Popup";
+  import AddJtrac from "@/containers/svelte/popup/AddJtrac.svelte";
+  import conflictdetail from "@/containers/svelte/popup/conflictdetail.svelte";
+  import filelist from "@/containers/svelte/popup/filelist.svelte";
+  import userInformation from "@/containers/svelte/popup/userInformation.svelte";
+  import jtraclist from "@/containers/svelte/popup/jtraclist.svelte";
+  import fileDetail from "@/containers/svelte/popup/fileDetail.svelte";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import { itemPages, systemTypeList } from "@/constant/constant";
+  import XLSX from "xlsx";
+  import { UserInfo, JTRAC_TITLE, JTRAC_TITLE_H5 } from "@/utils/Settings";
+  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
+  import { UploadAlert } from "@/constant/alert/upload";
+  import { deepClone } from "@/utils/CommonUtils";
+  import Renderer from "@/constant/Renderer";
+  import Storage from "@/utils/Storage";
+  import { DateInput } from "date-picker-svelte";
+  import { format, subMonths } from "date-fns";
 
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
   let initDateFrom: Date = new Date();
   let initDateTo: Date = new Date();
-  let dateFromStr: string = '';
-  let dateToStr: string = '';
-  let selectedUploader: string = '';
-  let jtracNo: string = '';
-  let modules: string = '';
-  let searchType: string = '';
-  let checkedItem: string = '已传45';
-  let exModules: string = '/main/index.js,/main/runtime.js'; //"/main/index.js,/main/runtime.js,/main/common.js,/menu/index.js";
+  let dateFromStr: string = "";
+  let dateToStr: string = "";
+  let selectedUploader: string = "";
+  let jtracNo: string = "";
+  let modules: string = "";
+  let searchType: string = "";
+  let checkedItem: string = "已传45";
+  let exModules: string = "/main/index.js,/main/runtime.js"; //"/main/index.js,/main/runtime.js,/main/common.js,/menu/index.js";
   let jtracNoTotal: number = 0;
   let moduleTotal: number = 0;
   let exModuleTotal: number = 2;
@@ -81,10 +87,10 @@
   let arrHeadTitleName: any[] = [];
   let userInformationList: any[] = [];
   let checkBoxArr: any[] = [
-    { defaultValue: '待检查', checked: true },
-    { defaultValue: '待上传', checked: true },
-    { defaultValue: '已传45', checked: true },
-    { defaultValue: '已传IDC', checked: false },
+    { defaultValue: "待检查", checked: true },
+    { defaultValue: "待上传", checked: true },
+    { defaultValue: "已传45", checked: true },
+    { defaultValue: "已传IDC", checked: false },
   ];
   let searchInfo: any = {};
   let selectedUploaderValue: any = null;
@@ -94,12 +100,12 @@
   let gridApi: any;
 
   onMount(() => {
-    let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
-    if (currentTheme.includes('-theme')) {
-      currentTheme = 'ux-leaf';
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-leaf";
+    if (currentTheme.includes("-theme")) {
+      currentTheme = "ux-leaf";
     }
-    document.body.setAttribute('data-theme', currentTheme);
-    window.addEventListener('message', themeChangeHandler, false);
+    document.body.setAttribute("data-theme", currentTheme);
+    window.addEventListener("message", themeChangeHandler, false);
     const date = new Date();
     dateFrom = subMonths(date, 3);
     dateTo = date;
@@ -118,12 +124,12 @@
     UpdateStatus();
     upLoadListDelete();
     searchUserList();
-    window.removeEventListener('message', themeChangeHandler, false);
+    window.removeEventListener("message", themeChangeHandler, false);
   });
 
   function themeChangeHandler(e: MessageEvent) {
-    if (e.data.type === 'theme-changed') {
-      document.body.setAttribute('data-theme', e.data.data);
+    if (e.data.type === "theme-changed") {
+      document.body.setAttribute("data-theme", e.data.data);
     }
   }
 
@@ -135,12 +141,12 @@
       if (!value.error) {
         uploaderList = value.data;
         const user: any = {
-          blockFlag: '',
-          id: '',
-          name: '--请选择--',
-          password: '',
-          permissionGroup: '',
-          userType: '',
+          blockFlag: "",
+          id: "",
+          name: "--请选择--",
+          password: "",
+          permissionGroup: "",
+          userType: "",
         };
         uploaderList.unshift(user);
         selectedUploaderValue = uploaderList[0];
@@ -156,7 +162,7 @@
       pageStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!value.error) {
-        permissionData = value.data.split(',');
+        permissionData = value.data.split(",");
       }
     }
   });
@@ -184,130 +190,148 @@
           elem.id = elem.nid;
           elem.isDetail = true;
           elem.createDate = elem.createDate?.substr(0, 19);
-          elem.reviewerName = uploaderList?.find(v => v.id === elem.reviewer)?.name;
-          if (!elem.labelList || elem.labelList === 'null') {
-            elem.labelList = '';
+          elem.reviewerName = uploaderList?.find(
+            (v) => v.id === elem.reviewer
+          )?.name;
+          if (!elem.labelList || elem.labelList === "null") {
+            elem.labelList = "";
           }
           if (elem.labelList) {
-            cc = elem.labelList.split(',');
+            cc = elem.labelList.split(",");
             elem.labelListChange = `(${cc.length})${cc[0]}`;
           } else {
-            elem.labelListChange = '';
+            elem.labelListChange = "";
           }
-          if (elem.fileList.lastIndexOf(',') === elem.fileList.length - 1) elem.fileList = elem.fileList.slice(0, elem.fileList.length - 1);
-          if (elem.moduleList.lastIndexOf(',') === elem.moduleList.length - 1) elem.moduleList = elem.moduleList.slice(0, elem.moduleList.length - 1);
-          ac = elem.fileList.split(',');
+          if (elem.fileList.lastIndexOf(",") === elem.fileList.length - 1)
+            elem.fileList = elem.fileList.slice(0, elem.fileList.length - 1);
+          if (elem.moduleList.lastIndexOf(",") === elem.moduleList.length - 1)
+            elem.moduleList = elem.moduleList.slice(
+              0,
+              elem.moduleList.length - 1
+            );
+          ac = elem.fileList.split(",");
           elem.fileListChange = `(${ac.length})${ac[0]}`;
-          elem.srFileList = elem.fileList.replace(/,/g, '\r');
-          bc = elem.moduleList.replace(/\r/g, ',').split(',');
+          elem.srFileList = elem.fileList.replace(/,/g, "\r");
+          bc = elem.moduleList.replace(/\r/g, ",").split(",");
           elem.moduleListChange = `(${bc.length})${bc[0]}`;
-          if (elem.status === 'R') {
-            elem.statusChange = '待检查';
-          } else if (elem.status === 'A') {
-            elem.statusChange = '待上传';
-          } else if (elem.status === 'B') {
-            elem.statusChange = '已传45';
+          if (elem.status === "R") {
+            elem.statusChange = "待检查";
+          } else if (elem.status === "A") {
+            elem.statusChange = "待上传";
+          } else if (elem.status === "B") {
+            elem.statusChange = "已传45";
           } else {
-            elem.statusChange = '已传IDC';
+            elem.statusChange = "已传IDC";
           }
-          elem.versionLists = elem.versionList.split(',');
-          elem.systemTypeLists = elem.systemTypes.split(',');
-          elem.versionNo = '';
+          elem.versionLists = elem.versionList.split(",");
+          elem.systemTypeLists = elem.systemTypes.split(",");
+          elem.versionNo = "";
           if (elem.versionLists.length > 1) {
             if (elem.systemTypeLists.length === elem.versionLists.length) {
               for (let i = 0; i < elem.versionLists.length; i++) {
-                let systemStr = systemTypeList.find(v => v.id === elem.systemTypeLists[i])?.imk;
-                elem.versionNo += systemStr + ':' + elem.versionLists[i] + ' ';
+                let systemStr = systemTypeList.find(
+                  (v) => v.id === elem.systemTypeLists[i]
+                )?.imk;
+                elem.versionNo += systemStr + ":" + elem.versionLists[i] + " ";
               }
             } else {
-              elem.versionNo = elem.systemTypeLists.toString() + elem.versionList.toString();
+              elem.versionNo =
+                elem.systemTypeLists.toString() + elem.versionList.toString();
             }
           } else {
-            elem.versionNo = elem.systemTypes + ':' + elem.versionList;
+            elem.versionNo = elem.systemTypes + ":" + elem.versionList;
           }
-          if (elem.bizDeveloperName === null || elem.bizDeveloperName === '' || elem.bizDeveloperName === 'null') {
-            elem.bizDeveloperName = '';
+          if (
+            elem.bizDeveloperName === null ||
+            elem.bizDeveloperName === "" ||
+            elem.bizDeveloperName === "null"
+          ) {
+            elem.bizDeveloperName = "";
           }
-          if (!elem.systemTypes || String(elem.systemTypes) === 'null') {
-            elem.systemTypes = '';
+          if (!elem.systemTypes || String(elem.systemTypes) === "null") {
+            elem.systemTypes = "";
           }
-          if (!elem.systemType || String(elem.systemType) === 'null') {
-            elem.systemType = '';
+          if (!elem.systemType || String(elem.systemType) === "null") {
+            elem.systemType = "";
           }
-          if (!elem.version || String(elem.version) === 'null') {
-            elem.version = '';
+          if (!elem.version || String(elem.version) === "null") {
+            elem.version = "";
           }
-          if (!elem.detail || String(elem.detail) === 'null') {
-            elem.detail = '';
+          if (!elem.detail || String(elem.detail) === "null") {
+            elem.detail = "";
           }
-          elem.conflictFiles = '';
+          elem.conflictFiles = "";
           elem.detailFlag = false;
           if (elem.JtracRepeatNum > 1) {
             const multModules: any[] = [];
-            const sourceModules = elem.moduleList.replace(/\r/g, ',').split(',');
-            sourceModules.forEach(data => {
+            const sourceModules = elem.moduleList
+              .replace(/\r/g, ",")
+              .split(",");
+            sourceModules.forEach((data) => {
               if (!multModules.includes(data) && data) {
                 multModules.push(data);
               }
             });
             elem.moduleListChange = `(${multModules.length})${multModules[0]}`;
-            elem.moduleList = multModules.join(',');
-            elem.srModuleList = elem.moduleList.replace(/,/g, '\r');
+            elem.moduleList = multModules.join(",");
+            elem.srModuleList = elem.moduleList.replace(/,/g, "\r");
             elem.detailFlag = true;
             let labelModules: any[] = [];
             if (elem.labelList) {
-              let sourceLabelModules = elem.labelList.split(',');
-              sourceLabelModules.forEach(data => {
-                if (!isInArray(labelModules, data) && data !== '') {
+              let sourceLabelModules = elem.labelList.split(",");
+              sourceLabelModules.forEach((data) => {
+                if (!isInArray(labelModules, data) && data !== "") {
                   labelModules.push(data);
                 }
               });
               elem.labelListChange = `(${labelModules.length})${labelModules[0]}`;
-              elem.labelList = labelModules.join(',');
+              elem.labelList = labelModules.join(",");
             }
           } else {
-            elem.srModuleList = elem.moduleList.replace(/,/g, '\r');
+            elem.srModuleList = elem.moduleList.replace(/,/g, "\r");
           }
         });
-        if (searchType === 'search') {
+        if (searchType === "search") {
           if (!totalSign) {
             searchData = value.data;
             // 2次查询
             totalSign = true;
             let request: JtracListSearchInfo = {};
-            request.status = 'B';
-            request.jtracUniqFlag = 'Y';
+            request.status = "B";
+            request.jtracUniqFlag = "Y";
             request.iStart = 0;
             request.iPageCount = 10000;
-            searchType = 'search';
+            searchType = "search";
             setWaiting();
             pageStore.searchUniqJtracList(request);
           } else {
             allData = copyArr(value.data);
             searchData = getConflictFile(allData, searchData);
             totalSign = false;
-            searchType = '';
+            searchType = "";
             rowData = searchData;
             searchSign = true;
           }
-          pageCount = Math.ceil(rowData?.[0]?.totalCount / selectedPageSizeValue.code);
-        } else if (searchType === 'download') {
+          pageCount = Math.ceil(
+            rowData?.[0]?.totalCount / selectedPageSizeValue.code
+          );
+        } else if (searchType === "download") {
           if (!downloadSearchSign) {
             downloadData = value.data;
             // 2次查询
             downloadSearchSign = true;
             let request: JtracListSearchInfo = {};
-            request.status = 'B';
-            request.jtracUniqFlag = 'Y';
+            request.status = "B";
+            request.jtracUniqFlag = "Y";
             request.iStart = 0;
             request.iPageCount = 10000;
-            searchType = 'download';
+            searchType = "download";
             setWaiting();
             pageStore.searchUniqJtracList(request);
           } else {
             allData = copyArr(value.data);
             downloadData = getConflictFile(allData, downloadData);
-            searchType = '';
+            searchType = "";
             downloadDataHandler(downloadData);
           }
         }
@@ -347,8 +371,8 @@
 
   function searchUploader() {
     const info: UsersInfo = {};
-    info.blockflag = 'N';
-    info.usertype = 'U';
+    info.blockflag = "N";
+    info.usertype = "U";
     info.iStart = 0;
     info.iPageCount = 20;
     setWaiting();
@@ -356,7 +380,8 @@
   }
 
   function getUserActivePermission() {
-    const info = UserInfo.userId;
+    // const info = UserInfo.userId;
+    const info = "liuzhe";
     setWaiting();
     pageStore.getUserActivePermission(info);
   }
@@ -369,14 +394,14 @@
   }
 
   function onBtnAddJtracClickHandler() {
-    CreatePop('新增Jtrac', AddJtrac, {}, onPopCloseSearchHandler, {
-      width: '750px',
-      height: '500px',
+    CreatePop("新增Jtrac", AddJtrac, {}, onPopCloseSearchHandler, {
+      width: "750px",
+      height: "500px",
     });
   }
 
   function onPopCloseSearchHandler(data: string) {
-    if (data === 'Y') {
+    if (data === "Y") {
       if (searchInfo) {
         onBtnSearchClickHandler();
       }
@@ -386,49 +411,49 @@
   function onBtnSearchClickHandler() {
     totalSign = false;
     const info: JtracListSearchInfo = {
-      dateFrom: dateFrom ? format(dateFrom, 'yyyy-MM-dd') : '',
-      dateTo: dateTo ? format(dateTo, 'yyyy-MM-dd') : '',
+      dateFrom: dateFrom ? format(dateFrom, "yyyy-MM-dd") : "",
+      dateTo: dateTo ? format(dateTo, "yyyy-MM-dd") : "",
       status: getStatus(checkBoxArr),
       clientDeveloperId: selectedUploader,
       jtracNo: jtracNo,
       modules: modules,
-      jtracUniqFlag: 'Y',
+      jtracUniqFlag: "Y",
       iStart: 0,
       iPageCount: selectedPageSize,
     };
     page = 1;
     currentPage = 1;
     searchInfo = info;
-    searchType = 'search';
+    searchType = "search";
     setWaiting();
     pageStore.searchUniqJtracList(info);
   }
 
   function getStatus(data: any[]): string {
     let arr: any[] = [];
-    data.forEach(ele => {
+    data.forEach((ele) => {
       if (ele.checked) {
         arr.push(ele.defaultValue);
       }
     });
     const statusArr: any[] = [];
-    if (arr.includes('待检查')) {
-      statusArr.push('R');
+    if (arr.includes("待检查")) {
+      statusArr.push("R");
     }
-    if (arr.includes('待上传')) {
-      statusArr.push('A');
+    if (arr.includes("待上传")) {
+      statusArr.push("A");
     }
-    if (arr.includes('已传45')) {
-      statusArr.push('B');
+    if (arr.includes("已传45")) {
+      statusArr.push("B");
     }
-    if (arr.includes('已传IDC')) {
-      statusArr.push('C');
+    if (arr.includes("已传IDC")) {
+      statusArr.push("C");
     }
     return statusArr.toString();
   }
 
   function isInArray(arr: any[], value: string): boolean {
-    arr.forEach(data => {
+    arr.forEach((data) => {
       if (value === data) {
         return true;
       }
@@ -438,7 +463,7 @@
 
   function copyArr(arr: any[]): any[] {
     let res: any[] = [];
-    arr.forEach(data => {
+    arr.forEach((data) => {
       res.push(data);
     });
     return res;
@@ -447,37 +472,37 @@
   function onBtnClearClickHandler() {
     dateFrom = initDateFrom;
     dateTo = initDateTo;
-    dateFromStr = format(dateFrom, 'yyyy-MM-dd');
-    dateToStr = format(dateTo, 'yyyy-MM-dd');
+    dateFromStr = format(dateFrom, "yyyy-MM-dd");
+    dateToStr = format(dateTo, "yyyy-MM-dd");
     dateEmpty = true;
-    selectedUploader = '';
+    selectedUploader = "";
     selectedUploaderValue = uploaderList[0];
-    jtracNo = '';
-    modules = '';
-    exModules = '/main/index.js,/main/runtime.js'; //'/main/index.js,/main/runtime.js,/main/common.js,/menu/index.js';
+    jtracNo = "";
+    modules = "";
+    exModules = "/main/index.js,/main/runtime.js"; //'/main/index.js,/main/runtime.js,/main/common.js,/menu/index.js';
     jtracNoTotal = 0;
     moduleTotal = 0;
     exModuleTotal = 2;
     checkBoxArr = [
-      { defaultValue: '待检查', checked: true },
-      { defaultValue: '待上传', checked: true },
-      { defaultValue: '已传45', checked: true },
-      { defaultValue: '已传IDC', checked: false },
+      { defaultValue: "待检查", checked: true },
+      { defaultValue: "待上传", checked: true },
+      { defaultValue: "已传45", checked: true },
+      { defaultValue: "已传IDC", checked: false },
     ];
     selectedPageSizeValue = itemPages[0];
   }
 
   function onBtnClearExModulesClickHandler() {
-    exModules = '';
+    exModules = "";
     exModuleTotal = 0;
   }
 
   function onBtnUpdateStatusIdcClickHandler() {
-    onBtnUpdateStatusClickHandler('IDC');
+    onBtnUpdateStatusClickHandler("IDC");
   }
 
   function onBtnUpdateStatus45ClickHandler() {
-    onBtnUpdateStatusClickHandler('45');
+    onBtnUpdateStatusClickHandler("45");
   }
 
   function onBtnUpdateStatusClickHandler(status: string) {
@@ -486,7 +511,7 @@
       return;
     }
     let selectedRowIds = [];
-    rowData.forEach(elem => {
+    rowData.forEach((elem) => {
       if (elem.selected) {
         selectedRowIds.push(elem.id);
       }
@@ -495,22 +520,22 @@
     let errorAc = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
       let tempData: any[] = [];
-      rowData.forEach(data => {
+      rowData.forEach((data) => {
         if (selectedRowIds.includes(data.id)) {
           tempData.push(data);
         }
       });
-      if (status === 'IDC') {
-        tempData.forEach(data => {
-          if (data.status !== 'B') {
+      if (status === "IDC") {
+        tempData.forEach((data) => {
+          if (data.status !== "B") {
             errorAc.push(String(data.jtracNo));
           } else {
             jtracAc.push(String(data.jtracNo));
           }
         });
-      } else if (status === '45') {
-        tempData.forEach(data => {
-          if (data.status !== 'A') {
+      } else if (status === "45") {
+        tempData.forEach((data) => {
+          if (data.status !== "A") {
             errorAc.push(String(data.jtracNo));
           } else {
             jtracAc.push(String(data.jtracNo));
@@ -526,23 +551,31 @@
       CustomAlert(UploadAlert.CHOOSE_DATA, AlertIcon.WARNING);
       return;
     }
-    if (status === 'IDC') {
-      CustomAlert(`确定要变更jtrac: ${jtracAc.join(',')} 为已传IDC状态吗?`, AlertIcon.PROMPT, statusChangeHandler);
-    } else if (status === '45') {
-      CustomAlert(`确定要变更jtrac: ${jtracAc.join(',')} 为已传45状态吗?`, AlertIcon.PROMPT, statusChangeHandler);
+    if (status === "IDC") {
+      CustomAlert(
+        `确定要变更jtrac: ${jtracAc.join(",")} 为已传IDC状态吗?`,
+        AlertIcon.PROMPT,
+        statusChangeHandler
+      );
+    } else if (status === "45") {
+      CustomAlert(
+        `确定要变更jtrac: ${jtracAc.join(",")} 为已传45状态吗?`,
+        AlertIcon.PROMPT,
+        statusChangeHandler
+      );
     }
 
     function statusChangeHandler(data: string) {
-      if (data === 'Y') {
+      if (data === "Y") {
         const info: JtracInfo = {};
-        if (status === 'IDC') {
-          info.status = 'C';
-          info.orgStatus = 'B';
-        } else if (status === '45') {
-          info.status = 'B';
-          info.orgStatus = 'A';
+        if (status === "IDC") {
+          info.status = "C";
+          info.orgStatus = "B";
+        } else if (status === "45") {
+          info.status = "B";
+          info.orgStatus = "A";
         }
-        info.jtracNo = jtracAc.join(',');
+        info.jtracNo = jtracAc.join(",");
         setWaiting();
         pageStore.updateMultJtracStatus(info);
       }
@@ -555,7 +588,7 @@
       return;
     }
     let selectedRowIds = [];
-    rowData.forEach(elem => {
+    rowData.forEach((elem) => {
       if (elem.selected) {
         selectedRowIds.push(elem.id);
       }
@@ -565,13 +598,13 @@
     let nid: any[] = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
       let tempData: any[] = [];
-      rowData.forEach(data => {
+      rowData.forEach((data) => {
         if (selectedRowIds.includes(data.id)) {
           tempData.push(data);
         }
       });
-      tempData.forEach(data => {
-        if (data.status === 'C' || Number(data.JtracRepeatNum) > 1) {
+      tempData.forEach((data) => {
+        if (data.status === "C" || Number(data.JtracRepeatNum) > 1) {
           errorAc.push(String(data.jtracNo));
         } else {
           jtracAc.push(String(data.jtracNo));
@@ -587,12 +620,16 @@
       CustomAlert(UploadAlert.CHOOSE_DATA, AlertIcon.WARNING);
       return;
     }
-    CustomAlert(`确定要删除jtrac: ${jtracAc.join(',')} 吗?`, AlertIcon.PROMPT, deleteHandler);
+    CustomAlert(
+      `确定要删除jtrac: ${jtracAc.join(",")} 吗?`,
+      AlertIcon.PROMPT,
+      deleteHandler
+    );
 
     function deleteHandler(data: string) {
-      if (data === 'Y') {
+      if (data === "Y") {
         let info: JtracInfo = {};
-        info.nid = nid.join(',');
+        info.nid = nid.join(",");
         setWaiting();
         pageStore.deleteJtracInfo(info);
       }
@@ -605,28 +642,28 @@
       return;
     }
     let selectedRowIds = [];
-    rowData.forEach(elem => {
+    rowData.forEach((elem) => {
       if (elem.selected) {
         selectedRowIds.push(elem.id);
       }
     });
-    let jtracArrStr: string = '';
+    let jtracArrStr: string = "";
     let jtracNoAc: any[] = [];
-    let conflictArrStr: string = '';
+    let conflictArrStr: string = "";
     let errorAc: any[] = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
       let tempData: any[] = [];
-      rowData.forEach(data => {
+      rowData.forEach((data) => {
         if (selectedRowIds.includes(data.id)) {
           tempData.push(data);
         }
       });
-      tempData.forEach(data => {
-        if (data.status !== 'B') {
+      tempData.forEach((data) => {
+        if (data.status !== "B") {
           errorAc.push(String(data.jtracNo));
         } else {
           let targetNo = data.jtracNo;
-          jtracArrStr += (jtracArrStr === '' ? '' : '*') + targetNo;
+          jtracArrStr += (jtracArrStr === "" ? "" : "*") + targetNo;
           jtracNoAc.push(targetNo);
         }
       });
@@ -640,41 +677,51 @@
       return;
     }
     conflictArrStr = getConflictArrStr(getJtracAc(jtracNoAc), []);
-    CreatePop('冲突详细', conflictdetail, { jtracAc: jtracArrStr, conflictAc: conflictArrStr }, onPopCloseSearchHandler, {
-      width: '1000px',
-      height: '600px',
-    });
+    CreatePop(
+      "冲突详细",
+      conflictdetail,
+      { jtracAc: jtracArrStr, conflictAc: conflictArrStr },
+      onPopCloseSearchHandler,
+      {
+        width: "1000px",
+        height: "600px",
+      }
+    );
   }
 
   function getConflictFile(value: any[], curAc: any[]): any[] {
     let orgArray: any[] = [];
     let curArray: any[] = [];
     let conflictAc: any[] = [];
-    let conflictJtrac: string = '';
+    let conflictJtrac: string = "";
     for (let j = 0; j < curAc.length; j++) {
-      curAc[j].bizDebeloperShow = curAc[j].bizDebeloperName || curAc[j].bizDebeloper;
-      if (curAc[j].status !== 'B') continue;
-      curAc[j].conflictFiles = '';
+      curAc[j].bizDebeloperShow =
+        curAc[j].bizDebeloperName || curAc[j].bizDebeloper;
+      if (curAc[j].status !== "B") continue;
+      curAc[j].conflictFiles = "";
       conflictAc = [];
       conflictAc.push(curAc[j].jtracNo);
       conflictJtrac = curAc[j].jtracNo;
-      orgArray = getOrgArray(filterModule(curAc[j].moduleList.split(',')));
+      orgArray = getOrgArray(filterModule(curAc[j].moduleList.split(",")));
       for (let m = 0; m < orgArray.length; m++) {
         for (let n = 0; n < value.length; n++) {
           if (conflictJtrac === value[n].jtracNo) continue;
-          curArray = filterModule(value[n].moduleList.split(','));
+          curArray = filterModule(value[n].moduleList.split(","));
           for (let k = 0; k < curArray.length; k++) {
             if (
-              curArray[k].indexOf('/MPRefresh.mxml') !== -1 ||
-              curArray[k].indexOf('/GERP_upLoad.mxml') !== -1 ||
-              curArray[k].indexOf('/BuyerRefresh.mxml') !== -1 ||
-              curArray[k].indexOf('/SupplierRefresh.mxml') !== -1 ||
-              curArray[k].indexOf('/BuyerExportRefresh.mxml') !== -1
+              curArray[k].indexOf("/MPRefresh.mxml") !== -1 ||
+              curArray[k].indexOf("/GERP_upLoad.mxml") !== -1 ||
+              curArray[k].indexOf("/BuyerRefresh.mxml") !== -1 ||
+              curArray[k].indexOf("/SupplierRefresh.mxml") !== -1 ||
+              curArray[k].indexOf("/BuyerExportRefresh.mxml") !== -1
             )
               continue;
             if (curArray[k].indexOf(orgArray[m]) !== -1) {
-              if (String(curAc[j].conflictFiles).indexOf(value[n].jtracNo) === -1) {
-                curAc[j].conflictFiles += (curAc[j].conflictFiles === '' ? '' : ',') + value[n].jtracNo;
+              if (
+                String(curAc[j].conflictFiles).indexOf(value[n].jtracNo) === -1
+              ) {
+                curAc[j].conflictFiles +=
+                  (curAc[j].conflictFiles === "" ? "" : ",") + value[n].jtracNo;
                 conflictAc.push(value[n].jtracNo);
                 break;
               }
@@ -689,12 +736,12 @@
   function getOrgArray(orgArray: any[]): any[] {
     let index: number;
     let result: any[] = [];
-    orgArray.forEach(data => {
-      if (data.indexOf('全编') !== -1) {
-        data = data.substring(0, data.indexOf('全编'));
+    orgArray.forEach((data) => {
+      if (data.indexOf("全编") !== -1) {
+        data = data.substring(0, data.indexOf("全编"));
         result.push(`/${data}/`);
       } else {
-        index = data.lastIndexOf('/');
+        index = data.lastIndexOf("/");
         if (index >= 0) result.push(data.substr(index + 1));
         else result.push(data);
       }
@@ -703,7 +750,7 @@
   }
 
   function filterModule(value: any[]): any[] {
-    let inputExceptionAR = exModules.split(',');
+    let inputExceptionAR = exModules.split(",");
     if (inputExceptionAR && inputExceptionAR.length > 0) {
       let filterModuleAR = [];
       let InputMap = new Map<string, string>();
@@ -727,13 +774,13 @@
   function getConflictArrStr(jtracAc: any[], conflictAc: any[]): string {
     let array: any[] = [];
     let addConfictAc: any[] = [];
-    let conflictAcStr: string = '';
-    jtracAc.forEach(iData => {
+    let conflictAcStr: string = "";
+    jtracAc.forEach((iData) => {
       if (iData.conflictFiles) {
-        array = iData.conflictFiles.split(',');
+        array = iData.conflictFiles.split(",");
         array.push(iData.jtracNo);
-        array.forEach(data => {
-          if (conflictAc.indexOf(data) === -1 && data !== '') {
+        array.forEach((data) => {
+          if (conflictAc.indexOf(data) === -1 && data !== "") {
             conflictAc.push(data);
             addConfictAc.push(data);
           }
@@ -743,16 +790,16 @@
     if (addConfictAc.length) {
       getConflictArrStr(getJtracAc(addConfictAc), conflictAc);
     }
-    conflictAc.forEach(data => {
-      conflictAcStr += conflictAcStr === '' ? data : '*' + data;
+    conflictAc.forEach((data) => {
+      conflictAcStr += conflictAcStr === "" ? data : "*" + data;
     });
     return conflictAcStr;
   }
 
   function getJtracAc(jtracNoAc: any[]): any[] {
     let jtracAc: any[] = [];
-    jtracNoAc.forEach(iData => {
-      searchData.forEach(data => {
+    jtracNoAc.forEach((iData) => {
+      searchData.forEach((data) => {
         if (data.jtracNo === iData) {
           jtracAc.push(data);
         }
@@ -767,23 +814,23 @@
       return;
     }
     let selectedRowIds = [];
-    rowData.forEach(elem => {
+    rowData.forEach((elem) => {
       if (elem.selected) {
         selectedRowIds.push(elem.id);
       }
     });
-    let jtracArrStr: string = '';
+    let jtracArrStr: string = "";
     let jtracNoAc: any[] = [];
     if (selectedRowIds !== null && selectedRowIds.length > 0) {
       let tempData: any[] = [];
-      rowData.forEach(data => {
+      rowData.forEach((data) => {
         if (selectedRowIds.includes(data.id)) {
           tempData.push(data);
         }
       });
-      tempData.forEach(data => {
+      tempData.forEach((data) => {
         let targetNo = data.jtracNo;
-        jtracArrStr += (jtracArrStr === '' ? '' : '*') + targetNo;
+        jtracArrStr += (jtracArrStr === "" ? "" : "*") + targetNo;
         jtracNoAc.push(targetNo);
       });
     }
@@ -791,7 +838,13 @@
       CustomAlert(UploadAlert.CHOOSE_DATA, AlertIcon.WARNING);
       return;
     }
-    CreatePop('查看状态', conflictdetail, { jtracAc: jtracArrStr, conflictAc: null }, onPopCloseSearchHandler, { width: '1000px', height: '600px' });
+    CreatePop(
+      "查看状态",
+      conflictdetail,
+      { jtracAc: jtracArrStr, conflictAc: null },
+      onPopCloseSearchHandler,
+      { width: "1000px", height: "600px" }
+    );
   }
 
   function onBtnDownloadClickHandler() {
@@ -802,54 +855,54 @@
     let params = searchInfo;
     params.iStart = 0;
     params.iPageCount = 10000;
-    searchType = 'download';
+    searchType = "download";
     setWaiting();
     pageStore.searchUniqJtracList(params);
   }
 
   function downloadDataHandler(data: any[]) {
     downloadSearchSign = false;
-    let filename = '上传信息.xlsx';
+    let filename = "上传信息.xlsx";
     data = deepClone(data);
-    data.forEach(iData => {
+    data.forEach((iData) => {
       //version
       let reg = /[,]/g;
       for (let n in iData) {
-        if (n === 'jtracNo') {
-          iData['JtracNo'] = iData[n];
+        if (n === "jtracNo") {
+          iData["JtracNo"] = iData[n];
           delete iData[n];
-        } else if (n === 'createDate') {
-          iData['日期'] = iData[n];
+        } else if (n === "createDate") {
+          iData["日期"] = iData[n];
           delete iData[n];
-        } else if (n === 'clientDeveloperName') {
-          iData['负责人'] = iData[n];
+        } else if (n === "clientDeveloperName") {
+          iData["负责人"] = iData[n];
           delete iData[n];
-        } else if (n === 'bizDeveloperName') {
-          iData['后台负责人'] = iData[n];
+        } else if (n === "bizDeveloperName") {
+          iData["后台负责人"] = iData[n];
           delete iData[n];
-        } else if (n === 'version') {
-          iData['版本号'] = iData[n];
+        } else if (n === "version") {
+          iData["版本号"] = iData[n];
           delete iData[n];
-        } else if (n === 'systemTypes') {
-          iData['系统区分'] = iData[n];
+        } else if (n === "systemTypes") {
+          iData["系统区分"] = iData[n];
           delete iData[n];
-        } else if (n === 'statusChange') {
-          iData['状态'] = iData[n];
+        } else if (n === "statusChange") {
+          iData["状态"] = iData[n];
           delete iData[n];
-        } else if (n === 'JtracRepeatNum') {
-          iData['提交次数'] = iData[n];
+        } else if (n === "JtracRepeatNum") {
+          iData["提交次数"] = iData[n];
           delete iData[n];
-        } else if (n === 'fileList') {
-          iData['文件列表'] = iData[n];
+        } else if (n === "fileList") {
+          iData["文件列表"] = iData[n];
           delete iData[n];
-        } else if (n === 'moduleList') {
-          iData['模块'] = iData[n];
+        } else if (n === "moduleList") {
+          iData["模块"] = iData[n];
           delete iData[n];
-        } else if (n === 'labelListChange') {
-          iData['标注'] = iData[n];
+        } else if (n === "labelListChange") {
+          iData["标注"] = iData[n];
           delete iData[n];
-        } else if (n === 'conflictFiles') {
-          iData['直接冲突'] = iData[n];
+        } else if (n === "conflictFiles") {
+          iData["直接冲突"] = iData[n];
           delete iData[n];
         } else {
           delete iData[n];
@@ -857,24 +910,33 @@
       }
     });
     let arrTitle: any[] = uploadSveletColumn;
-    arrTitle.forEach(data => {
-      if (data.value !== '详细' && data.value) {
+    arrTitle.forEach((data) => {
+      if (data.value !== "详细" && data.value) {
         arrHeadTitleName.push(data.value);
-        arrHeadTitleNameWidth.push({ wpx: data.width?.replace('px', '') });
+        arrHeadTitleNameWidth.push({ wpx: data.width?.replace("px", "") });
       }
     });
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
-    ws['!cols'] = arrHeadTitleNameWidth;
+    ws["!cols"] = arrHeadTitleNameWidth;
     XLSX.utils.book_append_sheet(wb, ws);
     XLSX.writeFile(wb, filename);
   }
 
   function onBtnJtracNoLinkClickHandler(data: any) {
-    if (String(data.jtracNo).indexOf(JTRAC_TITLE) < 0 && String(data.jtracNo).indexOf(JTRAC_TITLE_H5) < 0) {
+    if (
+      String(data.jtracNo).indexOf(JTRAC_TITLE) < 0 &&
+      String(data.jtracNo).indexOf(JTRAC_TITLE_H5) < 0
+    ) {
       onBtnModuleLinkClickHandler(data);
     } else {
-      CreatePop('Jtrac详细', fileDetail, { jtracNo: data.jtracNo }, onPopCloseSearchHandler, { width: '600px', height: '630px' });
+      CreatePop(
+        "Jtrac详细",
+        fileDetail,
+        { jtracNo: data.jtracNo },
+        onPopCloseSearchHandler,
+        { width: "600px", height: "630px" }
+      );
     }
   }
 
@@ -888,7 +950,7 @@
 
   function onCheckBoxChangeHandler(e: any) {
     let arr: any[] = [];
-    checkBoxArr.forEach(ele => {
+    checkBoxArr.forEach((ele) => {
       if (e.target.defaultValue === ele.defaultValue) {
         ele.checked = e.target.checked;
       }
@@ -898,7 +960,7 @@
       }
     });
     if (arr.length === 0) {
-      checkBoxArr.forEach(ele => {
+      checkBoxArr.forEach((ele) => {
         if (ele.defaultValue === checkedItem) {
           ele.checked = true;
         }
@@ -916,14 +978,14 @@
     info.nid = data.nid;
     info.version = data.version;
     info.detail = data.detail;
-    info.file = 'A';
+    info.file = "A";
     info.label = data.labelList;
     info.reviewer = data.reviewer;
     info.urgencyFlag = data.urgencyFlag;
-    info.bizDeveloper = data.bizDeveloper ?? '';
-    CreatePop('文件列表', filelist, { info }, onPopCloseSearchHandler, {
-      width: '700px',
-      height: '630px',
+    info.bizDeveloper = data.bizDeveloper ?? "";
+    CreatePop("文件列表", filelist, { info }, onPopCloseSearchHandler, {
+      width: "700px",
+      height: "630px",
     });
   }
 
@@ -936,14 +998,14 @@
     info.nid = data.nid;
     info.version = data.version;
     info.detail = data.detail;
-    info.file = 'B';
+    info.file = "B";
     info.label = data.labelList;
     info.reviewer = data.reviewer;
     info.urgencyFlag = data.urgencyFlag;
-    info.bizDeveloper = data.bizDeveloper ?? '';
-    CreatePop('模块列表', filelist, { info }, onPopCloseSearchHandler, {
-      width: '700px',
-      height: '630px',
+    info.bizDeveloper = data.bizDeveloper ?? "";
+    CreatePop("模块列表", filelist, { info }, onPopCloseSearchHandler, {
+      width: "700px",
+      height: "630px",
     });
   }
 
@@ -973,16 +1035,16 @@
       iPageCount: selectedPageSize,
     };
     page = v.detail.page;
-    searchType = 'search';
+    searchType = "search";
     currentPage = v.detail.page;
     setWaiting();
     pageStore.searchUniqJtracList(info);
   }
 
   function onBtnDetailLinkClickHandler(e) {
-    if (e.field === 'fileListChange') {
+    if (e.field === "fileListChange") {
       onBtnFileLinkClickHandler(e.value);
-    } else if (e.field === 'moduleListChange') {
+    } else if (e.field === "moduleListChange") {
       onBtnModuleLinkClickHandler(e.value);
     }
   }
@@ -996,36 +1058,54 @@
   function onGridReadyHandler(params: GridReadyEvent) {
     gridApi = params.api;
     gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
-    gridApi?.addEventListener(Renderer.Renderer_Select_Check_Box, onBtnCheckBoxHandler);
-    gridApi?.addEventListener(Renderer.Renderer_Icon_Button, onBtnDetailLinkClickHandler);
+    gridApi?.addEventListener(
+      Renderer.Renderer_Select_Check_Box,
+      onBtnCheckBoxHandler
+    );
+    gridApi?.addEventListener(
+      Renderer.Renderer_Icon_Button,
+      onBtnDetailLinkClickHandler
+    );
   }
 
   function onBtnLinkHandler(e: any) {
-    if (e.field === 'jtracNo') {
+    if (e.field === "jtracNo") {
       onBtnJtracNoLinkClickHandler(e.value);
-    } else if (e.field === 'fileListChange') {
+    } else if (e.field === "fileListChange") {
       onBtnFileLinkClickHandler(e.value);
-    } else if (e.field === 'moduleListChange') {
+    } else if (e.field === "moduleListChange") {
       onBtnModuleLinkClickHandler(e.value);
-    } else if (e.field === 'detailFlag') {
-      CreatePop('查看详细', jtraclist, { jtracNo: e.value.jtracNo, jtracStatus: e.value.status }, onPopCloseSearchHandler, {
-        width: '1100px',
-        height: '600px',
-      });
-    } else if (e.field === 'clientDeveloperName') {
-      openUserInfoPop(e.value.clientDeveloperName.split(','), e.value.clientDeveloperIds.split(','));
-    } else if (e.field === 'reviewerName') {
-      openUserInfoPop(e.value.reviewerName.split(','), e.value.reviewer.split(','));
+    } else if (e.field === "detailFlag") {
+      CreatePop(
+        "查看详细",
+        jtraclist,
+        { jtracNo: e.value.jtracNo, jtracStatus: e.value.status },
+        onPopCloseSearchHandler,
+        {
+          width: "1100px",
+          height: "600px",
+        }
+      );
+    } else if (e.field === "clientDeveloperName") {
+      openUserInfoPop(
+        e.value.clientDeveloperName.split(","),
+        e.value.clientDeveloperIds.split(",")
+      );
+    } else if (e.field === "reviewerName") {
+      openUserInfoPop(
+        e.value.reviewerName.split(","),
+        e.value.reviewer.split(",")
+      );
     }
   }
 
   function openUserInfoPop(labelList, idList) {
     const userInfoList = [];
-    idList.forEach(data => {
-      userInfoList.push(userInformationList.find(info => info.id === data));
+    idList.forEach((data) => {
+      userInfoList.push(userInformationList.find((info) => info.id === data));
     });
     CreatePop(
-      '用户信息',
+      "用户信息",
       userInformation,
       {
         tabName: labelList,
@@ -1033,14 +1113,14 @@
       },
       null,
       {
-        width: '600px',
-        height: '400px',
+        width: "600px",
+        height: "400px",
       }
     );
   }
 
   function dateToInputHandler(e: CustomEvent<any>): void {
-    throw new Error('Function not implemented.');
+    throw new Error("Function not implemented.");
   }
 </script>
 
@@ -1072,7 +1152,12 @@
         </Box>
       </Box>
       <Box f={1} height="30px" class="box-width">
-        <Box width="55px" className="main-text " class="text-min-width" verticalAlign="middle">
+        <Box
+          width="55px"
+          className="main-text "
+          class="text-min-width"
+          verticalAlign="middle"
+        >
           <Text>提交人</Text>
         </Box>
         <Box f={1} class="components-height select-width">
@@ -1080,7 +1165,7 @@
             options={uploaderList}
             optionIdentifier="id"
             labelIdentifier="name"
-            onSubmit={v => onUploaderSelectHandler(v)}
+            onSubmit={(v) => onUploaderSelectHandler(v)}
             bind:value={selectedUploaderValue}
           />
         </Box>
@@ -1092,7 +1177,12 @@
         </Box>
         <Box f={1}>
           <Box class="input-box">
-            <BatchInput bind:value={jtracNo} bind:dataTotal={jtracNoTotal} on:blur={onJtracNoChangeHandler} />
+            <BatchInput
+              inputLabel="jtracNo"
+              bind:value={jtracNo}
+              bind:dataTotal={jtracNoTotal}
+              on:blur={onJtracNoChangeHandler}
+            />
           </Box>
         </Box>
       </Box>
@@ -1105,16 +1195,31 @@
         </Box>
         <Box width="370px" class="components-height" verticalAlign="middle">
           {#each checkBoxArr as value}
-            <Checkbox bind:checked={value.checked} labelText={value.defaultValue} {value} on:change={onCheckBoxChangeHandler} />
+            <Checkbox
+              bind:checked={value.checked}
+              labelText={value.defaultValue}
+              {value}
+              on:change={onCheckBoxChangeHandler}
+            />
           {/each}
         </Box>
       </Box>
       <Box f={1} height="30px" class="box-width">
-        <Box width="55px" className="main-text " class="text-min-width" verticalAlign="middle">
+        <Box
+          width="55px"
+          className="main-text "
+          class="text-min-width"
+          verticalAlign="middle"
+        >
           <Text>模块</Text>
         </Box>
         <Box f={1} class="input-box">
-          <BatchInput bind:value={modules} bind:dataTotal={moduleTotal} on:blur={onModulesChangeHandler} />
+          <BatchInput
+            inputLabel="模块"
+            bind:value={modules}
+            bind:dataTotal={moduleTotal}
+            on:blur={onModulesChangeHandler}
+          />
         </Box>
       </Box>
       <Box width="100px" />
@@ -1124,47 +1229,100 @@
         </Box>
         <Box f={1}>
           <Box class="input-box">
-            <BatchInput bind:value={exModules} bind:dataTotal={exModuleTotal} />
+            <BatchInput
+              inputLabel="例外模块"
+              bind:value={exModules}
+              bind:dataTotal={exModuleTotal}
+            />
           </Box>
         </Box>
-        <IconButton currentIcon={Close} on:click={onBtnClearExModulesClickHandler} />
+        <IconButton
+          currentIcon={Close}
+          on:click={onBtnClearExModulesClickHandler}
+        />
       </Box>
     </Box>
   </Box>
   <Box class="margin-bottom ">
     <Box f={2} horizontalAlign="left">
-      {#if permissionData.includes('J_A')}
-        <Button class="button-normal" size="small" kind="tertiary" icon={Add} on:click={onBtnAddJtracClickHandler}>新增</Button>
+      {#if permissionData.includes("J_A")}
+        <Button
+          class="button-normal"
+          size="small"
+          kind="tertiary"
+          icon={Add}
+          on:click={onBtnAddJtracClickHandler}>新增</Button
+        >
       {/if}
-      {#if permissionData.includes('J_E')}
-        <Button kind="tertiary" icon={FolderParent} class="margin-left-s button-normal" on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button>
+      {#if permissionData.includes("J_E")}
+        <Button
+          kind="tertiary"
+          icon={FolderParent}
+          class="margin-left-s button-normal"
+          on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button
+        >
       {/if}
-      {#if permissionData.includes('J_D')}
-        <Button kind="tertiary" icon={FolderParent} class="margin-left-s button-normal" on:click={onBtnUpdateStatus45ClickHandler}>45</Button>
+      {#if permissionData.includes("J_D")}
+        <Button
+          kind="tertiary"
+          icon={FolderParent}
+          class="margin-left-s button-normal"
+          on:click={onBtnUpdateStatus45ClickHandler}>45</Button
+        >
       {/if}
-      {#if permissionData.includes('J_B')}
-        <Button kind="tertiary" icon={TrashCan} class="margin-left-s button-normal" on:click={onBtnDeleteClickHandler}>删除</Button>
+      {#if permissionData.includes("J_B")}
+        <Button
+          kind="tertiary"
+          icon={TrashCan}
+          class="margin-left-s button-normal"
+          on:click={onBtnDeleteClickHandler}>删除</Button
+        >
       {/if}
-      <Button kind="tertiary" icon={Download} class="margin-left-s button-normal" on:click={onBtnDownloadClickHandler}>下载</Button>
-      {#if permissionData.includes('J_A')}
-        <Button kind="tertiary" icon={Checkmark} class="margin-left-s button-normal" on:click={onBtnSumitClickHandler}>确认全部冲突</Button>
+      <Button
+        kind="tertiary"
+        icon={Download}
+        class="margin-left-s button-normal"
+        on:click={onBtnDownloadClickHandler}>下载</Button
+      >
+      {#if permissionData.includes("J_A")}
+        <Button
+          kind="tertiary"
+          icon={Checkmark}
+          class="margin-left-s button-normal"
+          on:click={onBtnSumitClickHandler}>确认全部冲突</Button
+        >
       {/if}
-      {#if permissionData.includes('J_A')}
-        <Button kind="tertiary" icon={Collaborate} class="margin-left-s button-normal" on:click={onBtnCheckStatusClickHandler}>查看状态</Button>
+      {#if permissionData.includes("J_A")}
+        <Button
+          kind="tertiary"
+          icon={Collaborate}
+          class="margin-left-s button-normal"
+          on:click={onBtnCheckStatusClickHandler}>查看状态</Button
+        >
       {/if}
       <Box width="120px" height="30px" class="margin-left-s margin_top">
         <AdvancedSelect
           options={itemPages}
           optionIdentifier="code"
           labelIdentifier="name"
-          onSubmit={v => onPageSizeSelectHandler(v)}
+          onSubmit={(v) => onPageSizeSelectHandler(v)}
           bind:value={selectedPageSizeValue}
         />
       </Box>
     </Box>
     <Box f={1} horizontalAlign="right">
-      <Button kind="secondary" class=" button-normal" icon={Search} on:click={onBtnSearchClickHandler}>SEARCH</Button>
-      <Button kind="secondary" icon={Reset} class="margin-left-s button-normal" on:click={onBtnClearClickHandler}>RESET</Button>
+      <Button
+        kind="secondary"
+        class=" button-normal"
+        icon={Search}
+        on:click={onBtnSearchClickHandler}>SEARCH</Button
+      >
+      <Button
+        kind="secondary"
+        icon={Reset}
+        class="margin-left-s button-normal"
+        on:click={onBtnClearClickHandler}>RESET</Button
+      >
     </Box>
   </Box>
   <DataGrid
@@ -1180,8 +1338,8 @@
 </Box>
 
 <style lang="scss">
-  @import '../../styles/theme/var';
-  @import '../../styles/theme/mixin';
+  @import "../../styles/theme/var";
+  @import "../../styles/theme/mixin";
 
   :global(.linkButton) {
     display: flex;
@@ -1256,7 +1414,8 @@
   :global(.button-normal) {
     margin-bottom: 4px;
     font-size: 13px;
-    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
+    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+      "微软雅黑";
     margin-top: 5px;
   }
 

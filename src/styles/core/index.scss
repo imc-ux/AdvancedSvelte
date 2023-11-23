@@ -1,12 +1,13 @@
-@import '../../styles/theme/var';
-@import '../../styles/theme/mixin';
+@import "../../styles/theme/var";
+@import "../../styles/theme/mixin";
 
 html {
   height: 100%;
 }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
   @include body-bgc();
   min-height: 0px !important;
 }
@@ -19,17 +20,18 @@ body {
 }
 
 .bx--link {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .bx--link:visited {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
 }
 
 .bx--link:hover {
-  @include themifyListSelfIpt('color', $theme-color);
+  @include themifyListSelfIpt("color", $theme-color);
 }
 
 .bx--link:active {
@@ -50,7 +52,7 @@ input {
 }
 
 .bx--data-table th {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff;
   font-size: 13px;
   border-right: 1px solid #e5e5e5 !important;
@@ -91,7 +93,8 @@ input {
 .bx--table-header-label {
   color: #fff;
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
   height: 24px;
   line-height: 24px;
   font-weight: normal;
@@ -113,40 +116,40 @@ input {
 .bx--list-box:focus {
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--select-input {
   height: 30px;
   background-color: #fff;
   border: 1px solid #cacaca;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .bx--select-input:focus {
   outline: none;
   border: 1px solid #08adaa;
   background-color: #fff;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--select-input:hover {
   outline: none;
   border: 1px solid #08adaa;
   background-color: #fff;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--btn:focus {
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--btn:hover {
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--btn {
@@ -156,7 +159,7 @@ input {
 }
 
 .bx--btn--ghost {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
   height: 24px;
   line-height: 24px;
   margin-left: 5px;
@@ -164,7 +167,7 @@ input {
 }
 
 .bx--btn--ghost:hover {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
   background-color: #fff;
 }
 
@@ -181,12 +184,12 @@ input {
 }
 
 .bx--btn--secondary:focus {
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: inset 0 0 0 1px #119b9b, inset 0 0 0 2px #fff;
 }
 
 .bx--btn--tertiary:focus {
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: inset 0 0 0 1px #119b9b, inset 0 0 0 2px #fff;
 }
 
@@ -197,12 +200,12 @@ input {
 .bx--pagination-nav__page:focus {
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--select-option {
   background-color: #fff;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .bx--list-box__menu-item {
@@ -213,17 +216,17 @@ input {
 
 .bx--list-box__menu-item--active.bx--list-box__menu-item--highlighted {
   background-color: #fff;
-  @include themifyListSelfIpt('color', $theme-color);
+  @include themifyListSelfIpt("color", $theme-color);
 }
 
 .multiselect > div > div > div > .bx--list-box__menu-item:hover {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff !important;
   width: 100% !important;
 }
 
 .bx--list-box__menu-item__option:hover {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff !important;
 }
 
@@ -270,7 +273,7 @@ input {
 } */
 
 .bx--pagination-nav__page:not(.bx--pagination-nav__page--direction)::after {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 .root {
@@ -292,37 +295,105 @@ input {
   background-color: #fff;
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--text-input {
   outline: none;
   height: 30px;
-  border: 1px solid #cacaca;
+  // border: 2px solid #cacaca;
+  border: none;
+  border-radius: 5px;
   background-color: #fff;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  box-sizing: content-box;
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .bx--text-input:hover {
   background-color: #fff;
   outline: none;
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  // border: 2px solid #08adaa;
+  border: none;
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--text-input:focus {
   background-color: #fff;
   outline: none;
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  // border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.input-outer-border {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #cacaca;
+  border-radius: 5px;
+  cursor: text;
+}
+
+.input-outer-border-hover {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.input-outer-box {
+  padding: 0px 2px;
+}
+
+.input-outer-border:hover {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+}
+
+.zindex-8 {
+  z-index: 8;
+}
+
+.zindex-9 {
+  z-index: 9;
+}
+
+.zindex-10 {
+  z-index: 10;
+}
+
+.transparent-background {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.input-place-holder {
+  position: absolute;
+  line-height: 13px !important;
+  background: linear-gradient(rgba(255, 255, 255, 0) 55%, white 55%);
+  z-index: 9;
+  margin-left: 5px !important;
+  padding: 0 10px 0 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.2s;
+}
+
+.input-place-holder-move {
+  top: 0;
+  font-size: 13px;
+  transform: translateY(-55%);
+}
+
+.input-place-holder:hover + .input-outer-border {
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--modal-header {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   margin-bottom: 0px;
   padding-bottom: 8px;
   padding-top: 13px;
@@ -339,7 +410,8 @@ input {
 .bx--modal-header__heading {
   color: #fff;
   font-size: 18px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .bx--modal-content {
@@ -347,7 +419,8 @@ input {
   margin-bottom: 0px;
   justify-content: center;
   font-size: 14px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
   font-weight: 500;
   margin-bottom: 5px;
 }
@@ -376,7 +449,8 @@ input {
   background-color: #fff;
   color: #0a0a0a;
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helveftica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helveftica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .callout-padding {
@@ -388,7 +462,8 @@ input {
   border-radius: 2px;
   color: #0a0a0a;
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 option {
@@ -406,7 +481,7 @@ option {
 }
 
 .agree-button {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff;
   height: 30px;
   padding-left: 20px;
@@ -417,12 +492,12 @@ option {
   margin-left: 110px;
 }
 .agree-button:hover {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: none;
 }
 
 .opt-button {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff;
   height: 30px;
   padding-left: 20px;
@@ -439,7 +514,7 @@ option {
 }
 
 .opt-button:hover {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: none;
 }
 
@@ -495,7 +570,8 @@ option {
 
 .modify-text {
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
   margin-bottom: 3px;
   margin-left: 2px;
   color: #525252;
@@ -514,12 +590,12 @@ option {
 
 .bx--list-box__field:hover {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .bx--list-box__field:focus {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   /* outline-offset: -2px; */
   outline: none;
 }
@@ -546,14 +622,14 @@ option {
 }
 
 .background {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border-left: 1px solid #cfcfcf;
   border-right: 1px solid #cfcfcf;
   border-bottom: 1px solid #cfcfcf;
 }
 
 .background_border {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: 1px solid #cfcfcf;
 }
 
@@ -587,42 +663,42 @@ option {
 }
 
 .bx--data-table th.bx--table-column-checkbox {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 .bx--date-picker__input:focus {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   outline: 0px;
   outline-offset: 0px;
 }
 
 .flatpickr-day.today.selected {
   outline: 2px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
   color: #fff;
 }
 
 .flatpickr-day.endRange:hover {
   outline: 2px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   outline-offset: -2px;
   color: #fff;
 }
 
 .flatpickr-day.endRange.inRange.selected {
   outline: 2px solid #08adaa;
-  @include themifyListSelf('background-color', $theme-color);
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .flatpickr-day.selected {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 .flatpickr-day.inRange {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 .flatpickr-day.today {
@@ -631,23 +707,23 @@ option {
 }
 
 .flatpickr-day.today::after {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 .bx--inline-notification.bx--inline-notification--low-contrast a:focus {
   outline: 1px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .flatpickr-day:focus {
   outline: 2px solid #08adaa;
   outline-offset: -2px;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .flatpickr-calendar.open:focus {
   outline: 1px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .flatpickr-calendar.open {
@@ -672,18 +748,18 @@ option {
   border: 1px solid #cacaca;
 }
 .bx--checkbox:checked + .bx--checkbox-label::before {
-  @include themifyListSelfIpt('background-color', $theme-color);
+  @include themifyListSelfIpt("background-color", $theme-color);
   border: 1px solid #cacaca !important;
 }
 .bx--checkbox:indeterminate + .bx--checkbox-label::before {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: 1px solid #cacaca;
 }
 
 .bx--checkbox:checked:focus + .bx--checkbox-label::before {
   outline: 0px;
   outline-offset: 0px;
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: 1px solid #cacaca;
 }
 
@@ -779,7 +855,7 @@ body.waiting * {
 }
 
 .li-style:hover {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff;
 }
 
@@ -789,7 +865,7 @@ body.waiting * {
 } */
 
 .li-selected-style {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
   background-color: #fff;
 }
 
@@ -838,7 +914,7 @@ body.waiting * {
 
 .selectContainer.focused.svelte-17l1npl.svelte-17l1npl:hover {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .selectContainer.svelte-17l1npl.svelte-17l1npl {
@@ -892,12 +968,12 @@ body.waiting * {
 }
 
 .item.hover.svelte-3e0qet:not(.active) {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   color: #fff;
 }
 
 .item.active.svelte-3e0qet {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
   background-color: #fff;
 }
 
@@ -948,7 +1024,7 @@ body.waiting * {
 }
 
 .option.number.active {
-  @include themifyListSelf('color', $theme-color);
+  @include themifyListSelf("color", $theme-color);
 }
 .option.number:hover {
   cursor: pointer;
@@ -1012,16 +1088,16 @@ body.waiting * {
 
 .item.svelte-15ynnp5.active {
   background-color: #fff !important;
-  @include themifyListSelfIpt('color', $theme-color);
+  @include themifyListSelfIpt("color", $theme-color);
 }
 
 .item.svelte-15ynnp5:hover {
-  @include themifyListSelfIpt('background-color', $theme-color);
+  @include themifyListSelfIpt("background-color", $theme-color);
   color: #fff !important;
 }
 
 .item.svelte-15ynnp5.heightlight {
-  @include themifyListSelfIpt('background-color', $theme-color);
+  @include themifyListSelfIpt("background-color", $theme-color);
   color: #fff !important;
 }
 
@@ -1034,7 +1110,7 @@ body.waiting * {
 
 .link-color {
   width: 100%;
-  @include themifyListSelfIpt('color', $theme-color);
+  @include themifyListSelfIpt("color", $theme-color);
   outline: none !important;
   white-space: nowrap;
   overflow: hidden;
@@ -1188,12 +1264,12 @@ body.waiting * {
 
 .advancedBox > div > input:hover {
   border: 1px solid #08adaa !important;
-  @include themifyListSelfIpt('border-color', $theme-color);
+  @include themifyListSelfIpt("border-color", $theme-color);
 }
 
 .advancedBox > div > input:focus {
   border: 1px solid #08adaa !important;
-  @include themifyListSelfIpt('border-color', $theme-color);
+  @include themifyListSelfIpt("border-color", $theme-color);
 }
 
 .add-padding-bottom-top {
@@ -1211,7 +1287,7 @@ body.waiting * {
 }
 
 .bx--tag--high-contrast {
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 @keyframes load {
@@ -1251,12 +1327,12 @@ body.waiting * {
 
 .autoComplete {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .autoComplete:hover {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .detail-bottom-margin {
@@ -1273,16 +1349,20 @@ body.waiting * {
 .detail-bottom-margin:focus {
   outline: none;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .detail-bottom-margin:hover {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .textArea-bottom-margin {
-  border: 1px solid #cacaca;
+  // border: 1px solid #cacaca;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
   min-height: 45px;
   height: 100px;
   padding-left: 20px;
@@ -1294,17 +1374,19 @@ body.waiting * {
 
 .textArea-bottom-margin:focus {
   outline: none;
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  // border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .textArea-bottom-margin:hover {
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  border: none;
+  // border: 1px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .index-textArea-bottom-margin {
   border: 1px solid #cacaca;
+  border-radius: 5px;
   min-height: 30px;
   height: 150px;
   padding-left: 20px;
@@ -1315,18 +1397,21 @@ body.waiting * {
   z-index: 10;
   width: 100% !important;
   font-size: 13px;
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .index-textArea-bottom-margin:focus {
   outline: none;
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+  border-radius: 5px;
 }
 
 .index-textArea-bottom-margin:hover {
-  border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  border: 2px solid #08adaa;
+  @include themifyListSelf("border-color", $theme-color);
+  border-radius: 5px;
 }
 
 .bx--text-area:active {
@@ -1335,7 +1420,8 @@ body.waiting * {
 }
 
 .bx--text-area {
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑' !important;
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑" !important;
 }
 
 .fileDetail_content {
@@ -1348,16 +1434,16 @@ body.waiting * {
 .numInputWrapper .arrowDown:hover::after {
   border-top-color: #08adaa;
   border-bottom-color: #08adaa;
-  @include themifyListSelf('border-top-color', $theme-color);
-  @include themifyListSelf('border-bottom-color', $theme-color);
+  @include themifyListSelf("border-top-color", $theme-color);
+  @include themifyListSelf("border-bottom-color", $theme-color);
 }
 
 .numInputWrapper .arrowUp:active::after,
 .numInputWrapper .arrowDown:active::after {
   border-top-color: #08adaa;
   border-bottom-color: #08adaa;
-  @include themifyListSelf('border-top-color', $theme-color);
-  @include themifyListSelf('border-bottom-color', $theme-color);
+  @include themifyListSelf("border-top-color", $theme-color);
+  @include themifyListSelf("border-bottom-color", $theme-color);
 }
 
 .bx--form-item.bx--checkbox-wrapper {
@@ -1374,7 +1460,7 @@ body.waiting * {
 
 .numInputWrapper .numInput:focus {
   outline: 1px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .numInputWrapper .numInput {
@@ -1383,7 +1469,7 @@ body.waiting * {
 
 .bx--link:focus {
   outline: 1px solid #08adaa;
-  @include themifyListSelf('outline-color', $theme-color);
+  @include themifyListSelf("outline-color", $theme-color);
 }
 
 .flatpickr-current-month .cur-month:hover {
@@ -1403,13 +1489,16 @@ body.waiting * {
 }
 
 //---------ag-Grid-style---------
-.center-aligned > .ag-header-cell-comp-wrapper > .ag-cell-label-container > .ag-header-cell-label {
+.center-aligned
+  > .ag-header-cell-comp-wrapper
+  > .ag-cell-label-container
+  > .ag-header-cell-label {
   justify-content: center;
 }
 
 .ag-header {
   color: #ffffff;
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border-right: 1px solid #efefef !important;
 }
 
@@ -1456,13 +1545,15 @@ body.waiting * {
 // }
 
 .cell-left-align > div > span > span > p {
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑";
   font-size: 13px;
   padding-right: 0px;
 }
 
 .cell-center-align > div > span > span > p {
-  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
+  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
+    "微软雅黑";
   font-size: 13px;
   padding-right: 0px;
 }
@@ -1554,16 +1645,19 @@ body.waiting * {
   border: 1px solid #e6e6e6;
 }
 
-.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link,
-.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link:focus,
-.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link:active {
+.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled)
+  .bx--tabs__nav-link,
+.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled)
+  .bx--tabs__nav-link:focus,
+.bx--tabs__nav-item--selected:not(.bx--tabs__nav-item--disabled)
+  .bx--tabs__nav-link:active {
   font-size: 13px;
   font-weight: 500;
   line-height: inherit;
   text-align: center;
   color: #fff;
   background-color: #08adaa;
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: 1px solid #cacaca;
 }
 
@@ -1584,7 +1678,7 @@ a.bx--tabs__nav-link {
   color: #303133;
   text-align: center;
   border: 1px solid #cacaca;
-  }
+}
 
 a.bx--tabs__nav-link:focus,
 a.bx--tabs__nav-link:active {
@@ -1595,26 +1689,26 @@ a.bx--tabs__nav-link:active {
 
 .invalid.svelte-1bsxr9h {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   background-color: #fff;
 }
 
 .invalid.svelte-1bsxr9h:focus {
   border-color: #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: none;
 }
 
 .input.svelte-1bsxr9h:focus {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   background-color: #fff;
 }
 
 input.svelte-1bsxr9h:focus {
   background-color: #fff;
   border-color: #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: none;
 }
 
@@ -1625,9 +1719,9 @@ input.svelte-1bsxr9h {
   height: 30px;
 }
 
-select.svelte-w239uu:focus+select.dummy-select.svelte-w239uu {
+select.svelte-w239uu:focus + select.dummy-select.svelte-w239uu {
   border: 1px solid#08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: none;
 }
 
@@ -1639,7 +1733,7 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
 
 .date-time-picker.svelte-w239uu.svelte-w239uu:focus {
   border: 1px solid#08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: none;
 }
 
@@ -1657,9 +1751,9 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
 .cell.selected.svelte-w239uu.svelte-w239uu {
   color: #fff;
   background: #08adaa;
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .cell.svelte-w239uu.svelte-w239uu {
@@ -1671,7 +1765,7 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
   box-shadow: none;
   border-radius: 0px;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
 }
 
 .page-button.svelte-w239uu.svelte-w239uu {
@@ -1681,14 +1775,17 @@ select.dummy-select.svelte-w239uu.svelte-w239uu {
 
 .ag-select-agg-func-virtual-list-item:hover {
   background-color: #08adaa;
-  @include themifyListSelf('background-color', $theme-color);
+  @include themifyListSelf("background-color", $theme-color);
 }
 
 input.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5::placeholder {
   color: var(--placeholder-color, #000);
 }
 
-.bx--tabs__nav-item:hover:not(.bx--tabs__nav-item--selected):not(.bx--tabs__nav-item--disabled) .bx--tabs__nav-link {
+.bx--tabs__nav-item:hover:not(.bx--tabs__nav-item--selected):not(
+    .bx--tabs__nav-item--disabled
+  )
+  .bx--tabs__nav-link {
   border-bottom: 1px solid #cacaca;
   color: #161616;
 }
@@ -1703,18 +1800,17 @@ input.svelte-1vabmef {
 input.svelte-1vabmef:focus {
   background-color: #fff;
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
+  @include themifyListSelf("border-color", $theme-color);
   box-shadow: none;
 }
 
 .invalid.svelte-1vabmef {
   border: 1px solid #cacaca;
-  background-color: #fff
+  background-color: #fff;
 }
 
 .invalid.svelte-1vabmef:focus {
   border: 1px solid #08adaa;
-  @include themifyListSelf('border-color', $theme-color);
-  box-shadow: none
+  @include themifyListSelf("border-color", $theme-color);
+  box-shadow: none;
 }
-

@@ -1338,7 +1338,7 @@
     flex-direction: column !important;
     width: auto;
     height: 100% !important;
-    min-width: 1422px;
+    //min-width: 1422px;
   }
 
   :global(.components-height) {

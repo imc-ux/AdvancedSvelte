@@ -318,7 +318,8 @@
       size="small"
       kind="tertiary"
       icon={Save}
-      on:click={btnSaveJtracHandler}>
+      on:click={btnSaveJtracHandler}
+    >
       保存
     </Button>
   </Box>
@@ -326,123 +327,143 @@
     <Box
       class="addPage-list background_border"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>JtracNo</Text>
     </Box>
     <Box
       f={1}
       class="border_right_top padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <AdvancedSelect
         options={jtracNoTypeList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onJtracNoTypeSelectChangeHandler(v)}
-        bind:value={selectedJtracNoTypeValue} />
+        bind:value={selectedJtracNoTypeValue}
+      />
       <div class="connector">-</div>
       <Input
+        inputLabel="JtracNo"
         bind:value={jtracNo}
         restrict="0-9"
         on:change={onJtracNoChangeHandler}
-        class="input popTextHeight jtrac-input-width" />
+        class="input popTextHeight jtrac-input-width"
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>Version: {version}</Text>
     </Box>
     <Box
       f={1}
       class="border_right_top padding-normal"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <AdvancedSelect
         options={systemTypeList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onSystemTypeSelectChangeHandler(v)}
-        bind:value={selectedSystemFlag} />
+        bind:value={selectedSystemFlag}
+      />
       <div class="connector">-</div>
       <Input
         readOnly={inputVersionDisabled}
         bind:value={versionMessage}
         on:change={onVersionChangeHandler}
-        class="input popTextHeight jtrac-input-width" />
+        class="input popTextHeight jtrac-input-width"
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>代码检查负责人</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal popup-position popup-select-height"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <AdvancedSelect
         options={reviewerList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onReviewerSelectChangeHandler(v)}
-        bind:value={selectedReviewerValue} />
+        bind:value={selectedReviewerValue}
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>列表</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <TextArea
         on:blur={onListMessageBlurHandler}
         bind:value={listMessage}
-        class="textArea-bottom-margin" />
+        class="textArea-bottom-margin"
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>模块</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Input
         readOnly={moduleInputOnly}
         on:blur={onModuleMessageBlurHandler}
         bind:value={moduleMessage}
-        class="input popTextHeight" />
+        class="input popTextHeight"
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>Detail</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Input bind:value={detailMessage} class="input popTextHeight" />
     </Box>
   </Box>
@@ -450,40 +471,46 @@
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>后台负责人</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal popup-position popup-select-height"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <AdvancedSelect
         options={bizList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onBizSelectChangeHandler(v)}
-        bind:value={selectedBizValue} />
+        bind:value={selectedBizValue}
+      />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <Text>紧急程度</Text>
     </Box>
     <Box
       f={1}
       class="border_right_bottom padding-normal popup-position popup-select-height"
       horizontalAlign="left"
-      verticalAlign="middle">
+      verticalAlign="middle"
+    >
       <AdvancedSelect
         options={urgencyList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onUrgencySelectChangeHandler(v)}
-        bind:value={selectedUrgencyValue} />
+        bind:value={selectedUrgencyValue}
+      />
     </Box>
   </Box>
 </div>

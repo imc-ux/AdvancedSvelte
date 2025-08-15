@@ -1,4 +1,4 @@
-import { PrefixRestURL, PrefixURL } from "@/constant/Service";
+import { PrefixRestURL } from "@/constant/Service";
 import { CommonAlert } from "@/constant/alert/Base";
 import { getServerUrl } from "@/utils/CommonUtils";
 /**
@@ -27,10 +27,10 @@ export function callRestfulService(
     xhr.open(
       "GET",
       getServerUrl() +
-        method +
-        PrefixRestURL +
-        encodeURIComponent(encodeURIComponent(param)) +
-        temp,
+      method +
+      PrefixRestURL +
+      encodeURIComponent(encodeURIComponent(param)) +
+      temp,
       true
     );
   }

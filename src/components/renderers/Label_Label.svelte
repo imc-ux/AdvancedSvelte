@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createData } from "@/utils/CommonUtils";
+  import "@/styles/core/index.scss";
 
   export let params;
   export const cellData = params.data ?? {};
@@ -46,12 +47,4 @@
   </p>
 </div>
 
-<style>
-  :global(.label) {
-    height: 20px;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
+

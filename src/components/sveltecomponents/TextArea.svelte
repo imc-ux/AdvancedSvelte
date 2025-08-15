@@ -13,7 +13,7 @@
   export let value;
   export let readOnly = false;
   export let height = "100px";
-  export let commonTextArea = true;
+  //export let commonTextArea = true;
   export let inputLabel = "";
 
   let focus = false;
@@ -55,20 +55,16 @@
       ? "input-outer-border input-outer-border-hover"
       : "input-outer-border"}
     on:click={onTextAreaClickHandler}
-    on:keypress={() => {}}
-  />
+    on:keypress={() => {}} />
   {#if inputLabel}
     <Text
       class={value || focus
         ? "textarea-place-holder textarea-place-holder-move"
-        : "textarea-place-holder"}>{inputLabel}</Text
-    >
+        : "textarea-place-holder"}>{inputLabel}</Text>
   {/if}
   <TextArea
     bind:value
-    style="height:{height};background-color:{commonTextArea
-      ? 'rgba(255,255,255,0)'
-      : '#fff'}"
+    style="height:{height}"
     {...props}
     on:blur={onTextAreaBlurHandler}
     on:focus={onTextAreaFocusHandler}
@@ -76,23 +72,29 @@
     readonly={readOnly}
     on:input={onTextAreaInputChangeHandler}
     on:mouseenter={() => onTextAreaHoverHandler("in")}
-    on:mouseleave={() => onTextAreaHoverHandler("out")}
-  />
+    on:mouseleave={() => onTextAreaHoverHandler("out")} />
 </Box>
 
 <style>
   :global(.bx--text-area) {
     padding: 0px 5px;
-    font-family: "IBM Plex Mono", "Menlo", "DejaVu Sans Mono",
-      "Bitstream Vera Sans Mono", Courier, monospace;
-    font-size: 13px;
+    font-family: "微软雅黑";
+    font-size: 14px;
     min-height: 29px;
+  }
+
+  :global(.commonTextArea) {
+    
+  }
+
+  ::global(.normalTextArea) {
+    background-color: #fff !important;
   }
 
   :global(.textarea-place-holder) {
     position: absolute;
     line-height: 13px;
-    background: linear-gradient(rgba(255, 255, 255, 0) 55%, white 55%);
+    
     z-index: 0;
     margin-left: 5px;
     font-size: 17px;
@@ -103,11 +105,11 @@
 
   :global(.textarea-place-holder-move) {
     top: 0;
-    font-size: 13px;
+    font-size: 14px;
     transform: translateY(-55%);
   }
 
   :global(.transparent-textarea) {
-    background-color: rgba(255, 255, 255, 0);
+    
   }
 </style>

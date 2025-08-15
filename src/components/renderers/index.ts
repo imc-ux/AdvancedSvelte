@@ -1,6 +1,6 @@
 import Label from '@/components/renderers/Label.svelte';
 import Link from '@/components/renderers/Link.svelte';
-import checkRenderer from '@/components/renderers/checkRenderer.svelte';
+import checkRenderer from '@/components/renderers/CheckRenderer.svelte';
 import IconButton from '@/components/renderers/IconButton.svelte';
 import ProgressBar from '@/components/renderers/ProgressBar.svelte';
 import iconButtonRenderer from '@/components/renderers/IconButtonRenderer.svelte';
@@ -19,7 +19,6 @@ import linkButtonButtonBatchInput_linkButtonButtonBatchInput from '@/components/
 import iconButton_labelBatchInput from '@/components/renderers/IconButton_LabelBatchInput.svelte';
 import label_linkButtonButtonBatchInput from '@/components/renderers/Label_LinkButtonButtonBatchInput.svelte';
 import linkButtonOrLabel_labelBatchInput from '@/components/renderers/LinkButtonOrLabel_LabelBatchInput.svelte';
-
 import { ICellRendererParams } from 'ag-grid-community';
 
 function rendererWrapper(renderer, restProps = {}) {

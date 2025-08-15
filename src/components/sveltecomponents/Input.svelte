@@ -36,7 +36,6 @@
 
   function onInputMouseenterHandler(params) {
     hover = true;
-    console.log("k");
   }
 
   function onInputMouseleaveHandler(params) {
@@ -48,6 +47,7 @@
   }
 
   function onTextFieldChangeHandler(e) {
+    console.log(e);
     if (maxAscii) {
       let newValue = getMaxAsciiString(e.detail, maxAscii);
       value = newValue;
@@ -79,19 +79,11 @@
   {#if inputLabel}
     <Text
       class={value || (!readOnly && focus)
-        ? "input-place-holder zindex-9 input-place-holder-move"
-        : "input-place-holder zindex-9 common-size"}>{inputLabel}</Text
-    >
+        ? "input-place-holder input-place-holder-move"
+        : "input-place-holder common-size"}>{inputLabel}</Text>
   {/if}
-  <div
-    class={!readOnly && (focus || hover)
-      ? "input-outer-border zindex-8 input-outer-border-hover"
-      : "input-outer-border zindex-8"}
-    style="background-color: #ffffff"
-    on:click={onInputFocusHandler}
-    on:keypress={() => {}}
-  />
-  <Box f={1} class="input-outer-box zindex-10 transparent-background">
+  
+  <Box f={1} class="input-outer-box transparent-background">
     <TextInput
       style="background-color:rgba(255,255,255,0)"
       bind:value
@@ -103,17 +95,15 @@
       on:change={onInputChangeHandler}
       on:mouseenter={onInputMouseenterHandler}
       on:mouseleave={onInputMouseleaveHandler}
-      {...props}
-    />
+      {...props} /> 
   </Box>
 </Box>
 
 <style>
   :global(.bx--text-input) {
     padding: 0px 5px;
-    font-family: "IBM Plex Mono", "Menlo", "DejaVu Sans Mono",
-      "Bitstream Vera Sans Mono", Courier, monospace;
-    font-size: 13px;
+    font-family: "微软雅黑";
+    font-size: 14px;
   }
   :global(.common-size) {
     font-size: 17px;

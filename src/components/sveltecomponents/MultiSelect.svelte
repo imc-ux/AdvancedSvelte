@@ -38,37 +38,30 @@
   }
 
   function onFocusHandler(e) {
-    if (!e.detail.sourceCapabilities) {
+    //sourceCapabilities谷歌  //explicitOriginalTarget火狐
+    if (!e.detail.sourceCapabilities && !e.detail.explicitOriginalTarget) {
       isOpen = false;
     }
   }
 </script>
 
-<div title={label}>
+<div style="width: 100%;" title={label}>
   <MultiSelect
     bind:selectedIds
     items={dataProvider}
     {label}
-    {...props}
     on:select={onSelectHandler}
     style="outline:none"
     {direction}
     on:blur={onFocusHandler}
-    bind:open={isOpen} />
+    bind:open={isOpen}
+    {...props} />
 </div>
 
-<style>
+<style lang="scss">
   :global(.bx--list-box__field) {
     padding: 0px 0px 0px 5px;
-  }
-
-  :global(.bx--list-box:hover) {
-    background-color: #fff;
-  }
-
-  :global(.bx--list-box--expanded:hover) {
-    background-color: #fff;
-  }
+  }  
 
   :global(.bx--list-box__field) {
     padding: 0px 0px 0px 5px;
@@ -77,15 +70,10 @@
   :global(.bx--list-box__menu-icon) {
     right: 0px;
   }
-
-  :global(.bx--list-box__label) {
-    font-size: 13px !important;
-    margin-right: 19px;
-  }
-
+  
   :global(.bx--list-box__menu-item__option) {
     margin: 0px 0px;
-    width: 100%;
+    width: 100%;    
   }
 
   :global(

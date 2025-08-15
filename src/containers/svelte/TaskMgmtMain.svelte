@@ -1,35 +1,40 @@
 <!-- Summary:任务管理主页面 -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { AdvancedSelect, Button, BatchInput, Text } from '@/components/sveltecomponents';
-  import { Checkbox } from 'carbon-components-svelte';
-  import { autorun } from 'mobx';
-  import { onMount, onDestroy } from 'svelte';
-  import taskMgmtMainStore from '@/store/TaskMgmtMainStore';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { UsersInfo } from '@/vo/userManager';
-  import { items, progressTask, statusTask } from '@/constant/constant';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
-  import taskColumns from '@/components/columns/taskMgmtColumns';
-  import { taskInfo, userPermission } from '@/vo/taskManager/index';
-  import Search from 'carbon-icons-svelte/lib/Search.svelte';
-  import Reset from 'carbon-icons-svelte/lib/Reset.svelte';
-  import Download from 'carbon-icons-svelte/lib/Download.svelte';
-  import XLSX from 'xlsx';
-  import { CreatePop } from '@/components/Popup';
-  import ModifyTask from '@/containers/svelte/popup/modifyTask.svelte';
-  import DocumentBlank from 'carbon-icons-svelte/lib/DocumentBlank.svelte';
-  import TaskDetail from '@/containers/svelte/popup/TaskDetail.svelte';
-  import { UserInfo } from '@/utils/Settings';
-  import Storage, { StorageType } from '@/utils/Storage';
-  import { deepClone } from '@/utils/CommonUtils';
-  import { TaskMgmtAlert } from '@/constant/alert/Task';
-  import { Add, User } from 'carbon-icons-svelte';
-  import AddTask from '@/containers/svelte/popup/AddTask.svelte';
-  import type { GridReadyEvent } from 'ag-grid-community';
-  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
-  import RENDERER_EVENT from '@/constant/Renderer';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import {
+    AdvancedSelect,
+    Button,
+    BatchInput,
+    Text,
+  } from "@/components/sveltecomponents";
+  import { Checkbox } from "carbon-components-svelte";
+  import { autorun } from "mobx";
+  import { onMount, onDestroy } from "svelte";
+  import taskMgmtMainStore from "@/store/TaskMgmtMainStore";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { UsersInfo } from "@/vo/userManager";
+  import { items, progressTask, statusTask } from "@/constant/constant";
+  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
+  import taskColumns from "@/components/columns/taskMgmtColumns";
+  import { taskInfo, userPermission } from "@/vo/taskManager/index";
+  import Search from "carbon-icons-svelte/lib/Search.svelte";
+  import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+  import Download from "carbon-icons-svelte/lib/Download.svelte";
+  import XLSX from "xlsx";
+  import { CreatePop } from "@/components/Popup";
+  import ModifyTask from "@/containers/svelte/popup/modifyTask.svelte";
+  import DocumentBlank from "carbon-icons-svelte/lib/DocumentBlank.svelte";
+  import TaskDetail from "@/containers/svelte/popup/TaskDetail.svelte";
+  import { UserInfo } from "@/utils/Settings";
+  import Storage, { StorageType } from "@/utils/Storage";
+  import { deepClone } from "@/utils/CommonUtils";
+  import { TaskMgmtAlert } from "@/constant/alert/Task";
+  import { Add, User } from "carbon-icons-svelte";
+  import AddTask from "@/containers/svelte/popup/AddTask.svelte";
+  import type { GridReadyEvent } from "ag-grid-community";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import RENDERER_EVENT from "@/constant/Renderer";
 
   let bizList = [];
   let rowData: any[] | null = null;
@@ -37,10 +42,10 @@
   let selectedItems = 20;
   let selectedBizListValue = null;
   let selectedItemsValue = null;
-  let taskTitle: string = '';
+  let taskTitle: string = "";
   let taskTitleTotal = 0;
-  let taskProgress = 'AB';
-  let breakFlag: string = 'N';
+  let taskProgress = "AB";
+  let breakFlag: string = "N";
   let pageCount = 0;
   let pageSize = 20;
   let searchInfo: any = null;
@@ -52,23 +57,17 @@
   const loginUser = Storage.getSessionItem(StorageType.UserName);
   let permissionValue: any;
   let gridApi: any;
-  const linkCodes = ['taskTitle'];
-  const labelCodes = ['userName', 'status'];
-  const progressCode = ['taskProgress'];
+  const linkCodes = ["taskTitle"];
+  const labelCodes = ["userName", "status"];
+  const progressCode = ["taskProgress"];
   let permissionData: any[] = [];
-  onMount(() => {
-    let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
-    if (currentTheme.includes('-theme')) {
-      currentTheme = 'ux-leaf';
-    }
-    document.body.setAttribute('data-theme', currentTheme);
-    window.addEventListener('message', themeChangeHandler, false);
+  onMount(() => {   
+    window.addEventListener("message", themeChangeHandler, false);
     setWaiting();
-    if (loginUser === null || loginUser === '') {
-      window.location.href = 'login.html';
+    if (loginUser === null || loginUser === "") {
+      //window.location.href = "login.html";
     }
     searchUserList();
-
     getUserActivePermission();
   });
 
@@ -76,14 +75,22 @@
     disposerSearchTask();
     user();
     getPermission();
-    window.removeEventListener('message', themeChangeHandler, false);
-    gridApi?.removeEventListener(RENDERER_EVENT.Renderer_LinkButton, onItemRendererLinkButtonHandler);
-    gridApi?.removeEventListener(RENDERER_EVENT.Renderer_Icon_Button, onTaskDetailOpenHandler);
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
+    document.documentElement.setAttribute('data-bs-theme', currentTheme);
+    window.removeEventListener("message", themeChangeHandler, false);
+    gridApi?.removeEventListener(
+      RENDERER_EVENT.Renderer_LinkButton,
+      onItemRendererLinkButtonHandler
+    );
+    gridApi?.removeEventListener(
+      RENDERER_EVENT.Renderer_Icon_Button,
+      onTaskDetailOpenHandler
+    );
   });
 
   function themeChangeHandler(e: MessageEvent) {
-    if (e.data.type === 'theme-changed') {
-      document.body.setAttribute('data-theme', e.data.data);
+    if (e.data.type === "theme-changed") {
+      document.body.setAttribute("data-bs-theme", e.data.data);
     }
   }
 
@@ -94,17 +101,25 @@
 
   function onGridReadyHandler(params: GridReadyEvent) {
     gridApi = params.api;
-    gridApi?.addEventListener(RENDERER_EVENT.Renderer_LinkButton, onItemRendererLinkButtonHandler);
-    gridApi?.addEventListener(RENDERER_EVENT.Renderer_Icon_Button, onTaskDetailOpenHandler);
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_LinkButton,
+      onItemRendererLinkButtonHandler
+    );
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_Icon_Button,
+      onTaskDetailOpenHandler
+    );
   }
 
   const getPermission = autorun(() => {
     if (taskMgmtMainStore.getUserActivePermissionResult) {
-      const permssionList = deepClone(taskMgmtMainStore.getUserActivePermissionResult);
+      const permssionList = deepClone(
+        taskMgmtMainStore.getUserActivePermissionResult
+      );
       taskMgmtMainStore.getUserActivePermissionResult = null;
       removeWaiting();
       if (!permssionList.error) {
-        permissionData = permssionList.data?.split(',');
+        permissionData = permssionList.data?.split(",");
       }
       searchUserList();
     }
@@ -132,18 +147,18 @@
       if (!value.error) {
         bizList = value.data;
         const user: {} = {
-          name: '--请选择--',
-          id: '',
-          password: '',
-          permissionGroup: '',
-          userType: '',
-          blockFlag: '',
+          name: "--请选择--",
+          id: "",
+          password: "",
+          permissionGroup: "",
+          userType: "",
+          blockFlag: "",
         };
         bizList.unshift(user);
         selectedItemsValue = items[0];
         selectedBizListValue = bizList[0];
         selectedBizList = bizList[0].id;
-        if (!permissionData?.includes('S_A')) {
+        if (!permissionData?.includes("S_A")) {
           bizList.find((i) => {
             if (i.id === UserInfo.userId) {
               selectedBizListValue = i;
@@ -160,7 +175,9 @@
 
   const disposerSearchTask = autorun(() => {
     if (taskMgmtMainStore.taskListResult) {
-      const value = JSON.parse(JSON.stringify(taskMgmtMainStore.taskListResult));
+      const value = JSON.parse(
+        JSON.stringify(taskMgmtMainStore.taskListResult)
+      );
       taskMgmtMainStore.taskListResult = null;
       removeWaiting();
       if (value.error) {
@@ -170,24 +187,27 @@
       value.data?.forEach((i) => {
         i.linkCodes = linkCodes;
         i.labelCodes = labelCodes;
-        i.isDetail = 'Y';
+        i.isDetail = "Y";
         i.progressCode = progressCode;
         i.startTime = onDateConvert(i.startDate);
         i.endTime = onDateConvert(i.endDate);
         i.id = i.taskNo;
-        if (i.breakFlag === 'N') {
+        if (i.breakFlag === "N") {
           if (Number(i.taskProgress) === 100) {
-            i.status = '完成';
-          } else if (Number(i.taskProgress) > 0 && Number(i.taskProgress) < 100) {
-            i.status = '进行中';
+            i.status = "完成";
+          } else if (
+            Number(i.taskProgress) > 0 &&
+            Number(i.taskProgress) < 100
+          ) {
+            i.status = "进行中";
           } else if (Number(i.taskProgress) === 0) {
-            i.status = '发布';
+            i.status = "发布";
           }
         }
-        if (i.breakFlag === 'Y') {
-          i.status = '中止';
+        if (i.breakFlag === "Y") {
+          i.status = "中止";
         }
-        if (i.modifyFlag === 'Y') {
+        if (i.modifyFlag === "Y") {
           i.btnIcon = DocumentBlank;
         }
       });
@@ -213,19 +233,19 @@
   }
 
   function onDownLoadDataHandler(data: any[]) {
-    const filename = '任务管理.xlsx';
+    const filename = "任务管理.xlsx";
     data = JSON.parse(JSON.stringify(data));
     data.forEach((row) => {
-      changedKeys(row, 'taskTitle', '标题');
-      changedKeys(row, 'userName', '负责人');
-      changedKeys(row, 'startTime', '开始日期');
-      changedKeys(row, 'endTime', '结束日期');
-      changedKeys(row, 'taskProgress', '进度');
-      changedKeys(row, 'status', '状态');
+      changedKeys(row, "taskTitle", "标题");
+      changedKeys(row, "userName", "负责人");
+      changedKeys(row, "startTime", "开始日期");
+      changedKeys(row, "endTime", "结束日期");
+      changedKeys(row, "taskProgress", "进度");
+      changedKeys(row, "status", "状态");
       dataDownloadChoose(row);
     });
     taskColumns.forEach((i) => {
-      if (i?.headerName !== '详细' && i.headerName) {
+      if (i?.headerName !== "详细" && i.headerName) {
         if (!arrHeadTitleName.some((value) => value === i.headerName)) {
           arrHeadTitleName.push(i.headerName);
           arrHeadTitleNameWidth.push({ wpx: i.width });
@@ -234,7 +254,7 @@
     });
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
-    ws['!cols'] = arrHeadTitleNameWidth;
+    ws["!cols"] = arrHeadTitleNameWidth;
     XLSX.utils.book_append_sheet(wb, ws);
     XLSX.writeFile(wb, filename);
   }
@@ -246,7 +266,14 @@
 
   function dataDownloadChoose(data: any) {
     for (let key in data) {
-      if (key !== '标题' && key !== '负责人' && key !== '开始日期' && key !== '结束日期' && key !== '进度' && key !== '状态') {
+      if (
+        key !== "标题" &&
+        key !== "负责人" &&
+        key !== "开始日期" &&
+        key !== "结束日期" &&
+        key !== "进度" &&
+        key !== "状态"
+      ) {
         delete data[key];
       }
     }
@@ -254,8 +281,8 @@
 
   function searchUserList() {
     const info: UsersInfo = {};
-    info.blockflag = 'N';
-    info.usertype = 'U';
+    info.blockflag = "N";
+    info.usertype = "U";
     info.iStart = 0;
     info.iPageCount = 10;
     taskMgmtMainStore.getUserList(info);
@@ -273,39 +300,43 @@
 
   function onProgressTaskChangeHandler(e: Event) {
     const statusCheckbox = e.target as HTMLInputElement;
-    const currentIndex = progressTask.findIndex((i) => i.value === statusCheckbox.defaultValue);
+    const currentIndex = progressTask.findIndex(
+      (i) => i.value === statusCheckbox.defaultValue
+    );
     progressTask[currentIndex].checked = statusCheckbox.checked;
     breakSelect = progressTask.every((i) => !i.checked);
     if (breakSelect) {
       statusCheckbox.checked = true;
       progressTask[currentIndex].checked = statusCheckbox.checked;
     }
-    if (progressTask[currentIndex].value === '发布') {
+    if (progressTask[currentIndex].value === "发布") {
       if (progressTask[currentIndex].checked) {
         taskProgress = onUniqueHandler(`A${taskProgress}`);
       } else {
-        taskProgress = taskProgress.replace('A', '');
+        taskProgress = taskProgress.replace("A", "");
       }
     }
-    if (progressTask[currentIndex].value === '进行中') {
+    if (progressTask[currentIndex].value === "进行中") {
       if (progressTask[currentIndex].checked) {
         taskProgress = onUniqueHandler(`B${taskProgress}`);
       } else {
-        taskProgress = taskProgress.replace('B', '');
+        taskProgress = taskProgress.replace("B", "");
       }
     }
-    if (progressTask[currentIndex].value === '完成') {
+    if (progressTask[currentIndex].value === "完成") {
       if (progressTask[currentIndex].checked) {
         taskProgress = onUniqueHandler(`C${taskProgress}`);
       } else {
-        taskProgress = taskProgress.replace('C', '');
+        taskProgress = taskProgress.replace("C", "");
       }
     }
   }
 
   function onStatusTaskChangeHandler(e: Event) {
     const checkbox = e.target as HTMLInputElement;
-    const currentIndex = statusTask.findIndex((i) => i.value === checkbox.defaultValue);
+    const currentIndex = statusTask.findIndex(
+      (i) => i.value === checkbox.defaultValue
+    );
     statusTask[currentIndex].checked = checkbox.checked;
     breakSelect = statusTask.every((i) => !i.checked);
     if (breakSelect) {
@@ -313,14 +344,16 @@
       statusTask[currentIndex].checked = checkbox.checked;
     }
     if (statusTask[currentIndex].checked) {
-      breakFlag = onUniqueHandler(`${breakFlag}${statusTask[currentIndex].value}`);
+      breakFlag = onUniqueHandler(
+        `${breakFlag}${statusTask[currentIndex].value}`
+      );
     } else {
-      breakFlag = breakFlag.replace(statusTask[currentIndex].value, '');
+      breakFlag = breakFlag.replace(statusTask[currentIndex].value, "");
     }
   }
 
   function onUniqueHandler(str: string) {
-    let newStr = '';
+    let newStr = "";
     for (let i = 0; i < str.length; i++) {
       if (newStr.search(str[i]) === -1) {
         newStr += str[i];
@@ -345,36 +378,36 @@
   }
 
   function onItemRendererLinkButtonHandler(e: any) {
-    CreatePop('任务修改', ModifyTask, e.value, onClosePopHandler, {
-      width: '650px',
+    CreatePop("任务修改", ModifyTask, e.value, onClosePopHandler, {
+      width: "650px",
     });
   }
 
   function onClosePopHandler(data: string) {
-    if (data === 'Y') {
+    if (data === "Y") {
       if (searchInfo) {
         setWaiting();
         currentPage = 0;
         taskMgmtMainStore.searchTaskList(searchInfo);
-        document.getElementById('task-mgmt-Grid').scrollTop = 0;
+        document.getElementById("task-mgmt-Grid").scrollTop = 0;
       }
     }
   }
 
   function onSearchConditionResetHandler() {
     selectedItemsValue = items[0];
-    taskTitle = '';
+    taskTitle = "";
     taskTitleTotal = 0;
-    taskProgress = 'AB';
+    taskProgress = "AB";
     progressTask[0].checked = true;
     progressTask[1].checked = true;
     progressTask[2].checked = false;
-    breakFlag = 'N';
+    breakFlag = "N";
     statusTask[0].checked = true;
     statusTask[1].checked = false;
     selectedBizList = bizList[0].id;
     selectedBizListValue = bizList[0];
-    if (!permissionData?.includes('S_A')) {
+    if (!permissionData?.includes("S_A")) {
       selectedBizList = UserInfo.userId;
       selectedBizListValue = defaultUser;
     }
@@ -403,13 +436,14 @@
   }
 
   function onTaskDetailOpenHandler(e: any) {
-    if (e.field === 'modifyFlag' && e.value.modifyFlag === 'Y') CreatePop('查看详细', TaskDetail, e.value);
+    if (e.field === "modifyFlag" && e.value.modifyFlag === "Y")
+      CreatePop("查看详细", TaskDetail, e.value);
   }
 
   function onAddBtnClickHandler() {
-    CreatePop('新增任务', AddTask, {}, onClosePopHandler, {
-      width: '650px',
-      height: '455px',
+    CreatePop("新增任务", AddTask, {}, onClosePopHandler, {
+      width: "650px",
+      height: "455px",
     });
   }
 
@@ -433,8 +467,7 @@
           optionIdentifier="id"
           labelIdentifier="name"
           bind:value={selectedBizListValue}
-          onSubmit={onBizListSeletedHandler}
-        />
+          onSubmit={onBizListSeletedHandler} />
       </div>
     </div>
     <div class="flex-div top-div">
@@ -442,7 +475,10 @@
         <Text>标题</Text>
       </div>
       <div class="top-select batch-input-z-index">
-        <BatchInput bind:value={taskTitle} bind:dataTotal={taskTitleTotal} mode={1} />
+        <BatchInput
+          bind:value={taskTitle}
+          bind:dataTotal={taskTitleTotal}
+          mode={1} />
       </div>
     </div>
     <div class="flex-div top-second-right">
@@ -452,7 +488,11 @@
         </div>
         <div class="flex-div status-div">
           {#each progressTask as progress}
-            <Checkbox labelText={progress.value} value={progress.value} checked={progress.checked} on:change={onProgressTaskChangeHandler} />
+            <Checkbox
+              labelText={progress.value}
+              value={progress.value}
+              checked={progress.checked}
+              on:change={onProgressTaskChangeHandler} />
           {/each}
         </div>
       </div>
@@ -462,7 +502,11 @@
         </div>
         <div class="flex-div break-flag-status">
           {#each statusTask as status}
-            <Checkbox labelText={status.value} value={status.value} checked={status.checked} on:change={onStatusTaskChangeHandler} />
+            <Checkbox
+              labelText={status.value}
+              value={status.value}
+              checked={status.checked}
+              on:change={onStatusTaskChangeHandler} />
           {/each}
         </div>
       </div>
@@ -470,61 +514,70 @@
   </div>
   <div class="flex-div top-second-width task-search">
     <div class="flex-div top-second-left">
-      {#if permissionData?.includes('S_A')}
+      {#if permissionData?.includes("S_A")}
         <div class="add-button" id="add-task">
-          <Button icon={Add} size="small" kind="tertairy" on:click={onAddBtnClickHandler} class="button-normal">新增</Button>
+          <Button
+            icon={Add}
+            size="small"
+            kind="tertairy"
+            on:click={onAddBtnClickHandler}
+            class="button-normal">新增</Button>
         </div>
       {/if}
 
       <div class="load-button add-button">
-        <Button icon={Download} size="small" kind="tertiary" on:click={onRowDataDownloadHandler} class="button-normal">下载</Button>
+        <Button
+          icon={Download}
+          size="small"
+          kind="tertiary"
+          on:click={onRowDataDownloadHandler}
+          class="button-normal">下载</Button>
       </div>
     </div>
     <div class="flex-div flex-end top-second-right">
       <div class="item-select">
-        <AdvancedSelect options={items} bind:value={selectedItemsValue} onSubmit={onItemsSelectedHandler} />
+        <AdvancedSelect
+          options={items}
+          bind:value={selectedItemsValue}
+          onSubmit={onItemsSelectedHandler} />
       </div>
       <div class="seartch-button">
-        <Button icon={Search} size="small" kind="tertiary" on:click={onSearchTaskHandler} class="button-normal ">SEARCH</Button>
+        <Button
+          icon={Search}
+          size="small"
+          kind="tertiary"
+          on:click={onSearchTaskHandler}
+          class="button-normal ">SEARCH</Button>
       </div>
       <div class="reset-button">
-        <Button icon={Reset} size="small" kind="tertiary" on:click={onSearchConditionResetHandler} class="button-normal ">RESET</Button>
+        <Button
+          icon={Reset}
+          size="small"
+          kind="tertiary"
+          on:click={onSearchConditionResetHandler}
+          class="button-normal ">RESET</Button>
       </div>
     </div>
   </div>
-  <DataGrid id="task-mgmt-Grid" columnDefs={taskColumns} {rowData} {pageCount} {currentPage} {onPageChange} onGridReady={onGridReadyHandler} />
-  <!-- <DataGridEx
-    id="task-data-table-id"
+  <DataGrid
+    id="task-mgmt-Grid"
+    columnDefs={taskColumns}
     {rowData}
-    columnsDefs={taskColumns}
-    {currentPage}
     {pageCount}
-    total={rowData?.[0]?.totalCount}
-    onLinkClick={onTaskModifyPageOpenHandler}
-    onBtnClick={onTaskDetailOpenHandler}
+    {currentPage}
     {onPageChange}
-  /> -->
-
-  <!-- <div style="justify-content:center; align-item:center">
-    <div id="task-mgmt-Grid" style="height: 700px" />
-    {#if rowData}
-      <div>
-        <Pagination total={rowData?.[0]?.totalCount} {pageCount} {currentPage} {onPageChange} />
-      </div>
-    {/if}
-  </div> -->
+    onGridReady={onGridReadyHandler} />
 </div>
 
 <style lang="scss">
-  @import '../../styles/theme/var';
-  @import '../../styles/theme/mixin';
-
   .outer {
     display: flex !important;
     flex-direction: column !important;
     width: auto;
     height: 100% !important;
     min-width: 1422px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .flex-div {
@@ -545,12 +598,7 @@
     width: 50%;
   }
 
-  .top-box {
-    width: 100%;
-    height: 50px;
-    border-bottom: 1px solid #cacaca;
-    padding: 10px 0px;
-  }
+
 
   .top-first-div {
     width: 100%;
@@ -569,7 +617,7 @@
   }
 
   .top-text1 {
-    width: 49px !important;
+    width: 56px !important;
     height: 30px;
     line-height: 30px;
   }
@@ -579,7 +627,7 @@
     line-height: 30px;
   }
   .top-text3 {
-    width: 29px !important;
+    width: 35px !important;
     height: 30px;
     line-height: 30px;
   }
@@ -590,14 +638,8 @@
     margin-left: -4px;
   }
   .top-select {
-    width: 100% !important;
-
-    /* margin-left: 15px; */
-  }
-
-  /* .status-text { */
-  /* margin-left: -30px; */
-  /* } */
+    width: 100% !important;   
+  }  
 
   .status-div {
     width: 200px;
@@ -685,8 +727,8 @@
   }
 
   :global(.button-normal) {
-    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif, '微软雅黑';
-    font-size: 13px;
+    font-family: "微软雅黑";
+    font-size: 14px;
   }
 
   :global(.seartch-button > .bx--btn) {
@@ -713,7 +755,7 @@
   :global(.item) {
     height: 24px !important;
     line-height: 24px !important;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   :global(.svelte-select > .value-container) {
@@ -759,8 +801,7 @@
     line-height: 35px;
   }
 
-  :global(.bx--table-header-label) {
-    @include themifyList('background-color', $theme-color);
+  :global(.bx--table-header-label) {    
     color: #fff;
     height: 35px;
     line-height: 35px;
@@ -833,36 +874,21 @@
     margin-left: 10px;
     margin-top: 1px;
     cursor: pointer;
-  }
-
-  :global(.option.number.active) {
-    @include themifyList('color', $theme-color);
-  }
+  }  
 
   :global(.bx--data-table th) {
     position: sticky;
   }
-
-  :global(.svelte-select.focused) {
-    border-width: 1px !important;
-    border-style: solid !important;
-    @include themifyListIpt('border-color', $theme-color);
-  }
-
+  
   :global(.bx--text-input:focus) {
     outline: none;
     border-width: 1px !important;
-    border-style: solid !important;
-    @include themifyListIpt('border-color', $theme-color);
+    border-style: solid !important;    
   }
 
   :global(.bx--checkbox-label::before) {
     outline: none !important;
-  }
-
-  :global(.alert-box > .bx--modal-container > .bx--modal-header) {
-    @include themifyListIpt('background-color', $theme-color);
-  }
+  }  
 
   :global(.top-select > .flex-display > .bx--form-item) {
     min-width: 300px;
@@ -883,7 +909,15 @@
     color: #fff;
   }
 
-  :global(.outer ~ div > div > div > .bx--modal-header > .bx--modal-close > .bx--modal-close__icon) {
+  :global(
+      .outer
+        ~ div
+        > div
+        > div
+        > .bx--modal-header
+        > .bx--modal-close
+        > .bx--modal-close__icon
+    ) {
     fill: #fff;
   }
 
@@ -894,16 +928,14 @@
   }
 
   :global(.bx--btn--ghost) {
-    @include themifyList('color', $theme-color);
     background-color: none;
     border: none;
   }
 
   :global(.bx--btn--ghost:hover) {
-    @include themifyList('color', $theme-color);
     cursor: pointer;
     border: none;
-    background-color: #e6e6e6;
+    background-color: #424242; //e6e6e6
   }
 
   :global(.bx--btn--ghost:focus) {
@@ -914,11 +946,11 @@
   }
 
   :global(.bx--btn--ghost:active) {
-    background-color: #e6e6e6;
+    background-color: #424242; //e6e6e6
   }
 
   :global(.datatable-width > table > tbody > tr > td > .bx--link) {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   :global(.task-search + .dataTable > table > thead > tr > th:nth-child(5)) {

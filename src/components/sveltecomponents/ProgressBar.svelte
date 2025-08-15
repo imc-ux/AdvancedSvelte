@@ -39,8 +39,7 @@
 
   :global(.bx--progress-bar__bar) {
     border-radius: 100px !important;
-    background-color: var(--progressbar-background-color);
-    // @include themifyList('background-color', $theme-color);
+    background-color: var(--progressbar-background-color);    
   }
 
   :global(.progress-bar-flex) {
@@ -54,11 +53,7 @@
     width: 50px;
     display: flex;
     justify-content: flex-end;
-  }
-
-  // :global(.bx--progress-bar-backgroung-color){
-
-  // }
+  }  
 
   :global(.svelte-progress-bar) {
     position: absolute !important;

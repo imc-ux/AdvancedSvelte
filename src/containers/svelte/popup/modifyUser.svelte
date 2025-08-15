@@ -182,8 +182,7 @@
         size="small"
         kind="tertiary"
         icon={Save}
-        on:click={onSaveBtnClickHandler}>保存</Button
-      >
+        on:click={onSaveBtnClickHandler}>保存</Button>
     </div>
   {:else}
     <div class="btn-align-right" style="height:33px" />
@@ -216,8 +215,7 @@
           labelIdentifier="value"
           options={usertypeList}
           bind:value={userTypeSelected}
-          onSubmit={onUserTypeSelectedHandler}
-        />
+          onSubmit={onUserTypeSelectedHandler} />
       </div>
     </div>
     <div class="flex">
@@ -230,8 +228,7 @@
           labelIdentifier="value"
           bind:value={blockFlagSelected}
           options={blockflagList}
-          onSubmit={onBlockFlagSelectedHandler}
-        />
+          onSubmit={onBlockFlagSelectedHandler} />
       </div>
     </div>
     <div class="flex">
@@ -242,8 +239,7 @@
         <Input
           type="password"
           bind:value={oldPassWord}
-          on:input={onOldPswChangeHandler}
-        />
+          on:input={onOldPswChangeHandler} />
       </div>
     </div>
     <div class="flex">
@@ -254,27 +250,25 @@
         <Input
           type="password"
           bind:value={newPassWord}
-          on:input={onNewPswChangeHandler}
-        />
+          on:input={onNewPswChangeHandler} />
       </div>
     </div>
     <div class="flex">
-      <div class="left-div ">
+      <div class="left-div">
         <Text>确认密码</Text>
       </div>
       <div class="right-div modify-input">
         <Input
           type="password"
           bind:value={confirmPassword}
-          on:input={onConfirmPswChangeHandler}
-        />
+          on:input={onConfirmPswChangeHandler} />
       </div>
     </div>
     <div class="flex">
-      <div class="left-div ">
+      <div class="left-div">
         <Text>IP</Text>
       </div>
-      <div class="right-div modify-input ">
+      <div class="right-div modify-input">
         <Input bind:value={ip} on:input={onIpChangeHandler} />
       </div>
     </div>
@@ -286,17 +280,13 @@
         <ImageUpload
           value={imageSrc}
           on:imageUpload={onImageUploadHandler}
-          {isImgDisplay}
-        />
+          {isImgDisplay} />
       </div>
     </div>
   </div>
 </div>
 
 <style lang="scss">
-  @import "../../../styles/theme/var";
-  @import "../../../styles/theme/mixin";
-
   .btn-align-right {
     display: flex;
     justify-content: flex-end;
@@ -306,17 +296,7 @@
     display: flex;
     flex: 1;
     height: 35px;
-  }
-
-  .left-div {
-    width: 150px;
-    @include themifyList("background-color", $theme-color);
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border-bottom: 1px solid #cfcfcf;
-  }
+  } 
 
   .right-div {
     flex: 1;
@@ -324,12 +304,7 @@
     flex-direction: column;
     justify-content: center;
     padding: 0px 5px;
-  }
-
-  .modify-user {
-    border: 1px solid #cfcfcf;
-    margin-top: 5px;
-  }
+  }  
 
   .figure-height {
     height: 100px;
@@ -346,9 +321,11 @@
     min-height: 30px !important;
   }
 
-  :global(.modify-input
-      > .bx--text-input-wrapper
-      > .bx--text-input__field-outer-wrapper) {
+  :global(
+      .modify-input
+        > .bx--text-input-wrapper
+        > .bx--text-input__field-outer-wrapper
+    ) {
     flex-direction: column;
     justify-content: center;
   }

@@ -1,6 +1,6 @@
 @mixin themifyList($key, $valueMap) {
   // theme list
-  $themes: ux-leaf, ux-whale, ux-garden;
+  $themes: ux-leaf, ux-whale, ux-garden, ux-dark;
 
   @each $theme in $themes {
     :global([data-theme="#{$theme}"]) & {
@@ -11,7 +11,7 @@
 
 @mixin themifyListIpt($key, $valueMap) {
   // theme list
-  $themes: ux-leaf, ux-whale, ux-garden;
+  $themes: ux-leaf, ux-whale, ux-garden, ux-dark;
 
   @each $theme in $themes {
     :global([data-theme="#{$theme}"]) & {
@@ -25,7 +25,7 @@
 // 不添加:global
 @mixin themifyListSelf($key, $valueMap) {
   // theme list
-  $themes: ux-leaf, ux-whale, ux-garden;
+  $themes: ux-leaf, ux-whale, ux-garden, ux-dark;
 
   @each $theme in $themes {
     [data-theme="#{$theme}"] & {
@@ -36,7 +36,7 @@
 
 @mixin themifyListSelfIpt($key, $valueMap) {
   // theme list
-  $themes: ux-leaf, ux-whale, ux-garden;
+  $themes: ux-leaf, ux-whale, ux-garden, ux-dark;
 
   @each $theme in $themes {
     [data-theme="#{$theme}"] & {
@@ -46,14 +46,14 @@
 }
 
 // body设置背景图
-@mixin body-bgc() {
-  $themes: ux-leaf, ux-whale, ux-garden;
+//@mixin body-bgc() {
+//  $themes: ux-leaf, ux-whale, ux-garden, ux-dark;
 
-  @each $theme in $themes {
-    &[data-theme="#{$theme}"] {
-      background: url("../../../static/uploadsys/images/sveltetheme/#{$theme}.png")
-        no-repeat;
-      background-size: 100% 100%;
-    }
-  }
-}
+//  @each $theme in $themes {
+//    &[data-theme="#{$theme}"] {
+//      background: url("../../../static/uploadsys/images/sveltetheme/#{$theme}.png")
+//        no-repeat;
+//      background-size: 100% 100%;
+//    }
+//  }
+//}

@@ -33,10 +33,9 @@
   import Save from "carbon-icons-svelte/lib/Save.svelte";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
   import { AddJtracAlert } from "@/constant/alert/upload";
-  import { deepClone } from "@/utils/CommonUtils";
+  import { deepClone, checkFileFlag } from "@/utils/CommonUtils";
 
   export let onClose;
-  // export let params: any;
   let jtracNo: string = "";
   let version: string = "";
   let versionMessage: string = "";
@@ -46,7 +45,6 @@
   let selectedSystemFlag: string = systemTypeList[0].id;
   let selectedBiz: string = "";
   let selectedUrgency: string = "";
-  let selectedReviewer: string = "";
   let selectedJtracNoType: string = jtracNoTypeList[0].name;
   let bizList: any[] = [];
   let reviewerList: any[] = [];
@@ -57,6 +55,9 @@
   let selectedUrgencyValue: any = urgencyList[0];
   let inputVersionDisabled = false;
   let moduleInputOnly = true;
+  let isReviewer = false;
+  let re = /\n/g;
+  let re2 = /\\/gi;
 
   onMount(() => {
     searchLastVersion(systemTypeList[0].id);
@@ -97,11 +98,6 @@
       removeWaiting();
       if (!value.error) {
         reviewerList = value.data;
-        let user: {} = {
-          id: "",
-          name: "--请选择--",
-        };
-        reviewerList.unshift(user);
         selectedReviewerValue = reviewerList[0];
       }
     }
@@ -182,12 +178,14 @@
         return false;
       }
     }
-    if (
-      !selectedReviewer &&
-      reviewerList.every((item) => item.id !== UserInfo.userId)
-    ) {
-      CustomAlert(AddJtracAlert.REVIEWER_CANNOT_EMPTY, AlertIcon.WARNING);
-      return false;
+    let fileList = distinctList(
+      listMessage.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
+    );
+    if (checkFileFlag(fileList)) {
+      if (!selectedReviewerValue) {
+        CustomAlert(AddJtracAlert.REVIEWER_CANNOT_EMPTY, AlertIcon.WARNING);
+        return false;
+      }
     }
     return true;
   }
@@ -212,8 +210,7 @@
     if (!validate()) {
       return;
     }
-    let re = /\n/g;
-    let re2 = /\\/gi;
+
     if (
       versionMessage.trim() !== "" &&
       !VERSION_REGEXP.test(versionMessage.trim())
@@ -221,30 +218,31 @@
       CustomAlert(AddJtracAlert.JTRAC_VERSION_FORMAT_ERROR, AlertIcon.WARNING);
       return false;
     }
+    let fileList = distinctList(
+      listMessage.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
+    );
+    let moduleList = distinctList(
+      moduleMessage.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
+    );
     const info = {
       jtracNo: `${selectedJtracNoType}-${jtracNo.trim()}`,
       bizDeveloper: selectedBiz,
       urgencyFlag: selectedUrgency,
-      reviewer: selectedReviewer,
-      fileList: distinctList(
-        listMessage.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
-      ),
-      moduleList: distinctList(
-        moduleMessage.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
-      ),
+      reviewer: isReviewer ? selectedReviewerValue : "",
+      fileList: fileList,
+      moduleList: moduleList,
       systemType: selectedSystemFlag,
       clientDeveloper: UserInfo.userId,
       version: versionMessage.trim(),
       detail: detailMessage.trim(),
-      status: "R",
+      status: checkFileFlag(fileList) ? "R" : "A",
     };
     setWaiting();
     pageStore.addJtracInfo(info);
   }
 
   function onReviewerSelectChangeHandler(value: any) {
-    selectedReviewer = value.id;
-    selectedReviewerValue = value;
+    selectedReviewerValue = value.id;
   }
 
   function onJtracNoTypeSelectChangeHandler(value: any) {
@@ -286,8 +284,18 @@
     versionMessage = e.detail.data;
   }
 
-  function onListMessageBlurHandler(e: any) {
-    listMessage = switchToTextArea(e.detail.data);
+  function onListMessageInputHandler(e: any) {
+    let text = switchToTextArea(e.detail.data);
+    let fileList = distinctList(
+      text.replace(re, ",").replace(/\r/g, ",").replace(re2, "/")
+    );
+    if (checkFileFlag(fileList)) {
+      isReviewer = true;
+      selectedReviewerValue = reviewerList[0]?.id;
+    } else {
+      isReviewer = false;
+      selectedReviewerValue = "";
+    }
   }
 
   function onModuleMessageBlurHandler(e: any) {
@@ -318,8 +326,7 @@
       size="small"
       kind="tertiary"
       icon={Save}
-      on:click={btnSaveJtracHandler}
-    >
+      on:click={btnSaveJtracHandler}>
       保存
     </Button>
   </Box>
@@ -327,143 +334,126 @@
     <Box
       class="addPage-list background_border"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>JtracNo</Text>
     </Box>
     <Box
       f={1}
       class="border_right_top padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <AdvancedSelect
         options={jtracNoTypeList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onJtracNoTypeSelectChangeHandler(v)}
-        bind:value={selectedJtracNoTypeValue}
-      />
+        bind:value={selectedJtracNoTypeValue} />
       <div class="connector">-</div>
       <Input
-        inputLabel="JtracNo"
         bind:value={jtracNo}
         restrict="0-9"
         on:change={onJtracNoChangeHandler}
-        class="input popTextHeight jtrac-input-width"
-      />
+        class="input popTextHeight jtrac-input-width" />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>Version: {version}</Text>
     </Box>
     <Box
       f={1}
       class="border_right_top padding-normal"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <AdvancedSelect
         options={systemTypeList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onSystemTypeSelectChangeHandler(v)}
-        bind:value={selectedSystemFlag}
-      />
+        bind:value={selectedSystemFlag} />
       <div class="connector">-</div>
       <Input
         readOnly={inputVersionDisabled}
         bind:value={versionMessage}
         on:change={onVersionChangeHandler}
-        class="input popTextHeight jtrac-input-width"
-      />
+        class="input popTextHeight jtrac-input-width" />
     </Box>
   </Box>
+  {#if isReviewer}
+    <Box class="typeLable">
+      <Box
+        class="addPage-list background"
+        horizontalAlign="compact"
+        verticalAlign="middle">
+        <Text>代码检查负责人</Text>
+      </Box>
+      <Box
+        f={1}
+        class="border_right padding-normal popup-position popup-select-height"
+        horizontalAlign="left"
+        verticalAlign="middle">
+        <AdvancedSelect
+          options={reviewerList}
+          optionIdentifier="id"
+          labelIdentifier="name"
+          placeholder=""
+          onSubmit={(v) => onReviewerSelectChangeHandler(v)}
+          bind:value={selectedReviewerValue} />
+      </Box>
+    </Box>
+  {/if}
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
-      <Text>代码检查负责人</Text>
-    </Box>
-    <Box
-      f={1}
-      class="border_right padding-normal popup-position popup-select-height"
-      horizontalAlign="left"
-      verticalAlign="middle"
-    >
-      <AdvancedSelect
-        options={reviewerList}
-        optionIdentifier="id"
-        labelIdentifier="name"
-        onSubmit={(v) => onReviewerSelectChangeHandler(v)}
-        bind:value={selectedReviewerValue}
-      />
-    </Box>
-  </Box>
-  <Box class="typeLable">
-    <Box
-      class="addPage-list background"
-      horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>列表</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <TextArea
-        on:blur={onListMessageBlurHandler}
+        on:input={onListMessageInputHandler}
         bind:value={listMessage}
-        class="textArea-bottom-margin"
-      />
+        class="textArea-bottom-margin" />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>模块</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Input
         readOnly={moduleInputOnly}
         on:blur={onModuleMessageBlurHandler}
         bind:value={moduleMessage}
-        class="input popTextHeight"
-      />
+        class="input popTextHeight" />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>Detail</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Input bind:value={detailMessage} class="input popTextHeight" />
     </Box>
   </Box>
@@ -471,46 +461,40 @@
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>后台负责人</Text>
     </Box>
     <Box
       f={1}
       class="border_right padding-normal popup-position popup-select-height"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <AdvancedSelect
         options={bizList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onBizSelectChangeHandler(v)}
-        bind:value={selectedBizValue}
-      />
+        bind:value={selectedBizValue} />
     </Box>
   </Box>
   <Box class="typeLable">
     <Box
       class="addPage-list background"
       horizontalAlign="compact"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <Text>紧急程度</Text>
     </Box>
     <Box
       f={1}
       class="border_right_bottom padding-normal popup-position popup-select-height"
       horizontalAlign="left"
-      verticalAlign="middle"
-    >
+      verticalAlign="middle">
       <AdvancedSelect
         options={urgencyList}
         optionIdentifier="id"
         labelIdentifier="name"
         onSubmit={(v) => onUrgencySelectChangeHandler(v)}
-        bind:value={selectedUrgencyValue}
-      />
+        bind:value={selectedUrgencyValue} />
     </Box>
   </Box>
 </div>
@@ -543,7 +527,6 @@
   }
 
   :global(.connector) {
-    width: 30px;
     text-align: center;
   }
 </style>

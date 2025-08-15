@@ -1,0 +1,16 @@
+@import "./common.scss";
+
+$ux-leaf: (
+  theme-link-color: $theme-link-color_default,
+  font-color: $theme-color-default,
+);
+
+$ux-dark: (
+  theme-link-color: $theme-link-color_dark,
+  font-color: $theme-color-dark,
+);
+
+$themes: (
+  ux-dark: $ux-dark,
+  ux-leaf: $ux-leaf,
+);

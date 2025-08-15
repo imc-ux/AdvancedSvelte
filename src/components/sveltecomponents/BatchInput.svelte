@@ -85,23 +85,19 @@
         on:click={inputClickHandler}
         class="ellipsis"
         on:blur={textInputBlurHandler}
-        maxlength={100}
-      />
+        maxlength={100} />
       <div
         class={value
           ? "input-outer-border low-zindex"
           : "input-outer-border high-zindex"}
         on:click={inputClickHandler}
-        on:keypress={() => {}}
-      />
+        on:keypress={() => {}} />
     {:else}
       <TextArea
         bind:value
         {...props}
-        commonTextArea={false}
         class="root index-textArea-bottom-margin"
-        on:blur={textAreaBlurHandler}
-      />
+        on:blur={textAreaBlurHandler} />
     {/if}
     {#if inputLabel}
       <Text
@@ -112,8 +108,7 @@
           : value
           ? "place-holder-text place-holder-text-up"
           : "place-holder-text place-holder-font-size"}
-        on:click={inputClickHandler}>{inputLabel}</Text
-      >
+        on:click={inputClickHandler}>{inputLabel}</Text>
     {/if}
   </Box>
 
@@ -136,7 +131,6 @@
   :global(.place-holder-text) {
     position: absolute;
     line-height: 13px;
-    background: linear-gradient(rgba(255, 255, 255, 0) 55%, white 55%);
     z-index: 9;
     margin-left: 5px;
     padding: 0 10px 0 5px;
@@ -151,7 +145,7 @@
 
   :global(.place-holder-move) {
     top: 0;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 10;
     transition: 0.2s;
     transform: translateY(-55%);
@@ -159,14 +153,14 @@
 
   :global(.value-place-holder-move) {
     top: 0;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 10;
     transform: translateY(-55%);
   }
 
   :global(.place-holder-text-up) {
     top: 0;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 9;
     transform: translateY(-55%);
   }

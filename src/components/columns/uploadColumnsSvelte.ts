@@ -7,6 +7,7 @@ import {
   LinkButtonOrLabel_LabelBatchInput,
 } from "@/components/renderers/index";
 import DocumentBlank from "carbon-icons-svelte/lib/DocumentBlank.svelte";
+import { HeaderCheckRenderer } from "@/components/headerRenderers/Header_2_CheckBox";
 
 export const uploadColumns = [
   {
@@ -77,6 +78,7 @@ const uploadSveletColumn = [
         headerClass: ["center-aligned", "ag-header"],
         cellClass: ["cell-center-align", "cell-border"],
         cellRenderer: CheckRenderer,
+        headerComponent: HeaderCheckRenderer,
       },
     ],
   },
@@ -138,8 +140,9 @@ const uploadSveletColumn = [
         width: 400,
         field: "moduleListChange*srModuleList*conflictFiles",
         headerClass: ["center-aligned", "ag-header"],
-        cellClass: ["cell-center-align", "cell-border"],
+        cellClass: ["cell-left-align", "cell-border"],
         upClassName: "hor-left",
+        downClassName: "hor-left",
         icon: DocumentBlank,
         cellRenderer: LinkButtonButtonBatchInput_Label,
       },

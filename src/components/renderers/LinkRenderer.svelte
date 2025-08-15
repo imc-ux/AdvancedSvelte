@@ -50,19 +50,5 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    @include themifyListIpt("color", $theme-color);
-  }
-
-  :global(.bx--link:visited) {
-    @include themifyList("color", $theme-color);
-  }
-
-  :global(.bx--link:hover) {
-    @include themifyListIpt("color", $theme-color);
-  }
-
-  :global(.bx--link:active) {
-    outline: none;
-    @include themifyList("color", $theme-color);
   }
 </style>

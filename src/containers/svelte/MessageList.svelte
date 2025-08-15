@@ -8,12 +8,9 @@
   import { Button } from "carbon-components-svelte";
   import {
     Box,
-    TextArea,
-    Divider,
-    Grid,
-    Row,
+    
     Image,
-    Column,
+    
     Text,
     Link,
   } from "@/components/sveltecomponents";
@@ -23,7 +20,6 @@
   import MessageReply from "./MessageReply";
   import messageStore from "@/store/MessagelistStore";
   import Edit from "carbon-icons-svelte/lib/Edit.svelte";
-  import { draw } from "svelte/transition";
   import MessageSend from "./MessageSend";
   import { UserInfo } from "@/utils/Settings";
   import { autorun } from "mobx";
@@ -121,6 +117,9 @@
       if (value && !value.error) {
         if (value.data.length > 0) {
           if (messageInfo.nid.toString() === value.data[0].relateNid) {
+            value.data?.forEach(elem=>{
+              elem.userName = elem.userName === 'null' ? '匿名用户': elem.userName;
+            })
             if (index === 0) {
               commentList = value.data;
             } else {
@@ -193,7 +192,7 @@
   style="width: 100%;">
   <Box width={100}>
     <Box width={100} horizontalAlign="compact" verticalAlign="middle">
-      <Text style="width:50px">{userName}</Text>
+      <Text style="width:70px">{userName}</Text>
       <Box
         width={50}
         height={50}
@@ -282,7 +281,7 @@
 
 <style>
   :global(.list-bottom-boder) {
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #424242;
   }
 
   :global(.cursor-pointer) {

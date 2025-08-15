@@ -1,8 +1,10 @@
 // mixin和原H5上传项目changeTheme文件定义一致
+
 $theme-color: (
   ux-leaf: #08adaa,
   ux-whale: #379cdc,
   ux-garden: #547a14,
+  ux-dark: #454545,
 );
 
 // 按钮特效使用
@@ -10,4 +12,171 @@ $dark-theme-color: (
   ux-leaf: scale-color(#08adaa, $lightness: -40%),
   ux-whale: scale-color(#379cdc, $lightness: -40%),
   ux-garden: scale-color(#547a14, $lightness: -40%),
+  ux-dark: scale-color(#454545, $lightness: -40%),
+);
+
+$theme-link-color: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #4a99ff,
+);
+
+$theme-ag-header-color: (
+  ux-leaf: #ffffff,
+  ux-whale: #ffffff,
+  ux-garden: #ffffff,
+  ux-dark: #dadada,
+);
+
+$theme-button-normal-color: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #dadada,
+);
+
+$theme-button-normal-background-color: (
+  ux-leaf: #fff,
+  ux-whale: #fff,
+  ux-garden: #fff,
+  ux-dark: #141414,
+);
+
+$theme-input-background-color: (
+  ux-leaf: #fff,
+  ux-whale: #fff,
+  ux-garden: #fff,
+  ux-dark: #141414,
+);
+
+$theme-select-item-color: (
+  ux-leaf: #fff,
+  ux-whale: #fff,
+  ux-garden: #fff,
+  ux-dark: #424242,
+);
+
+$theme-button-normal-border: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #8e8e8e,
+);
+
+$theme-border: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #424242,
+);
+
+$theme-background-color: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #141414,
+);
+
+$theme-font-color: (
+  ux-leaf: #161616,
+  ux-whale: #161616,
+  ux-garden: #161616,
+  ux-dark: #dadada,
+);
+
+$theme-ag-grid-row-select-color: (
+  ux-leaf: #e6e6e6,
+  ux-whale: #e6e6e6,
+  ux-garden: #e6e6e6,
+  ux-dark: #424242,
+);
+
+$theme-disabled-backgroud-select-color: (
+  ux-leaf: #f4f4f4,
+  ux-whale: #f4f4f4,
+  ux-garden: #f4f4f4,
+  ux-dark: #606060,
+);
+
+$theme-disabled-border-select-color: (
+  ux-leaf: #f4f4f4,
+  ux-whale: #f4f4f4,
+  ux-garden: #f4f4f4,
+  ux-dark: #666666,
+);
+
+$theme-disabled-select-color: (
+  ux-leaf: #c6c6c6,
+  ux-whale: #c6c6c6,
+  ux-garden: #c6c6c6,
+  ux-dark: #878787,
+);
+
+$agGrid-border-color: (
+  ux-leaf: #efefef,
+  ux-whale: #efefef,
+  ux-garden: #efefef,
+  ux-dark: #424242,
+);
+//e6e6e6
+
+$agGrid-grid-border-color: (
+  ux-leaf: #e6e6e6,
+  ux-whale: #e6e6e6,
+  ux-garden: #e6e6e6,
+  ux-dark: #424242,
+);
+
+//303133
+$input-tabs-select-color: (
+  ux-leaf: #303133,
+  ux-whale: #303133,
+  ux-garden: #303133,
+  ux-dark: #dadada,
+);
+
+$input-tabs-color: (
+  ux-leaf: #303133,
+  ux-whale: #303133,
+  ux-garden: #303133,
+  ux-dark: #9f9f9f,
+);
+
+$input-tabs_border-color: (
+  ux-leaf: #cacaca,
+  ux-whale: #cacaca,
+  ux-garden: #cacaca,
+  ux-dark: #0f62fe,
+);
+
+//cfcfcf
+$pop_border-color: (
+  ux-leaf: #cfcfcf,
+  ux-whale: #cfcfcf,
+  ux-garden: #cfcfcf,
+  ux-dark: #424242,
+);
+//dedede
+
+$pop-detail-border-color: (
+  ux-leaf: #dedede,
+  ux-whale: #dedede,
+  ux-garden: #dedede,
+  ux-dark: #424242,
+);
+
+$check-background-color: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #4a99ff,
+);
+//1b1b1b
+
+$agGrid-background-color: (
+  ux-leaf: #08adaa,
+  ux-whale: #379cdc,
+  ux-garden: #547a14,
+  ux-dark: #1b1b1b,
 );

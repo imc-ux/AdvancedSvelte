@@ -9,6 +9,7 @@
  -->
 <script lang="ts">
   import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
   import { Box, Text } from "@/components/sveltecomponents";
   import jtracStore from "@/store/jtracDetailStore";
   import { onMount, onDestroy } from "svelte";
@@ -149,9 +150,8 @@
     <Box>
       <Box
         class="background_gray_border left_box svelte-lnhus4-font"
-        horizontalAlign="left"
-      >
-        <Text class="left_text">编号:</Text>
+        horizontalAlign="left">
+        <Text class="center_text">编号:</Text>
       </Box>
       <Box f={1} class="border_right_left_top right_box" horizontalAlign="left">
         <Text>{jtracNo}</Text>
@@ -159,7 +159,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">相关项目:</Text>
+        <Text class="center_text">相关项目:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{relevantProject}</Text>
@@ -167,7 +167,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">状态:</Text>
+        <Text class="center_text">状态:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{status}</Text>
@@ -175,7 +175,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">添加人:</Text>
+        <Text class="center_text">添加人:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{initiator}</Text>
@@ -183,7 +183,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">发送给:</Text>
+        <Text class="center_text">发送给:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{receiver}</Text>
@@ -191,7 +191,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">概要:</Text>
+        <Text class="center_text">概要:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{summary}</Text>
@@ -199,7 +199,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">详述:</Text>
+        <Text class="center_text">详述:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text class="content_left">{detail}</Text>
@@ -208,7 +208,7 @@
     {#if jtracShowUI}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">紧急程度:</Text>
+          <Text class="center_text">紧急程度:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{emmergency}</Text>
@@ -217,7 +217,7 @@
     {/if}
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">{jtracShowUI ? "System:" : "sys区分"}</Text>
+        <Text class="center_text">{jtracShowUI ? "System:" : "sys区分"}</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{system}</Text>
@@ -225,7 +225,7 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">Page Name:</Text>
+        <Text class="center_text">Page Name:</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{pageName}</Text>
@@ -234,7 +234,7 @@
     {#if jtracShowUI}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Requester:</Text>
+          <Text class="center_text">Requester:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{requester}</Text>
@@ -242,7 +242,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Reason:</Text>
+          <Text class="center_text">Reason:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{reason}</Text>
@@ -250,7 +250,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">OP Req Reason:</Text>
+          <Text class="center_text">OP Req Reason:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{OPReqReason}</Text>
@@ -259,7 +259,7 @@
     {:else}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">发生日期:</Text>
+          <Text class="center_text">发生日期:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{changeDate}</Text>
@@ -267,7 +267,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">状态:</Text>
+          <Text class="center_text">状态:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{changeStatus}</Text>
@@ -275,7 +275,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">解决日期:</Text>
+          <Text class="center_text">解决日期:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{solveDate}</Text>
@@ -283,7 +283,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">区分:</Text>
+          <Text class="center_text">区分:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{diffName}</Text>
@@ -291,7 +291,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">开发区分:</Text>
+          <Text class="center_text">开发区分:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{developDiff}</Text>
@@ -299,7 +299,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">处理方法:</Text>
+          <Text class="center_text">处理方法:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{processingMethod}</Text>
@@ -308,9 +308,8 @@
     {/if}
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text"
-          >{jtracShowUI ? "Client Developer:" : "前台开发者:"}</Text
-        >
+        <Text class="center_text"
+          >{jtracShowUI ? "Client Developer:" : "前台开发者:"}</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{clientDeveloper}</Text>
@@ -318,9 +317,8 @@
     </Box>
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text"
-          >{jtracShowUI ? "Biz Developer:" : "后台开发者:"}</Text
-        >
+        <Text class="center_text"
+          >{jtracShowUI ? "Biz Developer:" : "后台开发者:"}</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{bizDeveloper}</Text>
@@ -329,7 +327,7 @@
     {#if jtracShowUI}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">DevStartDate:</Text>
+          <Text class="center_text">DevStartDate:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{devStartDate}</Text>
@@ -337,7 +335,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">DevEndDate:</Text>
+          <Text class="center_text">DevEndDate:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{devEndDate}</Text>
@@ -345,7 +343,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">SVN版本号:</Text>
+          <Text class="center_text">SVN版本号:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{SVNversion}</Text>
@@ -353,7 +351,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">DB Change:</Text>
+          <Text class="center_text">DB Change:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{DBChange}</Text>
@@ -361,7 +359,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Migration:</Text>
+          <Text class="center_text">Migration:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{migration}</Text>
@@ -369,7 +367,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">修改增加类:</Text>
+          <Text class="center_text">修改增加类:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{updateClass}</Text>
@@ -377,7 +375,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">通用代码变更:</Text>
+          <Text class="center_text">通用代码变更:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{versatilityCodeChange}</Text>
@@ -385,7 +383,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">配置表变更:</Text>
+          <Text class="center_text">配置表变更:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{configTableChange}</Text>
@@ -394,7 +392,8 @@
     {/if}
     <Box>
       <Box class="background_gray left_box" horizontalAlign="left">
-        <Text class="left_text">{jtracShowUI ? "CS负责人:" : "CS测试者:"}</Text>
+        <Text class="center_text"
+          >{jtracShowUI ? "CS负责人:" : "CS测试者:"}</Text>
       </Box>
       <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
         <Text>{tester}</Text>
@@ -403,7 +402,7 @@
     {#if jtracShowUI}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Test Start Date:</Text>
+          <Text class="center_text">Test Start Date:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{testStartDate}</Text>
@@ -411,7 +410,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Test End Date:</Text>
+          <Text class="center_text">Test End Date:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{testEndDate}</Text>
@@ -419,7 +418,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">原Jtrac No:</Text>
+          <Text class="center_text">原Jtrac No:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{preJtracNo}</Text>
@@ -427,7 +426,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">Daemon:</Text>
+          <Text class="center_text">Daemon:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{daemon}</Text>
@@ -435,7 +434,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">再Open 次数:</Text>
+          <Text class="center_text">再Open 次数:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{openAgain}</Text>
@@ -443,7 +442,7 @@
       </Box>
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">再Open日:</Text>
+          <Text class="center_text">再Open日:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{openAgainDate}</Text>
@@ -452,7 +451,7 @@
     {:else}
       <Box>
         <Box class="background_gray left_box" horizontalAlign="left">
-          <Text class="left_text">关联Jtrac号:</Text>
+          <Text class="center_text">关联Jtrac号:</Text>
         </Box>
         <Box f={1} class="border_bottom_right right_box" horizontalAlign="left">
           <Text>{openJtrac}</Text>
@@ -465,47 +464,12 @@
 </div>
 
 <style lang="scss">
-  @import "../../../styles/theme/var";
-  @import "../../../styles/theme/mixin";
-
-  :global(.background_gray) {
-    @include themifyListIpt("background-color", $theme-color);
-    color: #fff;
-    border-right: 1px solid #dedede !important;
-    border-left: 1px solid #dedede !important;
-    border-bottom: 1px solid #dedede !important;
-    text-align: center;
-  }
-
-  :global(.background_gray_border) {
-    @include themifyListIpt("background-color", $theme-color);
-    color: #fff;
-    border: 1px solid #dedede !important;
-    border-collapse: collapse;
-    text-align: center;
-  }
-
-  :global(.border_right_left_top) {
-    border-right: 1px solid #dedede !important;
-    border-top: 1px solid #dedede !important;
-    border-bottom: 1px solid #dedede !important;
-  }
-
-  :global(.border_right) {
-    border-right: 1px solid #dedede;
-  }
-
-  :global(.border_bottom_right) {
-    border-right: 1px solid #dedede !important;
-    border-bottom: 1px solid #dedede !important;
-  }
-
   :global(.left_box) {
     width: 180px !important;
     line-height: 30px !important;
     justify-content: center !important;
     overflow: hidden;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   :global(.left_text) {
@@ -514,11 +478,17 @@
     text-align: left;
   }
 
+  :global(.center_text) {
+    width: 100%;
+    padding-left: 10px;
+    text-align: center;
+  }
+
   :global(.right_box) {
     width: 450px !important;
     line-height: 30px;
     padding-left: 15px;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   :global(.bottom_gap) {

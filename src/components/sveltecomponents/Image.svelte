@@ -7,14 +7,19 @@
 */
 -->
 <script>
-  import { ImageLoader } from 'carbon-components-svelte';
-  import { getImagesServerUrl } from '@/utils/CommonUtils';
-  import noneImg from '../../../static/uploadsys/images/common/photoNone.png';
+  import { ImageLoader } from "carbon-components-svelte";
+  import { getImagesServerUrl } from "@/utils/CommonUtils";
+  import noneImg from "../../../static/uploadsys/images/common/photoNone.png";
 
-  export let src = '';
-  export let alt = '';
+  export let src = "";
+  export let alt = "";
 
-  $: showSrc = src && src.trim() ? (src.includes('base64') ? src : getImagesServerUrl() + src) : noneImg;
+  $: showSrc =
+    src && src.trim()
+      ? src.includes("base64")
+        ? src
+        : getImagesServerUrl() + src
+      : noneImg;
 </script>
 
 <ImageLoader src={showSrc} {alt} loaded {...$$restProps} />

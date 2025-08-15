@@ -1,5 +1,6 @@
 import { CheckRenderer, LinkRenderer, SelectRenderer, LabelRenderer, Image } from '@/components/renderers/index';
 import { blockFlagList } from '@/constant/constant';
+import { HeaderCheckRenderer } from "@/components/headerRenderers/Header_CheckBox";
 
 const userMgmtColumns = [
   {
@@ -7,6 +8,7 @@ const userMgmtColumns = [
     field: 'selected',
     width: 150,
     cellRenderer: CheckRenderer,
+    headerComponent: HeaderCheckRenderer,
     headerClass: ['center-aligned', 'ag-header'],
     cellClass: ['cell-center-align', 'cell-border'],
   },

@@ -49,7 +49,7 @@
     --sv-active-border: 1px solid #08adaa;
     --sv-placeholder-color: #161616;
     --sv-loader-border: 3px solid #cacaca;
-  }
+  } 
 
   :global(.indicator-container.svelte-1l8hgl2) {
     padding: 4px;

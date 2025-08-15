@@ -28,8 +28,8 @@
     Text,
     AdvancedSelect,
     BatchInput,
+    Link,
   } from "@/components/sveltecomponents";
-  import { IconButton } from "@/components/renderers/index";
   import uploadSveletColumn from "@/components/columns/uploadColumnsSvelte";
   import pageStore from "@/store/UploadStore";
   import userMgmtMainStore from "@/store/UserMgmtMainStore";
@@ -50,12 +50,14 @@
   import { UserInfo, JTRAC_TITLE, JTRAC_TITLE_H5 } from "@/utils/Settings";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
   import { UploadAlert } from "@/constant/alert/upload";
-  import { deepClone } from "@/utils/CommonUtils";
+  import { copyOverArray, deepClone } from "@/utils/CommonUtils";
   import Renderer from "@/constant/Renderer";
   import Storage from "@/utils/Storage";
-  import { DateInput } from "date-picker-svelte";
+  import { DateInput, localeFromDateFnsLocale } from "date-picker-svelte";
+  import { zhCN } from "date-fns/locale";
   import { format, subMonths } from "date-fns";
 
+  let locale = localeFromDateFnsLocale(zhCN);
   let dateFrom: Date = new Date();
   let dateTo: Date = new Date();
   let initDateFrom: Date = new Date();
@@ -100,11 +102,8 @@
   let gridApi: any;
 
   onMount(() => {
-    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-leaf";
-    if (currentTheme.includes("-theme")) {
-      currentTheme = "ux-leaf";
-    }
-    document.body.setAttribute("data-theme", currentTheme);
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
+    document.documentElement.setAttribute('data-bs-theme', currentTheme);
     window.addEventListener("message", themeChangeHandler, false);
     const date = new Date();
     dateFrom = subMonths(date, 3);
@@ -129,7 +128,7 @@
 
   function themeChangeHandler(e: MessageEvent) {
     if (e.data.type === "theme-changed") {
-      document.body.setAttribute("data-theme", e.data.data);
+      document.body.setAttribute("data-bs-theme", e.data.data);
     }
   }
 
@@ -190,9 +189,13 @@
           elem.id = elem.nid;
           elem.isDetail = true;
           elem.createDate = elem.createDate?.substr(0, 19);
-          elem.reviewerName = uploaderList?.find(
-            (v) => v.id === elem.reviewer
-          )?.name;
+          if (elem.reviewer) {
+            elem.reviewerName = uploaderList?.find(
+              (v) => v.id === elem.reviewer
+            )?.name;
+          } else {
+            elem.reviewerName = "";
+          }
           if (!elem.labelList || elem.labelList === "null") {
             elem.labelList = "";
           }
@@ -213,7 +216,11 @@
           elem.fileListChange = `(${ac.length})${ac[0]}`;
           elem.srFileList = elem.fileList.replace(/,/g, "\r");
           bc = elem.moduleList.replace(/\r/g, ",").split(",");
-          elem.moduleListChange = `(${bc.length})${bc[0]}`;
+          if (bc.length === 0 || (bc.length === 1 && !bc[0])) {
+            elem.moduleListChange = "";
+          } else {
+            elem.moduleListChange = `(${bc.length})${bc[0]}`;
+          }
           if (elem.status === "R") {
             elem.statusChange = "待检查";
           } else if (elem.status === "A") {
@@ -261,7 +268,8 @@
             elem.detail = "";
           }
           elem.conflictFiles = "";
-          elem.detailFlag = false;
+          elem.detailFlag = true;
+
           if (elem.JtracRepeatNum > 1) {
             const multModules: any[] = [];
             const sourceModules = elem.moduleList
@@ -272,10 +280,16 @@
                 multModules.push(data);
               }
             });
-            elem.moduleListChange = `(${multModules.length})${multModules[0]}`;
+            if (
+              multModules.length === 0 ||
+              (multModules.length === 1 && !multModules[0])
+            ) {
+              elem.moduleListChange = "";
+            } else {
+              elem.moduleListChange = `(${multModules.length})${multModules[0]}`;
+            }
             elem.moduleList = multModules.join(",");
             elem.srModuleList = elem.moduleList.replace(/,/g, "\r");
-            elem.detailFlag = true;
             let labelModules: any[] = [];
             if (elem.labelList) {
               let sourceLabelModules = elem.labelList.split(",");
@@ -380,8 +394,8 @@
   }
 
   function getUserActivePermission() {
-    // const info = UserInfo.userId;
-    const info = "liuzhe";
+    //const info = UserInfo.userId;
+    const info = "ljh";
     setWaiting();
     pageStore.getUserActivePermission(info);
   }
@@ -1057,6 +1071,10 @@
 
   function onGridReadyHandler(params: GridReadyEvent) {
     gridApi = params.api;
+    gridApi?.addEventListener(
+      Renderer.Renderer_Header_CheckBox,
+      onBtnHeaderLinkHandler
+    );
     gridApi?.addEventListener(Renderer.Renderer_LinkButton, onBtnLinkHandler);
     gridApi?.addEventListener(
       Renderer.Renderer_Select_Check_Box,
@@ -1066,6 +1084,16 @@
       Renderer.Renderer_Icon_Button,
       onBtnDetailLinkClickHandler
     );
+  }
+
+  function onBtnHeaderLinkHandler(e: any) {
+    if (e.value !== undefined) {
+      let rowDataCopy: any[] = copyOverArray(rowData);
+      rowDataCopy.forEach((elem) => {
+        elem.selected = e.value;
+      });
+      rowData = rowDataCopy;
+    }
   }
 
   function onBtnLinkHandler(e: any) {
@@ -1082,20 +1110,24 @@
         { jtracNo: e.value.jtracNo, jtracStatus: e.value.status },
         onPopCloseSearchHandler,
         {
-          width: "1100px",
-          height: "600px",
+          width: "1150px",
+          height: "700px",
         }
       );
     } else if (e.field === "clientDeveloperName") {
-      openUserInfoPop(
-        e.value.clientDeveloperName.split(","),
-        e.value.clientDeveloperIds.split(",")
-      );
+      if (e.value.clientDeveloperName) {
+        openUserInfoPop(
+          e.value.clientDeveloperName.split(","),
+          e.value.clientDeveloperIds.split(",")
+        );
+      }
     } else if (e.field === "reviewerName") {
-      openUserInfoPop(
-        e.value.reviewerName.split(","),
-        e.value.reviewer.split(",")
-      );
+      if (e.value.reviewerName) {
+        openUserInfoPop(
+          e.value.reviewerName.split(","),
+          e.value.reviewer.split(",")
+        );
+      }
     }
   }
 
@@ -1138,8 +1170,8 @@
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
-            on:Input={dateToInputHandler}
-          />
+            {locale}
+            on:Input={dateToInputHandler} />
           <DateInput
             class="margin-left-s"
             bind:value={dateTo}
@@ -1147,8 +1179,8 @@
             format="yyyy-MM-dd"
             valid={true}
             closeOnSelection={true}
-            on:Input={dateToInputHandler}
-          />
+            {locale}
+            on:Input={dateToInputHandler} />
         </Box>
       </Box>
       <Box f={1} height="30px" class="box-width">
@@ -1156,8 +1188,7 @@
           width="55px"
           className="main-text "
           class="text-min-width"
-          verticalAlign="middle"
-        >
+          verticalAlign="middle">
           <Text>提交人</Text>
         </Box>
         <Box f={1} class="components-height select-width">
@@ -1166,23 +1197,20 @@
             optionIdentifier="id"
             labelIdentifier="name"
             onSubmit={(v) => onUploaderSelectHandler(v)}
-            bind:value={selectedUploaderValue}
-          />
+            bind:value={selectedUploaderValue} />
         </Box>
       </Box>
       <Box width="100px" />
       <Box f={1} height="30px" class="box-width">
-        <Box width="68px" className="main-text" verticalAlign="middle">
+        <Box width="80px" className="main-text" verticalAlign="middle">
           <Text>jtracNo</Text>
         </Box>
-        <Box f={1}>
+        <Box width="100%">
           <Box class="input-box">
             <BatchInput
-              inputLabel="jtracNo"
               bind:value={jtracNo}
               bind:dataTotal={jtracNoTotal}
-              on:blur={onJtracNoChangeHandler}
-            />
+              on:blur={onJtracNoChangeHandler} />
           </Box>
         </Box>
       </Box>
@@ -1199,8 +1227,7 @@
               bind:checked={value.checked}
               labelText={value.defaultValue}
               {value}
-              on:change={onCheckBoxChangeHandler}
-            />
+              on:change={onCheckBoxChangeHandler} />
           {/each}
         </Box>
       </Box>
@@ -1209,37 +1236,31 @@
           width="55px"
           className="main-text "
           class="text-min-width"
-          verticalAlign="middle"
-        >
+          verticalAlign="middle">
           <Text>模块</Text>
         </Box>
         <Box f={1} class="input-box">
           <BatchInput
-            inputLabel="模块"
             bind:value={modules}
             bind:dataTotal={moduleTotal}
-            on:blur={onModulesChangeHandler}
-          />
+            on:blur={onModulesChangeHandler} />
         </Box>
       </Box>
       <Box width="100px" />
       <Box f={1} height="30px" class="box-width">
-        <Box width="68px" className="main-text" verticalAlign="middle">
+        <Box width="80px" className="main-text" verticalAlign="middle">
           <Text>例外模块</Text>
         </Box>
-        <Box f={1}>
+        <Box width="100%">
           <Box class="input-box">
-            <BatchInput
-              inputLabel="例外模块"
-              bind:value={exModules}
-              bind:dataTotal={exModuleTotal}
-            />
+            <BatchInput bind:value={exModules} bind:dataTotal={exModuleTotal} />
+          </Box>
+          <Box width="25px">
+            <Link on:click={onBtnClearExModulesClickHandler}>
+              <Close size={24} />
+            </Link>
           </Box>
         </Box>
-        <IconButton
-          currentIcon={Close}
-          on:click={onBtnClearExModulesClickHandler}
-        />
       </Box>
     </Box>
   </Box>
@@ -1251,54 +1272,47 @@
           size="small"
           kind="tertiary"
           icon={Add}
-          on:click={onBtnAddJtracClickHandler}>新增</Button
-        >
+          on:click={onBtnAddJtracClickHandler}>新增</Button>
       {/if}
       {#if permissionData.includes("J_E")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
-          on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button
-        >
+          on:click={onBtnUpdateStatusIdcClickHandler}>IDC</Button>
       {/if}
       {#if permissionData.includes("J_D")}
         <Button
           kind="tertiary"
           icon={FolderParent}
           class="margin-left-s button-normal"
-          on:click={onBtnUpdateStatus45ClickHandler}>45</Button
-        >
+          on:click={onBtnUpdateStatus45ClickHandler}>45</Button>
       {/if}
       {#if permissionData.includes("J_B")}
         <Button
           kind="tertiary"
           icon={TrashCan}
           class="margin-left-s button-normal"
-          on:click={onBtnDeleteClickHandler}>删除</Button
-        >
+          on:click={onBtnDeleteClickHandler}>删除</Button>
       {/if}
       <Button
         kind="tertiary"
         icon={Download}
         class="margin-left-s button-normal"
-        on:click={onBtnDownloadClickHandler}>下载</Button
-      >
+        on:click={onBtnDownloadClickHandler}>下载</Button>
       {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Checkmark}
           class="margin-left-s button-normal"
-          on:click={onBtnSumitClickHandler}>确认全部冲突</Button
-        >
+          on:click={onBtnSumitClickHandler}>确认全部冲突</Button>
       {/if}
       {#if permissionData.includes("J_A")}
         <Button
           kind="tertiary"
           icon={Collaborate}
           class="margin-left-s button-normal"
-          on:click={onBtnCheckStatusClickHandler}>查看状态</Button
-        >
+          on:click={onBtnCheckStatusClickHandler}>查看状态</Button>
       {/if}
       <Box width="120px" height="30px" class="margin-left-s margin_top">
         <AdvancedSelect
@@ -1306,8 +1320,10 @@
           optionIdentifier="code"
           labelIdentifier="name"
           onSubmit={(v) => onPageSizeSelectHandler(v)}
-          bind:value={selectedPageSizeValue}
-        />
+          bind:value={selectedPageSizeValue} />
+      </Box>
+      <Box width="120px" height="30px" class="margin-left-s margin_top">
+        <input type="checkbox" value="" name="" class="bx--checkbox" />
       </Box>
     </Box>
     <Box f={1} horizontalAlign="right">
@@ -1315,14 +1331,12 @@
         kind="secondary"
         class=" button-normal"
         icon={Search}
-        on:click={onBtnSearchClickHandler}>SEARCH</Button
-      >
+        on:click={onBtnSearchClickHandler}>SEARCH</Button>
       <Button
         kind="secondary"
         icon={Reset}
         class="margin-left-s button-normal"
-        on:click={onBtnClearClickHandler}>RESET</Button
-      >
+        on:click={onBtnClearClickHandler}>RESET</Button>
     </Box>
   </Box>
   <DataGrid
@@ -1333,8 +1347,7 @@
     {pageCount}
     headerRows={2}
     onGridReady={onGridReadyHandler}
-    {onPageChange}
-  />
+    {onPageChange} />
 </Box>
 
 <style lang="scss">
@@ -1375,30 +1388,14 @@
 
   :global(.main-bottom > .pagination-nav > .option.next) {
     margin-top: 3px;
-  }
-
-  :global(.svelte-select.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5) {
-    min-height: 30px !important;
-    line-height: 30px !important;
-    border-radius: 0% !important;
-    font-size: 12px !important;
-    cursor: pointer !important;
-  }
+  }  
 
   :global(.svelte-select.svelte-fpyony.svelte-fpyony.svelte-fpyony) {
     min-height: 30px !important;
     line-height: 30px !important;
     border-radius: 0% !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
     cursor: pointer !important;
-  }
-
-  :global(.outter) {
-    display: flex !important;
-    flex-direction: column !important;
-    width: auto;
-    height: 100% !important;
-    //min-width: 1422px;
   }
 
   :global(.components-height) {
@@ -1413,9 +1410,8 @@
 
   :global(.button-normal) {
     margin-bottom: 4px;
-    font-size: 13px;
-    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
-      "微软雅黑";
+    font-size: 14px;
+    font-family: "微软雅黑";
     margin-top: 5px;
   }
 
@@ -1424,7 +1420,6 @@
   }
 
   :global(.select-width > .svelte-select) {
-    border: 1px solid #cacaca !important;
     width: 100% !important;
   }
 
@@ -1460,10 +1455,22 @@
   }
 
   :global(.bx--form-item.bx--checkbox-wrapper) {
-    max-width: 76px;
+    max-width: 80px;
   }
 
   :global(.bx--modal-content p) {
     padding-right: 0px;
+  }
+
+  :global(.margin-top-m) {
+    margin-top: -3px;
+  }
+
+  :global(.margin_icon_m) {
+    margin-top: -6px;
+  }
+
+  :global(.cursorPointer) {
+    cursor: pointer;
   }
 </style>

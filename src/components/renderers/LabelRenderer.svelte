@@ -1,18 +1,19 @@
 <script>
-  import { onDestroy, onMount } from 'svelte';
+  import { onDestroy, onMount } from "svelte";
   export let params;
-  export let value = params.value ?? '';
-  let title = '';
+  export let value = params.value ?? "";
+  let title = "";
   let statusColor;
   const show = params.data.show;
 
   onMount(() => {
-    const endDate = new Date(params.data.endDate).getTime() + 16 * 60 * 60 * 1000;
+    const endDate =
+      new Date(params.data.endDate).getTime() + 16 * 60 * 60 * 1000;
     const moment = new Date().getTime();
     const breakFlag = params.data.breakFlag;
-    if (breakFlag === 'N') {
+    if (breakFlag === "N") {
       if (moment > endDate && Number(params.data.taskProgress) < 100) {
-        statusColor = '#ff0000';
+        statusColor = "#ff0000";
       }
     }
 
@@ -22,7 +23,7 @@
   });
 
   $: props = {
-    class: 'label',
+    class: "label",
     ...$$restProps,
   };
 
@@ -31,17 +32,22 @@
     const containerWidth = e.target.offsetWidth;
     if (value) {
       if (textWidth > containerWidth) title = value;
-      else title = '';
+      else title = "";
     }
   }
 </script>
 
-<p {title} on:mouseenter={onMouseEnterHandler} {...props} style="--status-color:{statusColor}">
+<p
+  {title}
+  on:mouseenter={onMouseEnterHandler}
+  {...props}
+  style="--status-color:{statusColor}">
   {value}
 </p>
 
 <style>
   :global(.label) {
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

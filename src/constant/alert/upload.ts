@@ -28,6 +28,7 @@ export enum FileListAlert {
   LOGIN_FIRST = '请登录后再进行该项操作!',
   DETAIL_MIN_8 = 'detail内容至少中文4或英文8!',
   COPY_SUCCESS = '复制成功.',
+  REVIEWER_CANNOT_EMPTY = '代码检查负责人不能为空!',
 }
 
 export enum JtracListAlert {

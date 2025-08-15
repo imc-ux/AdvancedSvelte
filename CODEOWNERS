@@ -10,7 +10,7 @@
 # precedence. When someone opens a pull request that only
 # modifies MD files, only @md-owner and not the global
 # owner(s) will be requested for a review.
-*.md  @Generalizations  @ythyhvh
+*.md  @ythyhvh
 
 
 # In this example, @octocat owns any file in an apps directory

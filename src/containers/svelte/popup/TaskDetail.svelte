@@ -10,6 +10,8 @@
   // import { DataGridEx } from '@/components/sveltecomponents';
   import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
   import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
 
   let taskChangeItem = [];
   let selectedItem = '';
@@ -124,15 +126,7 @@
   .advanced-select {
     height: 35px;
     margin-top: 10px;
-  }
-
-  .data-table {
-    margin-top: 10px;
-    height: 445px;
-    margin-bottom: 10px;
-    overflow-y: auto;
-    border: 1px solid lightgray;
-  }
+  }  
 
   :global(.data-table > .dataTable-width) {
     max-height: 443px;
@@ -143,15 +137,7 @@
     border: 0px;
     margin-left: 0px;
   }
-
-  /* .no-data {
-    width: 100%;
-    height: 450px;
-    display: flex;
-    justify-content: center;
-    color: lightgray;
-  } */
-
+  
   :global(.advanced-select > .svelte-select.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5) {
     border-radius: 0px;
     min-height: 35px;
@@ -185,10 +171,5 @@
 
   :global(.data-table > .bx--data-table-container > .bx--data-table tbody > tr > td > p) {
     padding-right: 0px;
-  }
-
-  /* :global(.bx--data-table th) {
-    position: sticky;
-    top: 0px;
-  } */
+  }  
 </style>

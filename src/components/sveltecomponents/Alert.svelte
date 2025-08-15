@@ -107,8 +107,7 @@
   selectorPrimaryFocus=".bottom-margin"
   preventCloseOnClickOutside
   on:close={handlerClose}
-  class="alert-box"
->
+  class="alert-box">
   <Box class="alert-content">
     <Box class="icon-box">
       {#if icon === 0}
@@ -126,17 +125,14 @@
   <Box class="btn-margin">
     {#if icon !== 2}
       <Button kind="tertiary" on:click={handlerClose} class="agree-button"
-        >确定</Button
-      >
+        >确定</Button>
     {:else}
       <Button kind="tertiary" on:click={onYesBtnClickHandler} class="opt-button"
-        >Yes</Button
-      >
+        >Yes</Button>
       <Button
         kind="tertiary"
         on:click={onNoBtnClickHandler}
-        class="opt-button right-button">No</Button
-      >
+        class="opt-button right-button">No</Button>
     {/if}
   </Box>
 </Modal>
@@ -181,13 +177,13 @@
   :global(.agree-button) {
     margin-bottom: 0px;
     min-height: 24px;
-    font-size: 13px;
+    font-size: 14px;
     margin: auto;
   }
 
   :global(.opt-button) {
     margin-bottom: 0px;
     min-height: 24px;
-    font-size: 13px;
+    font-size: 14px;
   }
 </style>

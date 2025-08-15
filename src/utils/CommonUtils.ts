@@ -2,8 +2,25 @@ import moment from "moment";
 import Storage, { StorageType } from "@/utils/Storage";
 import { TextArea } from "@/components/sveltecomponents";
 
+const checkData = [
+  'Common/src/components/hooks',
+  'Common/src/components/widgets',
+  'Common/src/provider',
+  'Common/src/utils',
+  'Common/src/components/renderers/base',
+  'Common/src/styles',
+  'Common/src/theme']
+
 export function getCurrentTime(): string {
   return moment().format("YYYY-MM-DD HH:mm:ss");
+}
+
+export function copyOverArray(data: any[]): any[] {
+  let copyData = [];
+  for (let j = 0; j < data.length; j++) {
+    copyData.push(JSON.parse(JSON.stringify(data[j])));
+  }
+  return copyData;
 }
 
 export function isLogin(): boolean {
@@ -33,12 +50,13 @@ export function bodyBatchInput(e: any, text: string) {
       readOnly: true,
       value: text,
       class: "root index-textArea-bottom-margin",
+      commonTextArea: false,
     },
   });
   document.addEventListener("mouseup", onWindowMouseUpListener);
   document.addEventListener("mousewheel", onWindowMouseUpListener);
   function onWindowMouseUpListener(e) {
-    if (e.target.type === 'textarea' || e.target.type === 'text') {
+    if (e.target.type === "textarea" || e.target.type === "text") {
       return;
     }
     if (mountNodeCount === 1) {
@@ -147,9 +165,9 @@ export function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
 
 export function getServerUrl(): string {
   // return document.location.protocol + "//" + document.location.host + "/b2b/";
-  // return location.protocol + "//127.0.0.1:7777/";
-  return "http://109.14.20.45:6636/ux/";
-  // return '/b2b/';
+  //return location.protocol + "//127.0.0.1:7777/b2b/";
+  return "http://109.14.6.43:6636/ux/";
+  //return "/b2b/";
 }
 
 export function getResourceUrl(): string {
@@ -335,3 +353,16 @@ export function createData(cellData: any, datafiled: string[]) {
   });
   return result;
 }
+
+export function checkFileFlag(input: string) {
+  let inputArray: any[] = input.split(",");
+  for (let i = 0; i < inputArray.length; i++) {
+    for (let j = 0; j < checkData.length; j++) {
+      if (inputArray[i].indexOf(checkData[j]) >= 0) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+

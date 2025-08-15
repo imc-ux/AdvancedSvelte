@@ -8,6 +8,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 var PACKAGE = require("./package.json");
 var debug = process.env.NODE_ENV !== "production";
 var entryPath = "./";
+const rootDir = process.cwd();
 
 const pages = [
   "mpPageManageMain",
@@ -45,13 +46,13 @@ function getPlugins() {
 
 module.exports = {
   devServer: {
-    host: "0.0.0.0",
+    host: "127.0.0.1",
     port: "7070",
     compress: true,
     proxy: {
       "/b2b": {
         target: "http://127.0.0.1:7777/",
-        // target: 'http://109.14.6.243:7777/',
+        // target: "http://109.14.6.243:7777/",
 
         pathRewrite: { "^/b2b": "" },
         changeOrigin: true,
@@ -121,6 +122,10 @@ module.exports = {
           options: {
             preprocess: [preprocess(), optimizeImports()],
             emitCss: true,
+            onwarn: (warning, handler) => {
+              if (warning.code === "a11y-click-events-have-key-events") return;
+              handler(warning);
+            },
           },
         },
       },
@@ -146,12 +151,15 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.join(__dirname, "src"), "node_modules"],
+    modules: ["node_modules", "../AdvancedSvelte/node_modules"],
     alias: {
-      "@": path.join(__dirname, "src"),
+      "@": [
+        path.join(rootDir, "src"),
+        path.resolve(rootDir, "../advancedcommon/src"),
+      ],
       svelte: path.resolve("node_modules", "svelte"),
     },
-    extensions: [".js", ".ts", ".tsx", ".svelte", "module"],
+    extensions: [".js", ".ts", ".tsx", ".svelte", ".module"],
     mainFields: ["svelte", "browser", "module", "main"],
     conditionNames: ["svelte", "browser"],
   },

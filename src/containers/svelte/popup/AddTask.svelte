@@ -1,33 +1,38 @@
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { Text, Input, TextArea, Button } from '@/components/sveltecomponents';
-  import { Checkbox, DatePicker, DatePickerInput } from 'carbon-components-svelte';
-  import addTaskStore from '@/store/AddTaskStore';
-  import { onDestroy, onMount } from 'svelte';
-  import { setWaiting, removeWaiting } from '@/utils/loaderUtils';
-  import { UsersInfo } from '@/vo/userManager';
-  import { autorun } from 'mobx';
-  import { deepClone } from '@/utils/CommonUtils';
-  import CustomAlert from '@/components/CustomAlert';
-  import { AddTaskAlert } from '@/constant/alert/Task';
-  import { AlertIcon } from '@/components/CustomAlert';
-  import { Save } from 'carbon-icons-svelte';
-  import { AddTaskValue } from '@/vo/taskManager';
-  import { UserInfo } from '@/utils/Settings';
-  import { taskInfo } from '@/vo/taskManager/index';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import { Text, Input, TextArea, Button } from "@/components/sveltecomponents";
+  import {
+    Checkbox,
+    DatePicker,
+    DatePickerInput,
+  } from "carbon-components-svelte";
+  import addTaskStore from "@/store/AddTaskStore";
+  import { onDestroy, onMount } from "svelte";
+  import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
+  import { UsersInfo } from "@/vo/userManager";
+  import { autorun } from "mobx";
+  import { deepClone } from "@/utils/CommonUtils";
+  import CustomAlert from "@/components/CustomAlert";
+  import { AddTaskAlert } from "@/constant/alert/Task";
+  import { AlertIcon } from "@/components/CustomAlert";
+  import { Save } from "carbon-icons-svelte";
+  import { AddTaskValue } from "@/vo/taskManager";
+  import { UserInfo } from "@/utils/Settings";
+  import { localeFromDateFnsLocale } from "date-picker-svelte";
+  import { zhCN } from "date-fns/locale";
 
   let bizList = [];
   let taskUserIdAr = [];
-  let taskTitle = '';
-  let taskContent = '';
-  let startDate = '';
-  let endDate = '';
-  let taskUserId = '';
+  let taskTitle = "";
+  let taskContent = "";
+  let startDate = "";
+  let endDate = "";
+  let taskUserId = "";
   let count = 1;
-  // let taskList = [];
+  let locale = localeFromDateFnsLocale(zhCN);
   export let onClose;
-  const placeholder = '同一技术请保持题目一致，特殊符号尽量只输入半角.和-';
+  const placeholder = "同一技术请保持题目一致，特殊符号尽量只输入半角.和-";
 
   onMount(() => {
     setWaiting();
@@ -69,7 +74,7 @@
       countOver();
       if (!value.error) {
         CustomAlert(AddTaskAlert.ADD_TASK_SUCCESS, AlertIcon.SUCCESS);
-        onClose('Y');
+        onClose("Y");
       } else {
         CustomAlert(AddTaskAlert.INTERNET_ERROR, AlertIcon.ERROR);
       }
@@ -130,8 +135,8 @@
 
   function searchUserList() {
     const info: UsersInfo = {};
-    info.blockflag = 'N';
-    info.usertype = 'U';
+    info.blockflag = "N";
+    info.usertype = "U";
     info.iStart = 0;
     info.iPageCount = 10;
     addTaskStore.getUserList(info);
@@ -151,8 +156,8 @@
 
   function getCurrentDate() {
     const date = new Date();
-    let month = '';
-    let day = '';
+    let month = "";
+    let day = "";
     if (date.getMonth() < 10) {
       month = `0${date.getMonth()}`;
     } else {
@@ -169,7 +174,7 @@
 
   function validate() {
     // searchTaskList();
-    if (taskTitle === '') {
+    if (taskTitle === "") {
       CustomAlert(AddTaskAlert.TASK_TITLE_ERROR, AlertIcon.ERROR);
       return false;
     }
@@ -177,11 +182,11 @@
     //   CustomAlert(AddTaskAlert.TASK_TITLE_SAME, AlertIcon.ERROR);
     //   return false;
     // }
-    if (taskUserId === '') {
+    if (taskUserId === "") {
       CustomAlert(AddTaskAlert.TASK_USERID_ERROR, AlertIcon.ERROR);
       return false;
     }
-    if (startDate === '' || endDate === '') {
+    if (startDate === "" || endDate === "") {
       CustomAlert(AddTaskAlert.TASK_DATE_ERROR, AlertIcon.ERROR);
       return false;
     } else {
@@ -190,13 +195,17 @@
   }
 
   function addStyleHandler() {
-    document.getElementById('add-task-pop').parentElement.style.padding = '8px';
+    document.getElementById("add-task-pop").parentElement.style.padding = "8px";
   }
 </script>
 
 <div id="add-task-pop">
   <div class="max-width button-height">
-    <Button kind="tertiary" icon={Save} class="button-normal" on:click={onSaveClickHandler}>保存</Button>
+    <Button
+      kind="tertiary"
+      icon={Save}
+      class="button-normal"
+      on:click={onSaveClickHandler}>保存</Button>
   </div>
   <div class="content-margin-top">
     <div class="flex">
@@ -204,7 +213,11 @@
         <Text class="left-min-height">标题</Text>
       </div>
       <div class="right border-top" style="flex-grow:1">
-        <Input bind:value={taskTitle} {placeholder} on:input={onTitleInputChangeHandler} maxAscii={100} />
+        <Input
+          bind:value={taskTitle}
+          {placeholder}
+          on:input={onTitleInputChangeHandler}
+          maxAscii={100} />
       </div>
     </div>
     <div class="flex max-height">
@@ -213,7 +226,10 @@
       </div>
       <div class="flex right checkbox">
         {#each bizList as bizList}
-          <Checkbox value={bizList.id} labelText={bizList.name} on:change={onCheckboxChangeHandler} />
+          <Checkbox
+            value={bizList.id}
+            labelText={bizList.name}
+            on:change={onCheckboxChangeHandler} />
         {/each}
       </div>
     </div>
@@ -222,7 +238,12 @@
         <Text class="left-content">内容</Text>
       </div>
       <div class="right textarea-border">
-        <TextArea bind:value={taskContent} on:input={onContentInputChangeHandler} height="100px" maxCount={200} class="textarea-resize" />
+        <TextArea
+          bind:value={taskContent}
+          on:input={onContentInputChangeHandler}
+          height="100px"
+          maxCount={200}
+          class="textarea-resize" />
       </div>
     </div>
     <div class="flex">
@@ -237,8 +258,7 @@
           dateFormat="Y-m-d"
           on:change={onDateInputChangeHandler}
           short={true}
-          class="date-picker-input"
-        >
+          class="date-picker-input">
           <DatePickerInput size="sm" bind:value={startDate} />
           <DatePickerInput size="sm" bind:value={endDate} />
         </DatePicker>
@@ -249,9 +269,6 @@
 </div>
 
 <style lang="scss">
-  @import '../../../styles/theme/var';
-  @import '../../../styles/theme/mixin';
-
   .flex {
     display: flex;
   }
@@ -270,15 +287,7 @@
 
   .content-margin-top {
     margin-top: 5px;
-  }
-
-  .left {
-    min-width: 150px;
-    @include themifyList('background-color', $theme-color);
-    color: #fff;
-    border-bottom: 1px solid #cacaca;
-    align-items: center;
-  }
+  }  
 
   .right {
     width: 100%;
@@ -331,25 +340,16 @@
   .date-picker-border {
     border-bottom: 1px solid #cacaca;
   }
-  :global(.textarea-border > .bx--form-item > .bx--text-area__wrapper > .bx--text-area) {
+  :global(
+      .textarea-border
+        > .bx--form-item
+        > .bx--text-area__wrapper
+        > .bx--text-area
+    ) {
     border-bottom: 0px;
     border: 1px solid #cacaca;
     min-height: 150px;
-  }
-
-  :global(.textarea-border > .bx--form-item > .bx--text-area__wrapper > .bx--text-area:focus) {
-    border: 1px solid #08adaa;
-    @include themifyList('border-color', $theme-color);
-    outline-offset: 0px;
-    outline: none;
-  }
-
-  :global(.bx--text-area:active) {
-    border: 1px solid #08adaa;
-    @include themifyList('border-color', $theme-color);
-    outline-offset: 0px;
-    outline: none;
-  }
+  }  
 
   :global(.max-width > button) {
     max-width: none;
@@ -360,22 +360,16 @@
   :global(.flex > .bx--form-item) {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
-  }
+  }  
 
-  // :global(.date-picker-border > .bx--form-item) {
-  //   align-items: center;
-  // }
-
-  :global(.date-picker-input > div > div > div > div > .flatpickr-calendar.static) {
+  :global(
+      .date-picker-input > div > div > div > div > .flatpickr-calendar.static
+    ) {
     top: auto !important;
     bottom: calc(100% + 2px);
   }
 
   :global(.textarea-resize) {
     resize: none;
-  }
-
-  // :global(.date-picker-input > div > div > div > div > .flatpickr-calendar.open) {
-  //   max-height: 300px;
-  // }
+  } 
 </style>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getImagesServerUrl } from '@/utils/CommonUtils';
-  import { onMount } from 'svelte';
-
+  
   export let params;
   export let value: string = getImagesServerUrl() + params.value;
   let isImgDisplay = params.data.display;

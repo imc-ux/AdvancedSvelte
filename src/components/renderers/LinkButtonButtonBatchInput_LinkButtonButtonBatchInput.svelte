@@ -99,8 +99,8 @@
 
 <style>
   :global(.label) {
-    height: 20px;
-    font-size: 13px;
+    height: 22px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

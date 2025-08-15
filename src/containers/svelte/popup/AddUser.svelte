@@ -224,9 +224,6 @@
 </div>
 
 <style lang="scss">
-  @import "../../../styles/theme/var";
-  @import "../../../styles/theme/mixin";
-
   .btn-align-right {
     display: flex;
     justify-content: flex-end;
@@ -236,17 +233,7 @@
     display: flex;
     flex: 1;
     height: 35px;
-  }
-
-  .left-div {
-    width: 150px;
-    @include themifyList("background-color", $theme-color);
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border-bottom: 1px solid #cfcfcf;
-  }
+  } 
 
   .right-div {
     flex: 1;

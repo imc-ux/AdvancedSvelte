@@ -7,24 +7,31 @@
  */
 -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import { createEventDispatcher } from 'svelte';
-  import { Image, Button, Text, Box, Divider, Icons } from '@/components/sveltecomponents';
-  import { autorun } from 'mobx';
-  import { onMount, onDestroy } from 'svelte';
-  import messageStore from '@/store/MessageReplyStore';
-  import { UserInfo } from '@/utils/Settings';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { CommonAlert } from '@/constant/alert/Base';
+  import "@/styles/core/white.css";
+  import { createEventDispatcher } from "svelte";
+  import {
+    Image,
+    Button,
+    Text,
+    Box,
+    Divider,
+    Icons,
+  } from "@/components/sveltecomponents";
+  import { autorun } from "mobx";
+  import { onMount, onDestroy } from "svelte";
+  import messageStore from "@/store/MessageReplyStore";
+  import { UserInfo } from "@/utils/Settings";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { CommonAlert } from "@/constant/alert/Base";
 
   const dispatch = createEventDispatcher();
 
-  export let nid: string = '';
-  export let userName: string = '';
-  export let userId: string = '';
-  export let userUrl: string = '';
-  export let messageTime: string = '';
-  export let content: string = '';
+  export let nid: string = "";
+  export let userName: string = "";
+  export let userId: string = "";
+  export let userUrl: string = "";
+  export let messageTime: string = "";
+  export let content: string = "";
   export let isShowUser: boolean = true;
   export let actionList = [];
   let likeCount: number | string = 0;
@@ -42,7 +49,9 @@
 
   const disposer = autorun(() => {
     if (messageStore.getMessageBoardActionResult) {
-      const value = JSON.parse(JSON.stringify(messageStore.getMessageBoardActionResult));
+      const value = JSON.parse(
+        JSON.stringify(messageStore.getMessageBoardActionResult)
+      );
       if (value && !value.error) {
         if (value.data.length > 0) {
           const value = [...value.data];
@@ -52,8 +61,11 @@
         CustomAlert(CommonAlert.INTERNET_ERROR, AlertIcon.ERROR);
       }
     } else if (messageStore.operateMessageBoardResult) {
-      const value = JSON.parse(JSON.stringify(messageStore.operateMessageBoardResult));
+      const value = JSON.parse(
+        JSON.stringify(messageStore.operateMessageBoardResult)
+      );
       if (value && !value.error) {
+        console.log(value);
         getOperateList();
       } else {
         CustomAlert(CommonAlert.INTERNET_ERROR, AlertIcon.ERROR);
@@ -66,8 +78,12 @@
   }
 
   function operateListHandler(data: any[]) {
-    const liskList = data?.filter(ele => ele.actionType === 'A' && ele.status === 'Y');
-    const disLiskList = data?.filter(ele => ele.actionType === 'B' && ele.status === 'Y');
+    const liskList = data?.filter(
+      (ele) => ele.actionType === "A" && ele.status === "Y"
+    );
+    const disLiskList = data?.filter(
+      (ele) => ele.actionType === "B" && ele.status === "Y"
+    );
     likeCount = liskList?.length ?? 0;
     disLikeCount = disLiskList?.length ?? 0;
   }
@@ -76,7 +92,7 @@
     const req = {
       relateNid: nid,
       userId: UserInfo.userId,
-      actionType: 'A',
+      actionType: "A",
     };
     messageStore.operateMessageBoard(req);
   }
@@ -85,13 +101,13 @@
     const req = {
       relateNid: nid,
       userId: UserInfo.userId,
-      actionType: 'B',
+      actionType: "B",
     };
     messageStore.operateMessageBoard(req);
   }
 
   function onGotoUserDetaiHandler(e) {
-    dispatch('userDetail', {
+    dispatch("userDetail", {
       e: e.detail.event,
       userId: userId,
       userName: userName,
@@ -105,11 +121,17 @@
     <Divider />
     <Box>
       <Box style="flex: 1" verticalAlign="middle">
-        <Box style="width: 40px; height: 40px; cursor: pointer" on:click={onGotoUserDetaiHandler}>
+        <Box
+          style="width: 40px; height: 40px; cursor: pointer"
+          on:click={onGotoUserDetaiHandler}>
           <Image src={userUrl} alt={userName} />
         </Box>
         <Box style="flex: 1">
-          <Text bold singleLine class="cursorPointer" on:click={onGotoUserDetaiHandler}>{userName}</Text>
+          <Text
+            bold
+            singleLine
+            class="cursorPointer"
+            on:click={onGotoUserDetaiHandler}>{userName}</Text>
         </Box>
       </Box>
       <Box style="width: 200px" horizontalAlign="right" verticalAlign="middle">
@@ -124,7 +146,11 @@
     <Button size="small" icon={Icons.ThumbsUp} on:click={onBtnLikeClickHandler}>
       {likeCount}
     </Button>
-    <Button kind="secondary" size="small" icon={Icons.ThumbsDown} on:click={onBtnDisLikeClickHandler}>
+    <Button
+      kind="secondary"
+      size="small"
+      icon={Icons.ThumbsDown}
+      on:click={onBtnDisLikeClickHandler}>
       {disLikeCount}
     </Button>
   </Box>

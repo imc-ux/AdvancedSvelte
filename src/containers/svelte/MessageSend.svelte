@@ -55,8 +55,7 @@
 
 <Box column>
   <TextArea
-    value = {messageText}
-    class="bottom-margin"
+    value = {messageText}  
     placeholder="Enter a description..."
     on:blur={onMessageTextAreaBlurHandler}
   />

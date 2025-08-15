@@ -47,7 +47,7 @@
   };
 </script>
 
-<div class={upClass}>
+<div class={upClass} style="height: 22px;">
   <Link
     {...linkProps}
     title={upTitle}
@@ -57,7 +57,7 @@
     {data[0] ?? ""}
   </Link>
 </div>
-<div class={downClass}>
+<div class={downClass} style="height: 22px;">
   <Link
     {...linkProps}
     title={downTitle}
@@ -70,8 +70,8 @@
 
 <style>
   :global(.label) {
-    height: 20px;
-    font-size: 13px;
+    height: 22px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

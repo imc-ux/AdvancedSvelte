@@ -5,19 +5,18 @@
  * © 2021 iMarketChina Co.,Ltd. All rights reserved.
  */ -->
 <script>
-  import '@/styles/core/white.css';
-  import Edit from 'carbon-icons-svelte/lib/Edit.svelte';
-  import { Grid, Row, Column } from 'carbon-components-svelte';
-  import { Box, Button, TextArea, Divider, Link } from '@/components/sveltecomponents';
-  import { onMount, onDestroy } from 'svelte';
-  import * as util from '@/utils/CommonUtils';
-  import { autorun } from 'mobx';
-  import messageStore from '@/store/MessageBoardStore';
-  import MessageList from './MessageList';
-  import MessageSend from './MessageSend';
-  import DownToBottom from 'carbon-icons-svelte/lib/DownToBottom.svelte';
-  import { UsersInfo } from '@/vo/userManager/index';
-  import { MessageBoardSearchInfo } from '@/vo/userManager/index';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import Edit from "carbon-icons-svelte/lib/Edit.svelte";
+  import { Grid, Row, Column } from "carbon-components-svelte";
+  import { Box, Button, Link } from "@/components/sveltecomponents";
+  import { onMount, onDestroy } from "svelte";
+  import { autorun } from "mobx";
+  import messageStore from "@/store/MessageBoardStore";
+  import MessageList from "./MessageList";
+  import MessageSend from "./MessageSend";
+  import DownToBottom from "carbon-icons-svelte/lib/DownToBottom.svelte";
+  import Storage from "@/utils/Storage";
 
   const PAGE_SIZE = 20;
 
@@ -27,8 +26,17 @@
   let index = 0;
 
   onMount(() => {
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
+    document.body.setAttribute('data-bs-theme', currentTheme);
     searchMessageList(0);
+    window.addEventListener("message", themeChangeHandler, false);
   });
+
+  function themeChangeHandler(e){
+    if (e.data.type === "theme-changed") {
+      document.body.setAttribute("data-bs-theme", e.data.data);
+    }
+  }  
 
   onDestroy(() => {
     disposer();
@@ -36,9 +44,14 @@
 
   const disposer = autorun(() => {
     if (messageStore.searchMessageBoardResult) {
-      const value = JSON.parse(JSON.stringify(messageStore.searchMessageBoardResult));
+      const value = JSON.parse(
+        JSON.stringify(messageStore.searchMessageBoardResult)
+      );
       if (value && !value.error) {
         if (value.data.length > 0) {
+          value.data?.forEach(elem=>{
+            elem.userName = elem.userName === 'null' ? '匿名用户': elem.userName;
+          })
           if (index === 0) {
             messageBoardList = value.data;
           } else {
@@ -85,7 +98,8 @@
     <Column>
       <Box column class="outer-container">
         <Box horizontalAlign="right">
-          <Button icon={Edit} on:click={onAddMessageBtnClickHandler}>写留言</Button>
+          <Button icon={Edit} on:click={onAddMessageBtnClickHandler}
+            >写留言</Button>
         </Box>
         <hr style="height:1px;margin: 5px 0 5px 0" />
         {#if isShowMsgText}
@@ -93,10 +107,16 @@
         {/if}
         <Box column verticalAlign="top">
           {#each messageBoardList as messageDetail, i (messageDetail.nid)}
-            <MessageList figureUrl={messageDetail.userFigure} userName={messageDetail.userName} messageInfo={messageDetail} />
+            <MessageList
+              figureUrl={messageDetail.userFigure}
+              userName={messageDetail.userName}
+              messageInfo={messageDetail} />
             {#if i === messageBoardList.length - 1 && messageBoardList.length % 20 === 0 && moreLength > 0}
               <Box horizontalAlign="compact" width="100%" class="top-margin">
-                <Link icon={DownToBottom} class="cursor-pointer" on:click={onMoreMessageLinkClickHandler}>更多留言...</Link>
+                <Link
+                  icon={DownToBottom}
+                  class="cursor-pointer"
+                  on:click={onMoreMessageLinkClickHandler}>更多留言...</Link>
               </Box>
             {/if}
           {/each}
@@ -115,18 +135,9 @@
   }
   :global(html) {
     height: 100%;
-  }
-  :global(body) {
-    background-color: #eee;
-    height: 100%;
-  }
+  }  
   :global(.inherit-height) {
     height: inherit;
   }
-  :global(.outer-container) {
-    background-color: #fff;
-    height: 100%;
-    padding: 10px;
-    box-shadow: 2px 2px 2px #9e9e9e;
-  }
+  
 </style>

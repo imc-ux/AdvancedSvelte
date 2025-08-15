@@ -7,40 +7,45 @@
  */
 -->
 <script lang="ts">
-  import '@/styles/core/white.css';
-  import '@/styles/core/index.scss';
-  import { autorun } from 'mobx';
-  import { onMount, onDestroy } from 'svelte';
-  import Storage, { StorageType } from '@/utils/Storage';
-  import { AdvancedSelect, Button, Input, Text } from '@/components/sveltecomponents';
-  import DataGrid from '@/components/sveltecomponents/DataGrid.svelte';
-  import Add from 'carbon-icons-svelte/lib/Add.svelte';
-  import Save from 'carbon-icons-svelte/lib/Save.svelte';
-  import Search from 'carbon-icons-svelte/lib/Search.svelte';
-  import Reset from 'carbon-icons-svelte/lib/Reset.svelte';
-  import Download from 'carbon-icons-svelte/lib/Download.svelte';
-  import userMgmtColumns from '@/components/columns/userMgmtMainColumns';
-  import { userTypeList, blockFlagList, items } from '@/constant/constant';
-  import userMgmtMainStore from '@/store/UserMgmtMainStore';
-  import { PermissionInfo, UsersInfo } from '@/vo/userManager';
-  import { UserInfo } from '@/utils/Settings';
-  import { deepClone } from '@/utils/CommonUtils';
-  import CustomAlert, { AlertIcon } from '@/components/CustomAlert';
-  import { UserMgmtMainAlert } from '@/constant/alert/user';
-  import { removeWaiting, setWaiting } from '@/utils/loaderUtils';
-  import { GridApi, GridReadyEvent } from 'ag-grid-community';
-  import RENDERER_EVENT from '@/constant/Renderer';
-  import XLSX from 'xlsx';
-  import { CreatePop } from '@/components/Popup';
-  import ModifyUser from './popup/modifyUser.svelte';
-  import AddUser from './popup/AddUser.svelte';
-  import { getImagesServerUrl } from '@/utils/CommonUtils';
+  import "@/styles/core/white.css";
+  import "@/styles/core/index.scss";
+  import { autorun } from "mobx";
+  import { onMount, onDestroy } from "svelte";
+  import Storage, { StorageType } from "@/utils/Storage";
+  import {
+    AdvancedSelect,
+    Button,
+    Input,
+    Text,
+  } from "@/components/sveltecomponents";
+  import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
+  import Add from "carbon-icons-svelte/lib/Add.svelte";
+  import Save from "carbon-icons-svelte/lib/Save.svelte";
+  import Search from "carbon-icons-svelte/lib/Search.svelte";
+  import Reset from "carbon-icons-svelte/lib/Reset.svelte";
+  import Download from "carbon-icons-svelte/lib/Download.svelte";
+  import userMgmtColumns from "@/components/columns/userMgmtMainColumns";
+  import { userTypeList, blockFlagList, items } from "@/constant/constant";
+  import userMgmtMainStore from "@/store/UserMgmtMainStore";
+  import { PermissionInfo, UsersInfo } from "@/vo/userManager";
+  import { UserInfo } from "@/utils/Settings";
+  import { deepClone } from "@/utils/CommonUtils";
+  import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { UserMgmtMainAlert } from "@/constant/alert/user";
+  import { removeWaiting, setWaiting } from "@/utils/loaderUtils";
+  import { GridApi, GridReadyEvent } from "ag-grid-community";
+  import RENDERER_EVENT from "@/constant/Renderer";
+  import XLSX from "xlsx";
+  import { CreatePop } from "@/components/Popup";
+  import ModifyUser from "./popup/modifyUser.svelte";
+  import AddUser from "./popup/AddUser.svelte";
+  import { getImagesServerUrl, copyOverArray } from "@/utils/CommonUtils";
 
-  let userId = '';
-  let userName = '';
-  let userTypeCodeSelected = '';
+  let userId = "";
+  let userName = "";
+  let userTypeCodeSelected = "";
   let userTypeSelected = null;
-  let blockFlagCodeSelected = 'N';
+  let blockFlagCodeSelected = "N";
   let blockFlagSelected = blockFlagList[2];
   let rowData: any[] | null = null;
   let itemCodeSelected = 20;
@@ -57,40 +62,43 @@
   let permissionData: any[] = [];
 
   onMount(() => {
-    userTypeCodeSelected = 'U';
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
+    document.documentElement.setAttribute('data-bs-theme', currentTheme);
+    window.addEventListener("message", themeChangeHandler, false);
+    userTypeCodeSelected = "U";
     userTypeSelected = userTypeList[1];
-    let currentTheme = Storage.getLocalItem('svelte-theme') ?? 'ux-leaf';
-    if (currentTheme.includes('-theme')) {
-      currentTheme = 'ux-leaf';
-    }
-    document.body.setAttribute('data-theme', currentTheme);
-    window.addEventListener('message', themeChangeHandler, false);
-
     let loginUserInfo = Storage.getSessionItem(StorageType.UserName);
-    if (loginUserInfo === null || loginUserInfo === '') {
-      window.location.href = 'login.html';
-    } else {
-      setWaiting();
-      getUserActivePermission();
+    if (loginUserInfo === null || loginUserInfo === "") {
+      window.location.href = "login.html";
     }
+    setWaiting();
+    getUserActivePermission();
   });
 
-  onDestroy(() => {
-    window.removeEventListener('message', themeChangeHandler, false);
+  onDestroy(() => {    
+    window.removeEventListener("message", themeChangeHandler, false);
     getUserActivePermissionList();
     searchUserList();
     modifyUserMulti();
     gridApi?.remove(RENDERER_EVENT.Render_Select, onSelectChangeHandler);
-    gridApi?.remove(RENDERER_EVENT.Renderer_Select_Check_Box, onRowsCheckedHandler);
-    gridApi?.addEventListener(RENDERER_EVENT.Renderer_LinkButton, onOpenModifyPopupHandler);
+    gridApi?.remove(
+      RENDERER_EVENT.Renderer_Select_Check_Box,
+      onRowsCheckedHandler
+    );
+    gridApi?.remove(
+      RENDERER_EVENT.Renderer_LinkButton,
+      onOpenModifyPopupHandler
+    );
   });
 
   const getUserActivePermissionList = autorun(() => {
     if (userMgmtMainStore.getUserActivePermissionResult) {
-      const permissionList = deepClone(userMgmtMainStore.getUserActivePermissionResult);
+      const permissionList = deepClone(
+        userMgmtMainStore.getUserActivePermissionResult
+      );
       removeWaiting();
       if (!permissionList.error) {
-        permissionData = permissionList.data.split(',');
+        permissionData = permissionList.data.split(",");
       }
     }
   });
@@ -101,15 +109,15 @@
       removeWaiting();
       if (!userList.error) {
         rowData = userList.data;
-        rowData.forEach(value => {
-          if (value.usertype === 'U') {
-            value.show = '前台';
-          } else if (value.usertype === 'P') {
-            value.show = '后台';
+        rowData.forEach((value) => {
+          if (value.usertype === "U") {
+            value.show = "前台";
+          } else if (value.usertype === "P") {
+            value.show = "后台";
           } else {
-            value.show = '';
+            value.show = "";
           }
-          if (value.figure === 'figures/figure000.jpg') {
+          if (value.figure === "figures/figure000.jpg") {
             value.display = false;
           } else {
             value.display = true;
@@ -117,7 +125,7 @@
         });
         pageSize = itemCodeSelected;
         pageCount = Math.ceil(userList.data?.[0]?.totalCount / pageSize);
-        rowData.forEach(i => {
+        rowData.forEach((i) => {
           i.selected = false;
           i.password = i.password.toLocaleUpperCase();
         });
@@ -130,7 +138,10 @@
       const modifyUserList = deepClone(userMgmtMainStore.modifyUserMultiResult);
       removeWaiting();
       if (!modifyUserList.error) {
-        CustomAlert(UserMgmtMainAlert.MODIFY_USER_MULTI_SUCCESS, AlertIcon.SUCCESS);
+        CustomAlert(
+          UserMgmtMainAlert.MODIFY_USER_MULTI_SUCCESS,
+          AlertIcon.SUCCESS
+        );
         onSearchBtnClickHandler();
       } else {
         CustomAlert(UserMgmtMainAlert.INTERNET_ERROR, AlertIcon.ERROR);
@@ -139,8 +150,8 @@
   });
 
   function themeChangeHandler(e: MessageEvent) {
-    if (e.data.type === 'theme-changed') {
-      document.body.setAttribute('data-theme', e.data.data);
+    if (e.data.type === "theme-changed") {
+      document.body.setAttribute("data-bs-theme", e.data.data);
     }
   }
 
@@ -173,11 +184,11 @@
   }
 
   function onSaveBtnClickHandler() {
-    rowData?.forEach(row => {
+    rowData?.forEach((row) => {
       if (row.selected) {
         selectedRows.push(row);
       } else {
-        selectedRows = selectedRows.filter(value => value.id !== row.id);
+        selectedRows = selectedRows.filter((value) => value.id !== row.id);
       }
     });
     if (!selectedRows?.length) {
@@ -198,32 +209,32 @@
   }
 
   function onDownLoadBtnClickHandler(data: any[]) {
-    const filename = '用户信息.xlsx';
+    const filename = "用户信息.xlsx";
     data = JSON.parse(JSON.stringify(data));
-    data.forEach(row => {
-      if (row.usertype === 'U') {
-        row.usertype = '前台';
+    data.forEach((row) => {
+      if (row.usertype === "U") {
+        row.usertype = "前台";
       }
-      if (row.usertype === 'P') {
-        row.usertype = '后台';
+      if (row.usertype === "P") {
+        row.usertype = "后台";
       }
       if (row.figure) {
         row.figure = getImagesServerUrl() + row.figure;
       }
-      changedKeys(row, 'id', 'ID');
-      changedKeys(row, 'name', '姓名');
-      changedKeys(row, 'usertype', '类型');
-      changedKeys(row, 'blockflag', '注销');
-      changedKeys(row, 'figure', '头像');
-      changedKeys(row, 'ip', 'IP');
+      changedKeys(row, "id", "ID");
+      changedKeys(row, "name", "姓名");
+      changedKeys(row, "usertype", "类型");
+      changedKeys(row, "blockflag", "注销");
+      changedKeys(row, "figure", "头像");
+      changedKeys(row, "ip", "IP");
       dataDownloadChoose(row);
     });
-    userMgmtColumns.forEach(value => {
+    userMgmtColumns.forEach((value) => {
       if (value.headerName) {
-        if (value.headerName === '头像') {
+        if (value.headerName === "头像") {
           value.width = 450;
         }
-        if (!arrHeadTitleName.some(i => i === value.headerName)) {
+        if (!arrHeadTitleName.some((i) => i === value.headerName)) {
           arrHeadTitleName.push(value.headerName);
           arrHeadTitleNameWidth.push({ wpx: value.width });
         }
@@ -231,7 +242,7 @@
     });
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
-    ws['!cols'] = arrHeadTitleNameWidth;
+    ws["!cols"] = arrHeadTitleNameWidth;
     XLSX.utils.book_append_sheet(wb, ws);
     XLSX.writeFile(wb, filename);
   }
@@ -243,16 +254,23 @@
 
   function dataDownloadChoose(data: any) {
     for (let key in data) {
-      if (key !== 'ID' && key !== '姓名' && key !== '类型' && key !== '注销' && key !== '头像' && key !== 'IP') {
+      if (
+        key !== "ID" &&
+        key !== "姓名" &&
+        key !== "类型" &&
+        key !== "注销" &&
+        key !== "头像" &&
+        key !== "IP"
+      ) {
         delete data[key];
       }
     }
   }
 
   function onAddBtnClickHandler() {
-    CreatePop('新增用户', AddUser, {}, onClosePopHandler, {
-      width: '600px',
-      height: '450px',
+    CreatePop("新增用户", AddUser, {}, onClosePopHandler, {
+      width: "600px",
+      height: "450px",
     });
   }
 
@@ -299,21 +317,44 @@
   }
 
   function onResetBtnClickHandler() {
-    userId = '';
-    userName = '';
-    blockFlagCodeSelected = 'N';
+    userId = "";
+    userName = "";
+    blockFlagCodeSelected = "N";
     blockFlagSelected = blockFlagList[2];
     itemCodeSelected = 20;
     itemSelected = items[0];
-    userTypeCodeSelected = 'U';
+    userTypeCodeSelected = "U";
     userTypeSelected = userTypeList[1];
   }
 
   function onGridReady(params: GridReadyEvent) {
     gridApi = params.api;
-    gridApi?.addEventListener(RENDERER_EVENT.Render_Select, onSelectChangeHandler);
-    gridApi?.addEventListener(RENDERER_EVENT.Renderer_Select_Check_Box, onRowsCheckedHandler);
-    gridApi?.addEventListener(RENDERER_EVENT.Renderer_LinkButton, onOpenModifyPopupHandler);
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_Header_CheckBox,
+      onBtnHeaderLinkHandler
+    );
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Render_Select,
+      onSelectChangeHandler
+    );
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_Select_Check_Box,
+      onRowsCheckedHandler
+    );
+    gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_LinkButton,
+      onOpenModifyPopupHandler
+    );
+  }
+
+  function onBtnHeaderLinkHandler(e: any) {
+    if (e.value !== undefined) {
+      let rowDataCopy = copyOverArray(rowData);
+      rowDataCopy.forEach((elem) => {
+        elem.selected = e.value;
+      });
+      rowData = rowDataCopy;
+    }
   }
 
   function onSelectChangeHandler(e) {
@@ -334,14 +375,14 @@
   }
 
   function onOpenModifyPopupHandler(e) {
-    CreatePop('修改用户信息', ModifyUser, e.value, onClosePopHandler, {
-      width: '600px',
-      height: '500px',
+    CreatePop("修改用户信息", ModifyUser, e.value, onClosePopHandler, {
+      width: "600px",
+      height: "500px",
     });
   }
 
   function onClosePopHandler(data: string) {
-    if (data === 'Y') {
+    if (data === "Y") {
       if (searchInfo) {
         setWaiting();
         currentPage = 1;
@@ -351,7 +392,7 @@
   }
 </script>
 
-<div style="display: flex; flex-direction:column;height:100%">
+<div class="outter">
   <div class="flex search">
     <div class="vertical-align">
       <div class="user-type-margin"><Text>用户类型</Text></div>
@@ -361,8 +402,7 @@
           labelIdentifier="value"
           options={userTypeList}
           bind:value={userTypeSelected}
-          onSubmit={onUserTypeSelectedHandler}
-        />
+          onSubmit={onUserTypeSelectedHandler} />
       </div>
     </div>
     <div class="vertical-align flex-residue">
@@ -385,53 +425,77 @@
           labelIdentifier="value"
           bind:value={blockFlagSelected}
           options={blockFlagList}
-          onSubmit={onBlockFlagSelectedHandler}
-        />
+          onSubmit={onBlockFlagSelectedHandler} />
       </div>
     </div>
   </div>
   <div class="flex">
     <div class="flex button-left">
-      {#if permissionData.includes('U_B')}
+      {#if permissionData.includes("U_B")}
         <div id="save">
-          <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Save} on:click={onSaveBtnClickHandler}
-            >保存</Button
-          >
+          <Button
+            class="button-normal button-text-vertical-align"
+            size="small"
+            kind="tertiary"
+            icon={Save}
+            on:click={onSaveBtnClickHandler}>保存</Button>
         </div>
       {/if}
 
       <div class="button-margin-left">
-        <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Download} on:click={onDataDownLoadHandler}
-          >下载</Button
-        >
+        <Button
+          class="button-normal button-text-vertical-align"
+          size="small"
+          kind="tertiary"
+          icon={Download}
+          on:click={onDataDownLoadHandler}>下载</Button>
       </div>
 
-      {#if permissionData.includes('U_A')}
+      {#if permissionData.includes("U_A")}
         <div id="addNewUser" class="button-margin-left">
-          <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Add} on:click={onAddBtnClickHandler}
-            >新增用户</Button
-          >
+          <Button
+            class="button-normal button-text-vertical-align"
+            size="small"
+            kind="tertiary"
+            icon={Add}
+            on:click={onAddBtnClickHandler}>新增用户</Button>
         </div>
       {/if}
     </div>
     <div class="flex flex-residue" style="justify-content:flex-end ;">
       <div class="select-width button-margin-right">
-        <AdvancedSelect options={items} bind:value={itemSelected} onSubmit={onItemSelectedHandler} />
+        <AdvancedSelect
+          options={items}
+          bind:value={itemSelected}
+          onSubmit={onItemSelectedHandler} />
       </div>
       <div class="button-margin-right">
-        <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Search} on:click={onSearchBtnClickHandler}
-          >SEARCH</Button
-        >
+        <Button
+          class="button-normal button-text-vertical-align"
+          size="small"
+          kind="tertiary"
+          icon={Search}
+          on:click={onSearchBtnClickHandler}>SEARCH</Button>
       </div>
       <div>
-        <Button class="button-normal button-text-vertical-align" size="small" kind="tertiary" icon={Reset} on:click={onResetBtnClickHandler}
-          >RESET</Button
-        >
+        <Button
+          class="button-normal button-text-vertical-align"
+          size="small"
+          kind="tertiary"
+          icon={Reset}
+          on:click={onResetBtnClickHandler}>RESET</Button>
       </div>
     </div>
   </div>
   <div class="flex-residue">
-    <DataGrid columnDefs={userMgmtColumns} {rowData} {currentPage} {pageCount} {onPageChange} {onGridReady} headerRows={2} />
+    <DataGrid
+      columnDefs={userMgmtColumns}
+      {rowData}
+      {currentPage}
+      {pageCount}
+      {onPageChange}
+      {onGridReady}
+      headerRows={2} />
   </div>
 </div>
 

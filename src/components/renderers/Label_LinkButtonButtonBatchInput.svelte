@@ -3,6 +3,7 @@
   import { createData, bodyBatchInput } from "@/utils/CommonUtils";
   import RENDERER_EVENT from "@/constant/Renderer";
   import { Box } from "@/components/sveltecomponents";
+  import "@/styles/core/index.scss";
 
   export let params;
   export let upTitle = "";
@@ -57,12 +58,12 @@
   };
 </script>
 
-<Box class={upClass} height="20px">
+<Box class={upClass} height="22px">
   <p title={upTitle} {...props} on:mouseenter={onMouseUpEnterHandler}>
     {data[0] ?? ""}
   </p>
 </Box>
-<Box class={downClass} height="20px">
+<Box class={downClass} height="22px">
   <Box f={1} style="width:90%; display:flex;">
     <Link
       {...linkProps}
@@ -81,12 +82,4 @@
     {...linkProps} />
 </Box>
 
-<style>
-  :global(.label) {
-    height: 20px;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
+

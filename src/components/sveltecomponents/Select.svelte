@@ -32,9 +32,5 @@
 </Select>
 
 <style>
-  :global(.disabled.svelte-15ynnp5.svelte-15ynnp5.svelte-15ynnp5) {
-    background: #f4f4f4 !important;
-    border-color: #f4f4f4 !important;
-    color: #c6c6c6 !important;
-  }
+  
 </style>

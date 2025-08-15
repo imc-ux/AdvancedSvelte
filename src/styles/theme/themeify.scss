@@ -1,0 +1,10 @@
+@import "./themes.scss";
+
+@mixin themifyListAT($key, $theme) {
+  @each $theme-name, $theme-map in $themes {
+    $theme-map: $theme-map !global;
+    [data-theme="#{$theme-name}"] & {
+      #{$key}: map-get($theme-map, $theme);
+    }
+  }
+}

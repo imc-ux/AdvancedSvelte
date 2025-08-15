@@ -1,4 +1,5 @@
 import { LinkRenderer, CheckRenderer } from "@/components/renderers/index";
+import { HeaderCheckRenderer } from "@/components/headerRenderers/Header_CheckBox";
 
 const jtracListColumns = [
   {
@@ -8,6 +9,7 @@ const jtracListColumns = [
     headerClass: ["center-aligned", "ag-header"],
     cellClass: ["cell-center-align", "cell-border"],
     cellRenderer: CheckRenderer,
+    headerComponent: HeaderCheckRenderer,
   },
   {
     headerName: "jtracNo",

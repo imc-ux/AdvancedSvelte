@@ -8,6 +8,8 @@
 -->
 <script>
   import { Link } from "carbon-components-svelte";
+  import "@/styles/core/index.scss";
+  
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -27,17 +29,3 @@
 </script>
 
 <Link on:click={onBtnClickHandler} icon={currentIcon} {...props} />
-
-<style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
-
-  :global(.iconButton) {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-    @include themifyList("color", $theme-color);
-    margin-top: 10px;
-  }
-</style>

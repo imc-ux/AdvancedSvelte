@@ -176,15 +176,10 @@
 </div>
 
 <style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
-
   :global(.svelte-autocomplete-select) {
     display: inline-block;
-    position: relative;
-    /* border: 1px solid #08adaa; */
-    border-radius: 0.25rem;
-    /* padding: 0.25rem 0.25rem; */
+    position: relative;    
+    border-radius: 0.25rem;    
     display: flex;
     align-items: center;
     height: 30px;
@@ -202,18 +197,7 @@
     cursor: pointer;
     padding-left: 1rem;
     font-size: 14px;
-  }
-
-  :global(.svelte-autocomplete-select-input:hover) {
-    border: 1px solid #08adaa;
-    @include themifyList("border-color", $theme-color);
-  }
-
-  :global(.svelte-autocomplete-select-input:focus) {
-    border: 1px solid #08adaa;
-    @include themifyList("border-color", $theme-color);
-    cursor: pointer;
-  }
+  }  
 
   :global(.svelte-autocomplete-results-container) {
     display: none;
@@ -266,15 +250,5 @@
   :global(.svelte-autocomplete-select-option span) {
     font-weight: bold;
     color: #212121;
-  }
-
-  :global(.svelte-autocomplete-select-option[aria-selected="true"]) {
-    @include themifyList("background-color", $theme-color);
-    color: #fff;
-  }
-
-  :global(.svelte-autocomplete-select-option:hover) {
-    @include themifyList("background-color", $theme-color);
-    color: #fff;
-  }
+  }  
 </style>

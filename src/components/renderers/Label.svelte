@@ -29,6 +29,7 @@
 
 <style>
   :global(.label) {
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

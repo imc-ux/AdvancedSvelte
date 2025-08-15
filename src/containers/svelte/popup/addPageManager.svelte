@@ -27,16 +27,19 @@
     gerpManagementTypeList,
   } from "@/constant/constant";
   import CustomAlert, { AlertIcon } from "@/components/CustomAlert";
+  import { Checkbox } from "carbon-components-svelte";
 
   let bizList = [];
   let checkList = [];
+  let testList = [];
   let managementList = [{ code: "", name: "--请选择--" }];
   let fileName = "";
   let userName = "";
   let selectedType = "";
-
+  let checked = false;
   let selectPersion = [];
   let selectChecker = [];
+  let selectTestor = "";
   let selectManagementList = "";
   let popPages = [];
   let popsOptions = [];
@@ -127,6 +130,7 @@
           value.data[i].text = value.data[i].name;
         }
         bizList = value.data;
+        testList = [{ id: "", name: "--请选择--" }, ...value.data];
       } else {
         CustomAlert(value.msg, AlertIcon.ERROR);
       }
@@ -247,6 +251,8 @@
       type: selectedType,
       developer: selectPersion.toString(),
       reviewer: selectChecker.toString(),
+      testor: selectTestor,
+      isTested: checked ? "Y" : "N",
       relatedPops: selectedType === "renderer" ? "" : relatedPops.toString(),
       relatedRenderers:
         selectedType === "renderer" ? "" : relatedRenderers.toString(),
@@ -362,6 +368,10 @@
     selectedManagementValue = value;
   }
 
+  function onTestorSubmitHandler(value) {
+    selectTestor = value.id;
+  }
+
   function addClassHandler() {
     document.getElementById(
       "outter"
@@ -372,7 +382,7 @@
   }
 </script>
 
-<div id="outter" style="overflow-y:auto;height:600px">
+<div id="outter" style="overflow-y:auto;height:730px">
   <Box horizontalAlign="right" class="typeLable">
     <Button
       class="button-normal margin_bottom_s button-main-style"
@@ -498,8 +508,9 @@
     <Box
       f={1}
       flexDisplay={false}
-      height="35px"
-      class="border_right_bottom padding-normal add-padding-bottom-top  {isShowPopInput ===
+      width="auto"
+      height="34px"
+      class="border_right padding-normal add-padding-bottom-top box-width {isShowPopInput ===
         false || isShowRendererInput === false
         ? 'select-max-height'
         : 'select-max-height-none'}"
@@ -512,6 +523,61 @@
         bind:selectedIds={selectChecker}
         class="popTextHeight"
         bind:direction />
+    </Box>
+  </Box>
+  <Box class="typeLable">
+    <Box
+      class="addPage-list background"
+      horizontalAlign="compact"
+      verticalAlign="middle">
+      <Text>测试负责人</Text>
+    </Box>
+    <Box
+      f={1}
+      class="border_right padding-normal popup-position {isShowPopInput ===
+        false || isShowRendererInput === false
+        ? 'select-max-height'
+        : 'select-max-height-none'}"
+      horizontalAlign="left"
+      verticalAlign="middle">
+      <AdvancedSelect
+        options={testList}
+        optionIdentifier="id"
+        labelIdentifier="name"
+        bind:value={selectTestor}
+        onSubmit={(v) => onTestorSubmitHandler(v)} />
+    </Box>
+  </Box>
+  <Box class="typeLable">
+    <Box
+      class="addPage-list background"
+      horizontalAlign="compact"
+      verticalAlign="middle">
+      <Text>TC</Text>
+    </Box>
+    <Box
+      f={1}
+      flexDisplay={false}
+      height="35px"
+      class="border_right_bottom padding-normal add-padding-bottom-top  {isShowPopInput ===
+        false || isShowRendererInput === false
+        ? 'select-max-height'
+        : 'select-max-height-none'}"
+      horizontalAlign="left"
+      verticalAlign="middle">
+      <Checkbox labelText="TC" bind:checked hideLabel />
+      <!-- <Box>
+        <RadioButtonGroup bind:selected={radioSelected}>
+          <RadioButton
+            labelText={radioBoxArr[0].text}
+            value={radioBoxArr[0].value}
+          />
+          <RadioButton
+            labelText={radioBoxArr[1].text}
+            value={radioBoxArr[1].value}
+          />
+        </RadioButtonGroup>
+      </Box> -->
     </Box>
   </Box>
   {#if isShowPopInput === true}
@@ -662,6 +728,7 @@
   :global(.bx--tag) {
     height: 20px;
     min-height: 20px !important;
+    width: 0px;
   }
 
   :global(.bx--tag__label) {
@@ -677,11 +744,31 @@
     max-width: 460px;
   }
 
-  /* :global(.button-z-index) {
-    z-index: -1;
-  } */
-
   :global(.button-display) {
     display: none;
+  }
+
+  :global(.bx--radio-button-wrapper) {
+    height: 34px;
+    margin-top: 5px;
+  }
+
+  :global(
+      .bx--radio-button-group--label-right .bx--radio-button__label,
+      .bx--radio-button-wrapper.bx--radio-button-wrapper--label-right
+        .bx--radio-button__label
+    ) {
+    font-size: 14px;
+    font-family: "微软雅黑" !important;
+    font-weight: 500;
+  }
+
+  :global(
+      .bx--radio-button:focus
+        + .bx--radio-button__label
+        .bx--radio-button__appearance
+    ) {
+    outline: 0px;
+    outline-offset: 0px;
   }
 </style>

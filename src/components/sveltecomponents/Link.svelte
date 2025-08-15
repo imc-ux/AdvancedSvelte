@@ -19,21 +19,7 @@
   href="#"
   {...$$restProps}
   on:click={onLinkClickHandler}
-  class="link-style"
->
+  class="link-style">
   <slot />
 </Link>
 
-<style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
-
-  :global(.link-style) {
-    outline: none !important;
-    @include themifyListIpt("color", $theme-color);
-  }
-
-  :global(.link-style:active) {
-    outline: none !important;
-  }
-</style>

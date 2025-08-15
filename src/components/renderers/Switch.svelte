@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { Toggle } from 'carbon-components-svelte';
-  import RENDERER_EVENT from '@/constant/Renderer';
+  import { Toggle } from "carbon-components-svelte";
+  import RENDERER_EVENT from "@/constant/Renderer";
 
   export let params: any;
-  export let labelA = '';
-  export let labelB = '';
+  export let labelA = "";
+  export let labelB = "";
   export let toggled: boolean;
 
   function onSwichClickHandler(e) {

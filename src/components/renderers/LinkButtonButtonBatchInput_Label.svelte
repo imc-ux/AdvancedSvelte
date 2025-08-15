@@ -57,7 +57,7 @@
   };
 </script>
 
-<Box class={upClass} height="20px">
+<Box class={upClass} height="22px">
   <Box f={1} style="width:90%; display:flex;">
     <Link
       {...linkProps}
@@ -75,7 +75,7 @@
     icon={currentIcon}
     {...linkProps} />
 </Box>
-<Box class={downClass}>
+<Box class={downClass} height="22px">
   <p title={downTitle} {...props} on:mouseenter={onMouseDownEnterHandler}>
     {data[2] ?? ""}
   </p>
@@ -83,8 +83,8 @@
 
 <style>
   :global(.label) {
-    height: 20px;
-    font-size: 13px;
+    height: 22px;
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

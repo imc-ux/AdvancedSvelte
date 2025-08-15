@@ -20,7 +20,7 @@
   import filelist from "@/containers/svelte/popup/filelist.svelte";
   import { setWaiting, removeWaiting } from "@/utils/loaderUtils";
   import { JtracListAlert } from "@/constant/alert/upload";
-  import { deepClone } from "@/utils/CommonUtils";
+  import { copyOverArray, deepClone } from "@/utils/CommonUtils";
   import type { GridReadyEvent } from "ag-grid-community";
   import DataGrid from "@/components/sveltecomponents/DataGrid.svelte";
   import RENDERER_EVENT from "@/constant/Renderer";
@@ -38,6 +38,11 @@
     "statusChange",
   ];
   let gridApi: any;
+  let currentPage: number = 1;
+  let currentPageCout: number = 20;
+  let pageCount: number = 1;
+  let rowDataTotal: any[] = [];
+
   export let params: any;
   export let onClose;
 
@@ -75,7 +80,14 @@
           elem.leftCodes = leftCodes;
           elem.centerCodes = centerCodes;
           elem.fileListChange = "(" + fileArr.length + ")" + fileArr[0];
-          elem.moduleListChange = "(" + moduleArr.length + ")" + moduleArr[0];
+          if (
+            moduleArr.length === 0 ||
+            (moduleArr.length === 1 && !moduleArr[0])
+          ) {
+            elem.moduleListChange = "";
+          } else {
+            elem.moduleListChange = "(" + moduleArr.length + ")" + moduleArr[0];
+          }
           elem.sFileList = elem.fileList.replace(reg, "\n");
           elem.sModuleList = elem.moduleList.replace(reg, "\n");
           elem.labelList = elem.labelList.replace(reg, "\n");
@@ -96,12 +108,26 @@
             elem.detail = "";
           }
         });
-        rowData = value.data;
+        rowDataTotal = value.data;
+        rowData = rowDataTotal.slice(0, currentPageCout);
+        currentPage = 1;
+        pageCount = Math.ceil(rowDataTotal?.length / currentPageCout);
       } else {
         CustomAlert(JtracListAlert.INTERNET_ERROR, AlertIcon.ERROR);
       }
     }
   });
+
+  function onPageChange(v: any) {
+    if (currentPage === v.detail.page) {
+      return;
+    }
+    currentPage = v.detail.page;
+    rowData = rowDataTotal.slice(
+      (currentPage - 1) * currentPageCout,
+      currentPage * currentPageCout
+    );
+  }
 
   const deleteJtracInfo = autorun(() => {
     if (pageStore.deleteJtracInfoResult) {
@@ -126,7 +152,7 @@
       jtracNo: params.jtracNo,
       status: params.jtracStatus,
       iStart: "0",
-      iPageCount: "1000",
+      iPageCount: "10000",
       jtracUniqFlag: "",
       clientDeveloperId: "",
     };
@@ -166,6 +192,10 @@
   function onGridReadyHandler(params: GridReadyEvent) {
     gridApi = params.api;
     gridApi?.addEventListener(
+      RENDERER_EVENT.Renderer_Header_CheckBox,
+      onBtnHeaderLinkHandler
+    );
+    gridApi?.addEventListener(
       RENDERER_EVENT.Renderer_LinkButton,
       onBtnLinkHandler
     );
@@ -173,6 +203,16 @@
       RENDERER_EVENT.Renderer_Select_Check_Box,
       onBtnCheckBoxHandler
     );
+  }
+
+  function onBtnHeaderLinkHandler(e: any) {
+    if (e.value !== undefined) {
+      let rowDataCopy: any[] = copyOverArray(rowData);
+      rowDataCopy.forEach((elem) => {
+        elem.selected = e.value;
+      });
+      rowData = rowDataCopy;
+    }
   }
 
   function onBtnCheckBoxHandler(e: any) {
@@ -232,6 +272,8 @@
     id="jtracList-mgmt-Grid"
     columnDefs={jtracListColumns}
     {rowData}
-    pageShowFlag={false}
+    {currentPage}
+    {pageCount}
+    {onPageChange}
     onGridReady={onGridReadyHandler} />
 </div>

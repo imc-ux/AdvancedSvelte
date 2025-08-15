@@ -92,17 +92,12 @@
     height: 100%;
   }
   :global(body) {
-    background-color: #eee;
+    background-color: #424242;
   }
   :global(.inherit-height) {
     height: inherit;
   }
-  :global(.outer-container) {
-    background-color: #fff;
-    height: 100%;
-    padding: 10px;
-    box-shadow: 2px 2px 2px #9e9e9e;
-  }
+  
   :global(.tabs) {
     padding: 15px 30px;
   }

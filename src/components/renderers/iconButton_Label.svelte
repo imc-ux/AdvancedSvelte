@@ -2,6 +2,7 @@
   import { Link } from "carbon-components-svelte";
   import { createData } from "@/utils/CommonUtils";
   import RENDERER_EVENT from "@/constant/Renderer";
+  import "@/styles/core/index.scss";
 
   export let params;
   export let title = "";
@@ -43,7 +44,7 @@
   };
 </script>
 
-<div class={upClass} style="height: 20px;">
+<div class={upClass} style="height: 22px;">
   {#if showIconButton}
     <Link on:click={onBtnClickHandler} icon={currentIcon} {...linkProps} />
   {/if}
@@ -51,24 +52,3 @@
 <div class={downClass}>
   <p {title} {...props} on:mouseenter={onMouseEnterHandler}>{data[1] ?? ""}</p>
 </div>
-
-<style lang="scss">
-  @import "../../styles/theme/var";
-  @import "../../styles/theme/mixin";
-
-  :global(.label) {
-    height: 20px;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  :global(.iconButton) {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    @include themifyList("color", $theme-color);
-    margin-top: 10px;
-  }
-</style>

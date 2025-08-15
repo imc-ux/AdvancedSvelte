@@ -53,7 +53,7 @@
   };
 
   function onConvertUTCTimeHandler() {
-    if (timestampInput < TS_MIN || timestampInput > TS_MAX) {
+    if (Number(timestampInput) < TS_MIN || Number(timestampInput) > TS_MAX) {
       timeUTCOutput = "";
       alert(
         "请输入正确的时间戳！取值范围:-8640000000000000 ~ 8640000000000000"
@@ -117,8 +117,7 @@
       <Text class="text-style">现在的时间戳是：</Text>
       <Text class="times-color text-style">{currentTime}</Text>
       <Button class="btn-style-s" on:click={copyToClipboard(currentTime)}
-        >复制</Button
-      >
+        >复制</Button>
       <Button class="btn-style-s" on:click={onClearAllHandler}>一键清空</Button>
     </div>
     <div class="content-box">
@@ -128,25 +127,21 @@
           type="text"
           class="input-style"
           bind:value={timestampInput}
-          on:input={onInputValueHandler}
-        />
+          on:input={onInputValueHandler} />
         <Text class="text-style">单位：毫秒(ms)</Text>
         <Button
           class="btn-style-s"
-          on:click={() => onClearValueHandler(CLEAR_ONE)}>清空</Button
-        >
+          on:click={() => onClearValueHandler(CLEAR_ONE)}>清空</Button>
       </div>
       <div class="tc">
         <Button class="btn-style full-width" on:click={onConvertUTCTimeHandler}
-          ><span class="btn-span">转换为北京时间</span></Button
-        >
+          ><span class="btn-span">转换为北京时间</span></Button>
       </div>
       <span class="text-style">北京时间：</span>
       <div class="time-box">
         <span class="output">{timeUTCOutput}</span>
         <Button class="btn-style-s" on:click={copyToClipboard(timeUTCOutput)}
-          >复制</Button
-        >
+          >复制</Button>
       </div>
     </div>
     <div class="cut-line" />
@@ -156,13 +151,11 @@
         <Input type="text" class="input-style" bind:value={timeUTCInput} />
         <Button
           class="btn-style-s"
-          on:click={() => onClearValueHandler(CLEAR_TWO)}>清空</Button
-        >
+          on:click={() => onClearValueHandler(CLEAR_TWO)}>清空</Button>
       </div>
       <div class="tc">
         <Button class="btn-style full-width" on:click={onConvertGTMTimeHandler}
-          ><span class="btn-span">转换为时间戳</span></Button
-        >
+          ><span class="btn-span">转换为时间戳</span></Button>
       </div>
       <span class="text-style">时间戳：</span>
       <div class="time-box">
@@ -221,7 +214,7 @@
     height: 28px;
     line-height: 28px;
     margin-right: 10px;
-    font-size: 13px;
+    font-size: 14px;
   }
   :global(.input-style) {
     border: 1px solid #ccc;

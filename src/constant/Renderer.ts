@@ -5,6 +5,7 @@ const Render_Select = "renderer_select";
 const Renderer_Image_Upload = "renderer_image_upload";
 const Renderer_Lable_Input = "renderer_cell_editor";
 const Renderer_Header_CheckBox = "renderer_Header_CheckBox";
+const Renderer_Switch = 'Renderer_Switch';
 
 export interface RENDERER_EVENT {
   type: string;
@@ -25,4 +26,5 @@ export default {
   Renderer_Image_Upload,
   Renderer_Lable_Input,
   Renderer_Header_CheckBox,
+  Renderer_Switch,
 };

@@ -36,7 +36,7 @@
     columnDefs: columnDefs,
     rowData: rowData,
     headerHeight: headerRowHeight.get(headerRows),
-    rowHeight: rowHeightMap.get(headerRows),    
+    rowHeight: rowHeightMap.get(headerRows),
     overlayNoRowsTemplate: overlayNoRowsTemplate,
     onGridReady: onGridReady,
     onGridSizeChanged: onGridSizeChange,
@@ -58,10 +58,6 @@
   function onGridSizeChange() {
     gridOptions?.api?.sizeColumnsToFit();
   }
-
-  function onColumnResized() {
-    gridOptions?.api?.sizeColumnsToFit();
-  }
 </script>
 
 <div
@@ -69,7 +65,7 @@
   <div style="flex:1" {id} class="grid-font-family" />
   {#if pageShowFlag}
     {#if rowData && rowData.length > 0}
-      <div style="height:45px">
+      <div style="height:76px">
         <Pagination
           total={rowData?.[0]?.totalCount}
           {pageCount}
@@ -82,9 +78,8 @@
 
 <style>
   .grid-font-family {
-    font-size: 13px;
-    font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif,
-      "微软雅黑" !important;
+    font-size: 14px;
+    font-family: "微软雅黑" !important;
   }
 
   :global(.ag-header-group-cell-label) {

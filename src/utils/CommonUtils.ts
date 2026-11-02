@@ -165,7 +165,8 @@ export function strEnum<T extends string>(o: Array<T>): { [K in T]: K } {
 
 export function getServerUrl(): string {
   // return document.location.protocol + "//" + document.location.host + "/b2b/";
-  //return location.protocol + "//127.0.0.1:7777/b2b/";
+  //return location.protocol + "//109.14.6.243:7777/";
+  //http://109.14.6.243:7777/
   return "http://109.14.6.43:6636/ux/";
   //return "/b2b/";
 }
@@ -180,11 +181,11 @@ export function getResourceUrl(): string {
 
 export function getUploadRedirectUrl(): string {
   const file = "result.html";
-  return "http://109.14.20.45:6636/upload/" + file;
+  return "http://109.14.6.43:6636/upload/" + file;
 }
 
 export function getImagesServerUrl() {
-  if (DEBUG) return "http://109.14.20.45:6636/upload/";
+  if (DEBUG) return "http://109.14.6.43:6636/upload/";
   else
     return (
       document.location.protocol + "//" + document.location.host + "/upload/"

@@ -163,6 +163,7 @@
       value.data?.forEach((elem) => {
         elem.linkCodes = linkCodes;
         elem.labelCodes = labelCodes;
+        elem.createDate = formatDate(elem.createDate);
         if (!elem.developerName || elem.developerName === "null") {
           elem.developerName = "";
         }
@@ -210,6 +211,10 @@
       }
     }
   });
+
+  function formatDate(date:string){
+    return date.replace('T',' ');
+  }
 
   function downloadDataHandler(data: any[]) {
     let filename = "MP管理.xlsx";
@@ -502,7 +507,7 @@
             mode={1} />
         </Box>
       </Box>
-      <Box width="550px" height="30px" class="box-width">
+      <Box width="500px" height="30px" class="box-width">
         <Box
           width="100px"
           className="main-text "
@@ -510,7 +515,7 @@
           horizontalAlign="compact">
           <Text>页面负责人</Text>
         </Box>
-        <Box width="450px" class="components-height select-width">
+        <Box width="400px" class="components-height select-width">
           <MultiSelect
             dataProvider={bizList}
             bind:selectedIds={selectedDeveloperValue}
@@ -518,7 +523,7 @@
             direction="bottom" />
         </Box>
       </Box>
-      <Box width="550px" height="30px" class="box-width">
+      <Box f={1} height="30px" class="box-width">
         <Box
           width="100px"
           className="main-text "
@@ -526,7 +531,7 @@
           horizontalAlign="compact">
           <Text>Type</Text>
         </Box>
-        <Box width="450px" class="components-height select-width">
+        <Box f={1} class="components-height select-width">
           <MultiSelect
             f={1}
             dataProvider={itemTypes}
@@ -534,25 +539,7 @@
             class="popTextHeight "
             direction="bottom" />
         </Box>
-      </Box>
-      <Box f={1} height="30px">
-        <Box
-          width="80px"
-          className="main-text"
-          verticalAlign="middle"
-          horizontalAlign="compact">
-          <Text>TC</Text>
-        </Box>
-        <Box width="120px" class="components-height select-width">
-          {#each checkBoxArr as value}
-            <Checkbox
-              bind:checked={value.checked}
-              labelText={value.testValue}
-              {value}
-              on:change={onCheckBoxChangeHandler} />
-          {/each}
-        </Box>
-      </Box>
+      </Box>      
     </Box>
     <Box f={1} class="grid-x margin-bottom padding-top" verticalAlign="middle">
       <Box width="468px" height="30px" class="box-width">
@@ -567,7 +554,7 @@
           <BatchInput bind:value={userName} bind:dataTotal={userNameTotal} />
         </Box>
       </Box>
-      <Box width="550px" height="30px" class="box-width">
+      <Box width="500px" height="30px" class="box-width">
         <Box
           width="100px"
           className="main-text"
@@ -575,7 +562,7 @@
           horizontalAlign="compact">
           <Text>测试负责人</Text>
         </Box>
-        <Box width="450px" class="components-height select-width">
+        <Box width="400px" class="components-height select-width">
           <MultiSelect
             dataProvider={bizList}
             bind:selectedIds={selectedTestorValue}
@@ -583,8 +570,24 @@
             direction="bottom" />
         </Box>
       </Box>
-      <Box width="550px" height="30px" class="box-width" />
-      <Box f={1} height="30px" />
+      <Box f={1} height="30px" class="box-width">
+        <Box
+          width="100px"
+          className="main-text "
+          verticalAlign="middle"
+          horizontalAlign="compact">
+          <Text>TC</Text>
+        </Box>
+        <Box width="120px" class="components-height select-width">
+          {#each checkBoxArr as value}
+            <Checkbox
+              bind:checked={value.checked}
+              labelText={value.testValue}
+              {value}
+              on:change={onCheckBoxChangeHandler} />
+          {/each}
+        </Box>
+      </Box>
     </Box>
   </Box>
   <Box class="margin-bottom ">

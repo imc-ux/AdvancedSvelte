@@ -33,8 +33,7 @@
   import Copy from "carbon-icons-svelte/lib/Copy.svelte";
   import Save from "carbon-icons-svelte/lib/Save.svelte";
   import Checkmark from "carbon-icons-svelte/lib/Checkmark.svelte";
-  import { systemTypeList } from "@/constant/constant";
-  import { readonly } from "svelte/store";
+  import { systemTypeList } from "@/constant/constant";  
 
   export let params: any;
   export let onClose;
@@ -79,6 +78,15 @@
       removeWaiting();
       if (!value.error) {
         let values = value.data;
+        const user: any = {
+          blockFlag: "",
+          id: "",
+          name: "--请选择--",
+          password: "",
+          permissionGroup: "",
+          userType: "",
+        };
+        values.unshift(user);
         reviewerList = values;
         const info = values.find(v=>v.id === params.info.reviewer);
         if(params.info.reviewer){
@@ -97,7 +105,7 @@
           params.info.status === "R"
         ) {
           isReviewer = true;
-        }
+        }        
       }
     }
   });
@@ -231,7 +239,7 @@
     info.jtracNo = jtracNo?.trim();
     info.bizDeveloper = selectedBizDeveloper;
     info.systemType = selectedSystemFlag;
-    info.reviewer = checkFileFlag(txtFileList) ? selectedReviewer : '';
+    info.reviewer = selectedReviewer;
     info.urgencyFlag = selectedUrgency?.trim();
     info.version = version?.trim();
     info.detail = detail?.trim();
@@ -246,7 +254,11 @@
         if(checkFileFlag(txtFileList)){
           info.status = 'R';
         }else{
-          info.status = 'A';
+          if(selectedReviewer){
+            info.status = params.info.status;
+          }else{
+            info.status = 'A';
+          }          
         }
       }      
     }
@@ -450,8 +462,7 @@
     </Box>
   </Box>
   <div style="height:415px">
-    <div style="height:413px;overflow:auto">
-      {#if isReviewerFlag}
+    <div style="height:413px;overflow:auto">      
       <Box class="typeLable">
         <Box
           class="addPage-list background"
@@ -473,8 +484,7 @@
               bind:value={selectedReviewer}
             />       
         </Box>
-      </Box>
-      {/if}
+      </Box>      
       <Box class="typeLable">
         <Box
           class="addPage-list background"

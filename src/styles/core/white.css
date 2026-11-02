@@ -2226,7 +2226,7 @@ em {
   font-style: normal;
   font-weight: 400;
   src: local("IBM Plex Mono"), local("IBMPlexMono"),
-    url("http://109.14.20.45:6636/cusys/static/uploadlist/img/IBMPlexMono-Regular-Latin1.woff2")
+    url("http://109.14.6.43:6636/cusys/static/uploadlist/img/IBMPlexMono-Regular-Latin1.woff2")
       format("woff2");
   unicode-range: U+0000, U+000D, U+0020-007E, U+00A0-00A3, U+00A4-00FF, U+0131,
     U+0152-0153, U+02C6, U+02DA, U+02DC, U+2013-2014, U+2018-201A, U+201C-201E,
@@ -3409,9 +3409,9 @@ em {
   font-style: normal;
   font-weight: 400;
   src: local("IBM Plex Sans"), local("IBMPlexSans"),
-    url("http://109.14.20.45:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular.woff2")
+    url("http://109.14.6.43:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular.woff2")
       format("woff2"),
-    url("http://109.14.20.45:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular.woff")
+    url("http://109.14.6.43:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular.woff")
       format("woff");
 }
 @font-face {
@@ -3468,7 +3468,7 @@ em {
   font-style: normal;
   font-weight: 400;
   src: local("IBM Plex Sans"), local("IBMPlexSans"),
-    url("http://109.14.20.45:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular-Latin1.woff2")
+    url("http://109.14.6.43:6636/cusys/static/uploadlist/img/IBMPlexSans-Regular-Latin1.woff2")
       format("woff2");
   unicode-range: U+0000, U+000D, U+0020-007E, U+00A0-00A3, U+00A4-00FF, U+0131,
     U+0152-0153, U+02C6, U+02DA, U+02DC, U+2013-2014, U+2018-201A, U+201C-201E,
@@ -3550,7 +3550,7 @@ em {
   font-style: normal;
   font-weight: 600;
   src: local("IBM Plex Sans SmBld"), local("IBMPlexSans-SmBld"),
-    url("http://109.14.20.45:6636/cusys/static/uploadlist/img/IBMPlexSans-SemiBold-Latin1.woff2")
+    url("http://109.14.6.43:6636/cusys/static/uploadlist/img/IBMPlexSans-SemiBold-Latin1.woff2")
       format("woff2");
   unicode-range: U+0000, U+000D, U+0020-007E, U+00A0-00A3, U+00A4-00FF, U+0131,
     U+0152-0153, U+02C6, U+02DA, U+02DC, U+2013-2014, U+2018-201A, U+201C-201E,
@@ -3994,8 +3994,7 @@ em {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.28572;
-  letter-spacing: 0.16px;
-  background-color: #fff;
+  letter-spacing: 0.16px; 
   color: #161616;
   line-height: 1;
 }
@@ -4004,7 +4003,6 @@ body {
   font-weight: 400;
   line-height: 1.28572;
   letter-spacing: 0.16px;
-  background-color: #fff;
   color: #161616;
   line-height: 1;
 }

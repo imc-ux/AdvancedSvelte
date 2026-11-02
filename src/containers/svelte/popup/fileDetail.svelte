@@ -89,13 +89,13 @@
           fillData[j] = fillData[j].substr(12, fillData[j].length);
         }
         if (fillData[0]) showUI = true;
-        jtracNo = fillData[0] ?? "";
-        relevantProject = fillData[1] ?? "";
-        status = fillData[2] ?? "";
-        initiator = fillData[3] ?? "";
-        receiver = fillData[4] ?? "";
-        summary = fillData[5] ?? "";
-        detail = fillData[6] ?? "";
+          jtracNo = fillData[0] ?? "";
+          relevantProject = fillData[1] ?? "";
+          status = fillData[2] ?? "";
+          initiator = fillData[3] ?? "";
+          receiver = fillData[4] ?? "";
+          summary = fillData[5] ?? "";
+          detail = fillData[6] ?? "";
         if (jtracNo.indexOf("V2A") >= 0) {
           jtracShowUI = true;
           emmergency = fillData[7] ?? "";

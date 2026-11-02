@@ -48,7 +48,7 @@
   let selectedJtracNoType: string = jtracNoTypeList[0].name;
   let bizList: any[] = [];
   let reviewerList: any[] = [];
-  let selectedReviewerValue: any = {};
+  let selectedReviewerValue: string = '';
   let selectedBizValue: any = {};
   let selectedJtracNoTypeValue: any = jtracNoTypeList[0];
   let selectedSystemTypeValue: any = systemTypeList[0];
@@ -98,7 +98,16 @@
       removeWaiting();
       if (!value.error) {
         reviewerList = value.data;
-        selectedReviewerValue = reviewerList[0];
+        let user: any = {
+          blockFlag: "",
+          id: "",
+          name: "--请选择--",
+          password: "",
+          permissionGroup: "",
+          userType: "",
+        };
+        reviewerList.unshift(user);
+        selectedReviewerValue = '';
       }
     }
   });
@@ -210,7 +219,6 @@
     if (!validate()) {
       return;
     }
-
     if (
       versionMessage.trim() !== "" &&
       !VERSION_REGEXP.test(versionMessage.trim())
@@ -228,14 +236,14 @@
       jtracNo: `${selectedJtracNoType}-${jtracNo.trim()}`,
       bizDeveloper: selectedBiz,
       urgencyFlag: selectedUrgency,
-      reviewer: isReviewer ? selectedReviewerValue : "",
+      reviewer: selectedReviewerValue,
       fileList: fileList,
       moduleList: moduleList,
       systemType: selectedSystemFlag,
       clientDeveloper: UserInfo.userId,
       version: versionMessage.trim(),
       detail: detailMessage.trim(),
-      status: checkFileFlag(fileList) ? "R" : "A",
+      status: selectedReviewerValue ? 'R' : 'A',//checkFileFlag(fileList) ? "R" : "A",
     };
     setWaiting();
     pageStore.addJtracInfo(info);
@@ -291,10 +299,10 @@
     );
     if (checkFileFlag(fileList)) {
       isReviewer = true;
-      selectedReviewerValue = reviewerList[0]?.id;
+      //selectedReviewerValue = reviewerList[0]?.id;
     } else {
       isReviewer = false;
-      selectedReviewerValue = "";
+      //selectedReviewerValue = "";
     }
   }
 
@@ -381,30 +389,29 @@
         on:change={onVersionChangeHandler}
         class="input popTextHeight jtrac-input-width" />
     </Box>
-  </Box>
-  {#if isReviewer}
-    <Box class="typeLable">
-      <Box
-        class="addPage-list background"
-        horizontalAlign="compact"
-        verticalAlign="middle">
-        <Text>代码检查负责人</Text>
-      </Box>
-      <Box
-        f={1}
-        class="border_right padding-normal popup-position popup-select-height"
-        horizontalAlign="left"
-        verticalAlign="middle">
-        <AdvancedSelect
-          options={reviewerList}
-          optionIdentifier="id"
-          labelIdentifier="name"
-          placeholder=""
-          onSubmit={(v) => onReviewerSelectChangeHandler(v)}
-          bind:value={selectedReviewerValue} />
-      </Box>
+  </Box>  
+  <Box class="typeLable">
+    <Box
+      class="addPage-list background"
+      horizontalAlign="compact"
+      verticalAlign="middle">
+      <Text>代码检查负责人</Text>
     </Box>
-  {/if}
+    <Box
+      f={1}
+      class="border_right padding-normal popup-position popup-select-height"
+      horizontalAlign="left"
+      verticalAlign="middle">
+      <AdvancedSelect
+        options={reviewerList}
+        optionIdentifier="id"
+        labelIdentifier="name"
+        placeholder=""
+        onSubmit={(v) => onReviewerSelectChangeHandler(v)}
+        bind:value={selectedReviewerValue} />
+    </Box>
+  </Box>
+  
   <Box class="typeLable">
     <Box
       class="addPage-list background"

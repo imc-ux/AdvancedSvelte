@@ -61,7 +61,9 @@
   const labelCodes = ["userName", "status"];
   const progressCode = ["taskProgress"];
   let permissionData: any[] = [];
-  onMount(() => {   
+  onMount(() => {
+    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
+    document.documentElement.setAttribute('data-bs-theme', currentTheme);   
     window.addEventListener("message", themeChangeHandler, false);
     setWaiting();
     if (loginUser === null || loginUser === "") {
@@ -75,8 +77,6 @@
     disposerSearchTask();
     user();
     getPermission();
-    let currentTheme = Storage.getLocalItem("svelte-theme") ?? "ux-green-light";
-    document.documentElement.setAttribute('data-bs-theme', currentTheme);
     window.removeEventListener("message", themeChangeHandler, false);
     gridApi?.removeEventListener(
       RENDERER_EVENT.Renderer_LinkButton,

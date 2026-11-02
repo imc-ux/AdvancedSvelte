@@ -119,6 +119,21 @@ const pageManageDoubleLineColumns = [
       },
     ],
   },
+  {
+    headerName: " 登录时间",
+    headerClass: ["center-aligned", "ag-header"],
+    cellClass: ["cell-center-align", "cell-border"],
+    children: [
+      {
+        headerName: "",
+        width: 200,
+        field: "createDate*AAAAAA",
+        headerClass: ["center-aligned", "ag-header"],
+        cellClass: ["cell-center-align", "cell-border"],
+        cellRenderer: Label_Label,
+      },
+    ],
+  },
 ];
 
 export default pageManageDoubleLineColumns;

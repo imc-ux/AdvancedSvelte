@@ -394,8 +394,7 @@
   }
 
   function getUserActivePermission() {
-    //const info = UserInfo.userId;
-    const info = "ljh";
+    const info = UserInfo.userId;
     setWaiting();
     pageStore.getUserActivePermission(info);
   }
@@ -930,6 +929,7 @@
         arrHeadTitleNameWidth.push({ wpx: data.width?.replace("px", "") });
       }
     });
+    
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.json_to_sheet(data, { header: arrHeadTitleName });
     ws["!cols"] = arrHeadTitleNameWidth;

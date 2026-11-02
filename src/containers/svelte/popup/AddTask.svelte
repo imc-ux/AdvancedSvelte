@@ -216,8 +216,7 @@
         <Input
           bind:value={taskTitle}
           {placeholder}
-          on:input={onTitleInputChangeHandler}
-          maxAscii={100} />
+          on:input={onTitleInputChangeHandler}/>
       </div>
     </div>
     <div class="flex max-height">
@@ -242,7 +241,6 @@
           bind:value={taskContent}
           on:input={onContentInputChangeHandler}
           height="100px"
-          maxCount={200}
           class="textarea-resize" />
       </div>
     </div>

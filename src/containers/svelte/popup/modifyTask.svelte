@@ -416,8 +416,7 @@
           id="title-input"
           bind:value={taskTitle}
           on:input={onTitleInputChangeHandler}
-          readOnly={readonly}
-          maxAscii={100} />
+          readOnly={readonly}/>
       </div>
     </div>
     <div class="flex">
@@ -442,7 +441,6 @@
           height="120px"
           on:input={onTaskContentChangeHandler}
           readOnly={readonly}
-          maxCount={200}
           class="textarea-resize {readonly ? 'not-allowed' : ''}" />
       </div>
     </div>
@@ -493,7 +491,6 @@
           <TextArea
             bind:value={taskRemark}
             on:input={onRemarkContentChangeHandler}
-            maxCount={200}
             class="textarea-resize" />
         </div>
       </div>

@@ -38,7 +38,7 @@ function getPlugins() {
         filename: `${elem}.html`, //指定生成的页面名称 默认生成在output指定的路径
         template: `templates/${elem}.ejs`, //以当前指定的页面为模板去生成
         chunks: [elem, "vendor"], // 多入口时需要用到  去掉节约23629ms
-      })
+      }),
     );
   });
   return plugins;
@@ -52,7 +52,7 @@ module.exports = {
     proxy: {
       "/b2b": {
         target: "http://127.0.0.1:7777/",
-        // target: "http://109.14.6.243:7777/",
+        //target: "http://109.14.6.243:7777/",
 
         pathRewrite: { "^/b2b": "" },
         changeOrigin: true,
